@@ -1,0 +1,3312 @@
+package PanelForm;
+//PRUEBA
+import Conexion.Econa.ExeSql_Econa;
+import Conexion.ExeSql;
+import Dialogos.jdAgregaBlog;
+
+import Dialogos.jdBuscarCliPrv;
+import Dialogos.jdAsociaCodChilemat;
+import Dialogos.jdBuscarHistorial;
+import Dialogos.jdContactos;
+import Dialogos.jdContactos_Econa;
+import Dialogos.jdDiasOCP;
+import Dialogos.jdOCCAgregaProducto;
+import Dialogos.jdOCCAgregaProducto_Econa;
+import Dialogos.jdOCCContacto;
+import Dialogos.jdProductosAsociadosPrv;
+import Dialogos.jdQuienFirma;
+import Formularios.fmMain;
+import static Formularios.fmMain.pnPestanas;
+import static PanelForm.pfBuscaDoc.BuscaArchivos;
+import Utilidades.ComboCodigos;
+import Utilidades.Ftp;
+import Utilidades.ImgTabla;
+import Utilidades.ListarProductos;
+import Utilidades.LogError;
+import Utilidades.PanelTab;
+import java.awt.Color;
+import java.awt.HeadlessException;
+import java.sql.ResultSet;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+
+/**
+ *
+ * @author MauricioLuvaly
+ */
+public class pfOCProveedor_Econa extends javax.swing.JPanel{
+
+    public String firmacompra;
+    String RutMaster;
+    int Tipo; // 0::Nuevo    1:Abrir
+    int PosCuotas;
+    int IdVendedor;
+    DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    private enum Columnas{Sku,Codprv,Nombre,UM,Cantidad,Unitario,Total,UniReal,CantReal,TotalPorcentaje};
+
+    public pfOCProveedor_Econa() {
+        initComponents();
+        txSkuTemporal.setVisible(false);
+        txDescTemporal.setVisible(false);
+        txUMTemporal.setVisible(false);
+        txCodBarTemporal.setVisible(false);
+        txCantidadTemporal.setVisible(false);
+        txUnitarioTemporal.setVisible(false);
+        txTotlineaTemporal.setVisible(false);
+
+        dtEmision.setFormats(new String[] {"dd/MM/yyyy"});
+        dtDespacho.setFormats(new String[] {"dd/MM/yyyy"});
+        Habilita(false);
+        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        Grilla.getColumnModel().getColumn(GetCol("Codprv")).setCellRenderer(centerRenderer);
+        Grilla.getColumnModel().getColumn(GetCol("Cantidad")).setCellRenderer(rightRenderer);
+        Grilla.getColumnModel().getColumn(GetCol("Unitario")).setCellRenderer(rightRenderer);
+        Grilla.getColumnModel().getColumn(GetCol("Total")).setCellRenderer(rightRenderer);
+        Grilla.getColumnModel().getColumn(GetCol("TotalPorcentaje")).setCellRenderer(rightRenderer);
+    }
+
+    @SuppressWarnings("unchecked")
+
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        pnMenu = new javax.swing.JPanel();
+        btNuevo = new javax.swing.JButton();
+        btGuardar = new javax.swing.JButton();
+        btCancelar = new javax.swing.JButton();
+        btEditar = new javax.swing.JButton();
+        btAbrir = new javax.swing.JButton();
+        btImprimir = new javax.swing.JButton();
+        jXLabel1 = new org.jdesktop.swingx.JXLabel();
+        btLiberar = new javax.swing.JButton();
+        btActualizar = new javax.swing.JButton();
+        btChilemat = new javax.swing.JButton();
+        lblNroChilemat = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        Grilla = new javax.swing.JTable();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        txRut = new javax.swing.JTextField();
+        txDv = new javax.swing.JTextField();
+        btIr = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        btContacto = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        txNombre = new javax.swing.JTextField();
+        txComentario = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox();
+        jLabel17 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        txVendedor = new javax.swing.JTextField();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        txNroOc = new javax.swing.JTextField();
+        btOtrasOrdenes = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        txExento = new javax.swing.JTextField();
+        txNeto = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        txIva = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        txTotal = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        txImpEspecifico = new javax.swing.JTextField();
+        btAgregar = new javax.swing.JButton();
+        btEliminar = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        dtEmision = new org.jdesktop.swingx.JXDatePicker();
+        dtDespacho = new org.jdesktop.swingx.JXDatePicker();
+        jLabel3 = new javax.swing.JLabel();
+        cbCuotas = new javax.swing.JComboBox();
+        jLabel9 = new javax.swing.JLabel();
+        txDias = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        txEstado = new javax.swing.JTextField();
+        btAsociados = new javax.swing.JButton();
+        txSkuTemporal = new javax.swing.JTextField();
+        txDescTemporal = new javax.swing.JTextField();
+        txUMTemporal = new javax.swing.JTextField();
+        txCodBarTemporal = new javax.swing.JTextField();
+        txCantidadTemporal = new javax.swing.JTextField();
+        txUnitarioTemporal = new javax.swing.JTextField();
+        txTotlineaTemporal = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        Grilla_Econa = new javax.swing.JTable();
+        jPanel7 = new javax.swing.JPanel();
+        btAgregarBlog = new javax.swing.JButton();
+        btMostrarHistorial = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        GrillaBlog = new javax.swing.JTable();
+        jPanel10 = new javax.swing.JPanel();
+        jLabel28 = new javax.swing.JLabel();
+        txExento2 = new javax.swing.JTextField();
+        txNeto2 = new javax.swing.JTextField();
+        jLabel29 = new javax.swing.JLabel();
+        txIva2 = new javax.swing.JTextField();
+        jLabel30 = new javax.swing.JLabel();
+        txTotal2 = new javax.swing.JTextField();
+        jLabel31 = new javax.swing.JLabel();
+        jLabel32 = new javax.swing.JLabel();
+        txImpEspecifico2 = new javax.swing.JTextField();
+        btEliminar1 = new javax.swing.JButton();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        txSku = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+
+        setToolTipText("");
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
+
+        pnMenu.setBackground(new java.awt.Color(220, 215, 226));
+        pnMenu.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        btNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/New.png"))); // NOI18N
+        btNuevo.setText("Nuevo");
+        btNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btNuevoActionPerformed(evt);
+            }
+        });
+
+        btGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/save16.png"))); // NOI18N
+        btGuardar.setText("Guardar");
+        btGuardar.setBorder(null);
+        btGuardar.setEnabled(false);
+        btGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btGuardarActionPerformed(evt);
+            }
+        });
+
+        btCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/Cancel16.png"))); // NOI18N
+        btCancelar.setText("Cancelar");
+        btCancelar.setEnabled(false);
+        btCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCancelarActionPerformed(evt);
+            }
+        });
+
+        btEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/Pencil16.png"))); // NOI18N
+        btEditar.setText("Editar");
+        btEditar.setEnabled(false);
+        btEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEditarActionPerformed(evt);
+            }
+        });
+
+        btAbrir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/open16.png"))); // NOI18N
+        btAbrir.setText("Abrir");
+        btAbrir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAbrirActionPerformed(evt);
+            }
+        });
+
+        btImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/impresora16.png"))); // NOI18N
+        btImprimir.setText("Imprimir");
+        btImprimir.setEnabled(false);
+        btImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btImprimirActionPerformed(evt);
+            }
+        });
+
+        jXLabel1.setForeground(new java.awt.Color(0, 0, 51));
+        jXLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/OCPoveedor24.png"))); // NOI18N
+        jXLabel1.setText("ORDEN DE COMPRA PROVEEDOR");
+        jXLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+
+        btLiberar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/erase16.png"))); // NOI18N
+        btLiberar.setText("Liberar");
+        btLiberar.setEnabled(false);
+        btLiberar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLiberarActionPerformed(evt);
+            }
+        });
+
+        btActualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/refresh16.png"))); // NOI18N
+        btActualizar.setText("Actualiza");
+        btActualizar.setEnabled(false);
+        btActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btActualizarActionPerformed(evt);
+            }
+        });
+
+        btChilemat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/chilemat.png"))); // NOI18N
+        btChilemat.setEnabled(false);
+        btChilemat.setMaximumSize(new java.awt.Dimension(95, 25));
+        btChilemat.setMinimumSize(new java.awt.Dimension(95, 25));
+        btChilemat.setPreferredSize(new java.awt.Dimension(95, 25));
+        btChilemat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btChilematActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnMenuLayout = new javax.swing.GroupLayout(pnMenu);
+        pnMenu.setLayout(pnMenuLayout);
+        pnMenuLayout.setHorizontalGroup(
+            pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnMenuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jXLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(90, 90, 90)
+                .addComponent(btGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btCancelar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btNuevo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btEditar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btAbrir)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btImprimir)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btLiberar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btActualizar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btChilemat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblNroChilemat, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(470, Short.MAX_VALUE))
+        );
+        pnMenuLayout.setVerticalGroup(
+            pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMenuLayout.createSequentialGroup()
+                .addGap(4, 4, 4)
+                .addGroup(pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNroChilemat, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnMenuLayout.createSequentialGroup()
+                        .addGroup(pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btAbrir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btImprimir)
+                                .addComponent(btLiberar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btActualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btChilemat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(pnMenuLayout.createSequentialGroup()
+                                .addGroup(pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(btEditar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(btNuevo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(btCancelar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(btGuardar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jXLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
+        add(pnMenu);
+
+        jPanel2.setBackground(new java.awt.Color(220, 215, 226));
+        jPanel2.setToolTipText("");
+        jPanel2.setOpaque(false);
+
+        jPanel1.setBackground(new java.awt.Color(220, 215, 226));
+        jPanel1.setToolTipText("");
+
+        Grilla.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Código", "CodPrv", "Nombre", "UM", "Cantidad", "V. Unitario", "Total Linea", "null", "null", "TotalPorcentaje", "Porcentaje"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        Grilla.getTableHeader().setReorderingAllowed(false);
+        Grilla.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                GrillaMouseClicked(evt);
+            }
+        });
+        Grilla.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                GrillaKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                GrillaKeyTyped(evt);
+            }
+        });
+        jScrollPane1.setViewportView(Grilla);
+        if (Grilla.getColumnModel().getColumnCount() > 0) {
+            Grilla.getColumnModel().getColumn(0).setPreferredWidth(100);
+            Grilla.getColumnModel().getColumn(0).setMaxWidth(100);
+            Grilla.getColumnModel().getColumn(1).setResizable(false);
+            Grilla.getColumnModel().getColumn(1).setPreferredWidth(60);
+            Grilla.getColumnModel().getColumn(2).setPreferredWidth(250);
+            Grilla.getColumnModel().getColumn(2).setMaxWidth(350);
+            Grilla.getColumnModel().getColumn(3).setResizable(false);
+            Grilla.getColumnModel().getColumn(3).setPreferredWidth(15);
+            Grilla.getColumnModel().getColumn(4).setResizable(false);
+            Grilla.getColumnModel().getColumn(4).setPreferredWidth(50);
+            Grilla.getColumnModel().getColumn(5).setResizable(false);
+            Grilla.getColumnModel().getColumn(5).setPreferredWidth(60);
+            Grilla.getColumnModel().getColumn(6).setResizable(false);
+            Grilla.getColumnModel().getColumn(6).setPreferredWidth(80);
+            Grilla.getColumnModel().getColumn(7).setMinWidth(0);
+            Grilla.getColumnModel().getColumn(7).setPreferredWidth(0);
+            Grilla.getColumnModel().getColumn(7).setMaxWidth(0);
+            Grilla.getColumnModel().getColumn(8).setMinWidth(0);
+            Grilla.getColumnModel().getColumn(8).setPreferredWidth(0);
+            Grilla.getColumnModel().getColumn(8).setMaxWidth(0);
+            Grilla.getColumnModel().getColumn(9).setMinWidth(0);
+            Grilla.getColumnModel().getColumn(9).setPreferredWidth(0);
+            Grilla.getColumnModel().getColumn(9).setMaxWidth(0);
+            Grilla.getColumnModel().getColumn(10).setMinWidth(0);
+            Grilla.getColumnModel().getColumn(10).setPreferredWidth(0);
+            Grilla.getColumnModel().getColumn(10).setMaxWidth(0);
+        }
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
+        jLabel1.setText("Rut");
+
+        txRut.setEnabled(false);
+        txRut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txRutActionPerformed(evt);
+            }
+        });
+        txRut.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txRutKeyPressed(evt);
+            }
+        });
+
+        txDv.setEditable(false);
+        txDv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txDvActionPerformed(evt);
+            }
+        });
+
+        btIr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos22/Go.png"))); // NOI18N
+        btIr.setBorderPainted(false);
+        btIr.setEnabled(false);
+        btIr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btIrActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Nombre");
+
+        jLabel14.setText("Vendedor");
+
+        btContacto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos22/Go.png"))); // NOI18N
+        btContacto.setBorderPainted(false);
+        btContacto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btContactoActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Despacho");
+
+        jLabel15.setText("Comentarios");
+
+        txNombre.setEditable(false);
+        txNombre.setEnabled(false);
+
+        txComentario.setEditable(false);
+        txComentario.setEnabled(false);
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Normal", "Directo" }));
+
+        jLabel17.setText("Gastos");
+
+        txVendedor.setEditable(false);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel17)
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(txVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btContacto, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBox1)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(txRut, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txDv, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btIr, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txComentario, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 4, Short.MAX_VALUE)))
+                .addGap(20, 20, 20))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                        .addComponent(txRut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btIr)
+                        .addComponent(txDv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(4, 4, 4)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btContacto, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(txComentario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel17)
+                    .addComponent(jCheckBox1))
+                .addContainerGap(10, Short.MAX_VALUE))
+        );
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel4.setText("Nro Orden");
+
+        btOtrasOrdenes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos22/Go.png"))); // NOI18N
+        btOtrasOrdenes.setBorderPainted(false);
+        btOtrasOrdenes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btOtrasOrdenesActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addComponent(txNroOc, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btOtrasOrdenes, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(14, 14, 14))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btOtrasOrdenes, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(txNroOc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
+        jLabel11.setText("Exento");
+
+        txExento.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txExento.setText("0");
+
+        txNeto.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txNeto.setText("0");
+
+        jLabel10.setText("Neto");
+
+        txIva.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txIva.setText("0");
+
+        jLabel12.setText("I.V.A.");
+
+        txTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txTotal.setText("0");
+
+        jLabel13.setText("TOTAL");
+
+        jLabel8.setText("Imp. específico");
+
+        txImpEspecifico.setEditable(false);
+        txImpEspecifico.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txImpEspecifico.setText("0");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(txImpEspecifico, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                    .addComponent(txIva, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txNeto, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txExento, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txTotal))
+                .addContainerGap(25, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(txExento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(txNeto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(txIva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(txImpEspecifico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(txTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        btAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos22/add2.png"))); // NOI18N
+        btAgregar.setText("Agregar");
+        btAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAgregarActionPerformed(evt);
+            }
+        });
+
+        btEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos22/Cancel.png"))); // NOI18N
+        btEliminar.setText("Eliminar");
+        btEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEliminarActionPerformed(evt);
+            }
+        });
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
+        jLabel5.setText("F. Emisión");
+
+        jLabel6.setText("Despacho");
+
+        dtDespacho.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dtDespachoActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Cuotas");
+
+        cbCuotas.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6" }));
+        cbCuotas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCuotasActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("Días");
+
+        txDias.setEditable(false);
+        txDias.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txDiasMouseClicked(evt);
+            }
+        });
+        txDias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txDiasActionPerformed(evt);
+            }
+        });
+
+        jLabel16.setText("Estado");
+
+        txEstado.setEditable(false);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(cbCuotas, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txDias))
+                    .addComponent(dtEmision, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                    .addComponent(dtDespacho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txEstado))
+                .addGap(135, 135, 135))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(txEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(dtEmision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(dtDespacho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(cbCuotas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(txDias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        btAsociados.setForeground(new java.awt.Color(0, 0, 255));
+        btAsociados.setText("Productos Asociados");
+        btAsociados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAsociadosActionPerformed(evt);
+            }
+        });
+
+        txSkuTemporal.setEnabled(false);
+
+        txDescTemporal.setEnabled(false);
+
+        txUMTemporal.setEnabled(false);
+
+        txCodBarTemporal.setEnabled(false);
+
+        txCantidadTemporal.setEnabled(false);
+
+        txUnitarioTemporal.setEnabled(false);
+
+        txTotlineaTemporal.setEnabled(false);
+
+        Grilla_Econa.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Código", "CodPrv", "Nombre", "UM", "Cantidad", "V. Unitario", "Total Linea", "null", "null", "TotalPorcentaje", "Porcentaje"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        Grilla_Econa.getTableHeader().setReorderingAllowed(false);
+        Grilla_Econa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Grilla_EconaMouseClicked(evt);
+            }
+        });
+        Grilla_Econa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                Grilla_EconaKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                Grilla_EconaKeyTyped(evt);
+            }
+        });
+        jScrollPane2.setViewportView(Grilla_Econa);
+        if (Grilla_Econa.getColumnModel().getColumnCount() > 0) {
+            Grilla_Econa.getColumnModel().getColumn(0).setPreferredWidth(100);
+            Grilla_Econa.getColumnModel().getColumn(0).setMaxWidth(100);
+            Grilla_Econa.getColumnModel().getColumn(1).setResizable(false);
+            Grilla_Econa.getColumnModel().getColumn(1).setPreferredWidth(60);
+            Grilla_Econa.getColumnModel().getColumn(2).setPreferredWidth(250);
+            Grilla_Econa.getColumnModel().getColumn(2).setMaxWidth(350);
+            Grilla_Econa.getColumnModel().getColumn(3).setResizable(false);
+            Grilla_Econa.getColumnModel().getColumn(3).setPreferredWidth(15);
+            Grilla_Econa.getColumnModel().getColumn(4).setResizable(false);
+            Grilla_Econa.getColumnModel().getColumn(4).setPreferredWidth(50);
+            Grilla_Econa.getColumnModel().getColumn(5).setResizable(false);
+            Grilla_Econa.getColumnModel().getColumn(5).setPreferredWidth(60);
+            Grilla_Econa.getColumnModel().getColumn(6).setResizable(false);
+            Grilla_Econa.getColumnModel().getColumn(6).setPreferredWidth(80);
+            Grilla_Econa.getColumnModel().getColumn(7).setMinWidth(0);
+            Grilla_Econa.getColumnModel().getColumn(7).setPreferredWidth(0);
+            Grilla_Econa.getColumnModel().getColumn(7).setMaxWidth(0);
+            Grilla_Econa.getColumnModel().getColumn(8).setMinWidth(0);
+            Grilla_Econa.getColumnModel().getColumn(8).setPreferredWidth(0);
+            Grilla_Econa.getColumnModel().getColumn(8).setMaxWidth(0);
+            Grilla_Econa.getColumnModel().getColumn(9).setMinWidth(0);
+            Grilla_Econa.getColumnModel().getColumn(9).setPreferredWidth(0);
+            Grilla_Econa.getColumnModel().getColumn(9).setMaxWidth(0);
+            Grilla_Econa.getColumnModel().getColumn(10).setMinWidth(0);
+            Grilla_Econa.getColumnModel().getColumn(10).setPreferredWidth(0);
+            Grilla_Econa.getColumnModel().getColumn(10).setMaxWidth(0);
+        }
+
+        btAgregarBlog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/Agregar.png"))); // NOI18N
+        btAgregarBlog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAgregarBlogActionPerformed(evt);
+            }
+        });
+
+        btMostrarHistorial.setText("Mostrar Historial Detallado");
+        btMostrarHistorial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btMostrarHistorialActionPerformed(evt);
+            }
+        });
+
+        GrillaBlog.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        GrillaBlog.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "", "Historial", "id"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        GrillaBlog.setToolTipText("");
+        GrillaBlog.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_NEXT_COLUMN);
+        GrillaBlog.setGridColor(new java.awt.Color(255, 255, 255));
+        jScrollPane4.setViewportView(GrillaBlog);
+        if (GrillaBlog.getColumnModel().getColumnCount() > 0) {
+            GrillaBlog.getColumnModel().getColumn(0).setMinWidth(30);
+            GrillaBlog.getColumnModel().getColumn(0).setPreferredWidth(30);
+            GrillaBlog.getColumnModel().getColumn(0).setMaxWidth(30);
+            GrillaBlog.getColumnModel().getColumn(2).setMinWidth(0);
+            GrillaBlog.getColumnModel().getColumn(2).setPreferredWidth(0);
+            GrillaBlog.getColumnModel().getColumn(2).setMaxWidth(0);
+        }
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(btAgregarBlog, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btMostrarHistorial))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(29, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btMostrarHistorial)
+                    .addComponent(btAgregarBlog))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel10.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
+        jLabel28.setText("Exento");
+
+        txExento2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txExento2.setText("0");
+
+        txNeto2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txNeto2.setText("0");
+
+        jLabel29.setText("Neto");
+
+        txIva2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txIva2.setText("0");
+
+        jLabel30.setText("I.V.A.");
+
+        txTotal2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txTotal2.setText("0");
+
+        jLabel31.setText("TOTAL");
+
+        jLabel32.setText("Imp. específico");
+
+        txImpEspecifico2.setEditable(false);
+        txImpEspecifico2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txImpEspecifico2.setText("0");
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel32)
+                    .addComponent(jLabel28)
+                    .addComponent(jLabel29)
+                    .addComponent(jLabel30)
+                    .addComponent(jLabel31))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(txImpEspecifico2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                    .addComponent(txIva2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txNeto2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txExento2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txTotal2))
+                .addContainerGap(25, Short.MAX_VALUE))
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel28)
+                    .addComponent(txExento2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel29)
+                    .addComponent(txNeto2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel30)
+                    .addComponent(txIva2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel32)
+                    .addComponent(txImpEspecifico2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel31)
+                    .addComponent(txTotal2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        btEliminar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos22/Cancel.png"))); // NOI18N
+        btEliminar1.setText("Eliminar");
+        btEliminar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEliminar1ActionPerformed(evt);
+            }
+        });
+
+        jLabel23.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel23.setText("LUVALY");
+
+        jLabel24.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel24.setText("ECONA");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(btAgregar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btEliminar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btAsociados))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txCodBarTemporal, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                                            .addComponent(txSkuTemporal))
+                                        .addGap(28, 28, 28)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(txDescTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(txUMTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(txCantidadTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(txUnitarioTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(9, 9, 9)
+                                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 617, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel23))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel24)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane2)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txTotlineaTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(btEliminar1))))))))
+                .addContainerGap(331, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel23)
+                    .addComponent(jLabel24))
+                .addGap(7, 7, 7)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btEliminar)
+                                    .addComponent(btAgregar)
+                                    .addComponent(btAsociados))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txSkuTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txDescTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txUMTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btEliminar1)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txCodBarTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txCantidadTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txUnitarioTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txTotlineaTemporal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(52, 52, 52))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
+        );
+
+        jLabel25.setText("jLabel25");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(234, 234, 234)
+                        .addComponent(txSku))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addComponent(jLabel25)))
+                .addContainerGap(63, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(txSku)
+                        .addGap(40, 40, 40)
+                        .addComponent(jLabel25)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        add(jPanel2);
+    }// </editor-fold>//GEN-END:initComponents
+static private int GetCol(String Col){
+        return Columnas.valueOf(Col).ordinal();
+    }
+//--------------------------------------------------------------------------------
+// Funcion SET DE TIPOS
+//--------------------------------------------------------------------------------
+    private void SetTipo(int ElTipo) {
+        //Nada
+        if (ElTipo == -1) {
+            fmMain.SetEstado(fmMain.pnPestanas.getSelectedIndex(), 0);
+            Habilita(false);
+            Edicion(false);
+            Limpia();
+            txRut.setEnabled(true);
+            txRut.setEditable(true);
+            btIr.setEnabled(false);
+            txRut.setEditable(false);
+            txRut.setEnabled(false);
+            btCancelar.setEnabled(false);
+            btGuardar.setEnabled(false);
+            btNuevo.setEnabled(true);
+//            btEditar.setEnabled(false);
+            btAbrir.setEnabled(true);
+//            btImprimir.setEnabled(false);
+            btLiberar.setEnabled(false);
+            Tipo = -1;
+            jCheckBox1.setEnabled(false);
+            btAgregarBlog.setEnabled(false);
+        } //Nueva Orden
+        else if (ElTipo == 1) {
+            fmMain.SetEstado(fmMain.pnPestanas.getSelectedIndex(), 1);
+            btGuardar.setEnabled(true);
+            btCancelar.setEnabled(true);
+//            btEditar.setEnabled(false);
+            btNuevo.setEnabled(false);
+            btAbrir.setEnabled(false);
+
+            Habilita(true);
+            Edicion(true);
+            btOtrasOrdenes.setEnabled(false);
+            txRut.requestFocus();
+            Tipo = 1;
+            jCheckBox1.setEnabled(true);
+            btAgregarBlog.setEnabled(true);
+        } //Abre Orden
+        else if (ElTipo == 2) {
+            fmMain.SetEstado(fmMain.pnPestanas.getSelectedIndex(), 0);
+//            btEditar.setEnabled(true);
+            btNuevo.setEnabled(true);
+            btGuardar.setEnabled(false);
+            btCancelar.setEnabled(false);
+//            btImprimir.setEnabled(true);
+            btLiberar.setEnabled(true);
+            btAbrir.setEnabled(true);
+            Habilita(true);
+            Edicion(false);
+            txRut.setEditable(false);
+            jCheckBox1.setEnabled(true);
+            
+            Tipo = 2;
+        } //Edita Orden
+        else if (ElTipo == 3) {
+            fmMain.SetEstado(fmMain.pnPestanas.getSelectedIndex(), 1);
+            Habilita(true);
+            Edicion(true);
+            btGuardar.setEnabled(true);
+            btCancelar.setEnabled(true);
+            btNuevo.setEnabled(false);
+            btImprimir.setEnabled(false);
+            btLiberar.setEnabled(false);
+//            btEditar.setEnabled(false);
+            btAbrir.setEnabled(false);
+            txRut.setEditable(false);
+            txRut.setEnabled(false);
+            txDv.setEnabled(false);
+            txDv.setEditable(false);
+            jCheckBox1.setEnabled(false);
+            Tipo = 3;
+        }
+//        lbExento.setVisible(false);
+//        lbIVA.setVisible(false);
+//        lbImp.setVisible(false);
+//        lbNeto.setVisible(false);
+//        lbTotal.setVisible(false);
+    }
+
+//--------------------------------------------------------------------------------
+// SUMADOR
+//--------------------------------------------------------------------------------
+private void Sumador(){    
+    
+    double Neto=0;
+    double Exento=0;
+    double Iva=0;
+    double Total=0;
+    String Unitario,Cantidad;
+    
+    for(int i=0; i< Grilla.getRowCount(); i++){
+        Unitario = Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString();
+        Cantidad = Grilla.getModel().getValueAt(i,GetCol("CantReal")).toString();
+        
+        Unitario = Unitario.replace(fmMain.GetMiles(), "");
+        Cantidad = Cantidad.replace(fmMain.GetMiles(), "");
+        Neto =  (Double.parseDouble(Unitario) * Double.parseDouble(Cantidad)) + Neto;
+        System.out.println(Neto);
+    }
+    Neto = Math.round(Neto);
+    
+    Iva = Math.round((Neto * Double.parseDouble("1.19"))- Neto);
+    Total = Neto + Iva;
+    
+    
+    txNeto.setText(fmMain.FormatoTotal(Neto));
+    txExento.setText(fmMain.FormatoTotal(Exento));
+    txIva.setText(fmMain.FormatoTotal(Iva));
+    txTotal.setText(fmMain.FormatoTotal(Total));
+    
+    
+}
+
+private void Sumador_Porcentaje(){    
+    
+    double Neto=0;
+    double Exento=0;
+    double Iva=0;
+    double Total=0;
+    String Unitario,Cantidad;
+    
+    for(int i=0; i< Grilla.getRowCount(); i++){
+        Unitario = Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString();
+        Cantidad = Grilla.getModel().getValueAt(i,GetCol("CantReal")).toString();
+        Unitario = Unitario.replace(fmMain.GetMiles(), "");
+        Cantidad = Cantidad.replace(fmMain.GetMiles(), "");
+        Neto =  (((Double.parseDouble(Unitario) * Double.parseDouble(Cantidad)))/Double.parseDouble(Grilla.getModel().getValueAt(i, 10).toString())) + Neto;
+//        Neto =  ((Double.parseDouble(Unitario)+((Double.parseDouble(Unitario)*porcentaje)/100)) * Double.parseDouble(Cantidad)) + Neto;
+    }
+    System.out.println("Neto; "+Neto);
+    Neto = Math.round(Neto);
+    
+    Iva = Math.round((Neto * Double.parseDouble("1.19"))- Neto);
+    Total = Neto + Iva;
+    System.out.println(Neto);
+    
+    txNeto.setText(fmMain.FormatoTotal(Neto));
+    txExento.setText(fmMain.FormatoTotal(Exento));
+    txIva.setText(fmMain.FormatoTotal(Iva));
+    txTotal.setText(fmMain.FormatoTotal(Total));
+    txImpEspecifico.setText("0");
+
+}
+private void Sumador_Econa(){    
+    
+    double Neto=0;
+    double Exento=0;
+    double Iva=0;
+    double Total=0;
+    String Unitario,Cantidad;
+    
+    for(int i=0; i< Grilla_Econa.getRowCount(); i++){
+        Unitario = Grilla_Econa.getModel().getValueAt(i,GetCol("UniReal")).toString();
+        Cantidad = Grilla_Econa.getModel().getValueAt(i,GetCol("CantReal")).toString();
+        
+        Unitario = Unitario.replace(fmMain.GetMiles(), "");
+        Cantidad = Cantidad.replace(fmMain.GetMiles(), "");
+        Neto =  (Double.parseDouble(Unitario) * Double.parseDouble(Cantidad)) + Neto;
+        System.out.println(Neto);
+    }
+    Neto = Math.round(Neto);
+    
+    Iva = Math.round((Neto * Double.parseDouble("1.19"))- Neto);
+    Total = Neto + Iva;
+    
+    
+    txNeto2.setText(fmMain.FormatoTotal(Neto));
+    txExento2.setText(fmMain.FormatoTotal(Exento));
+    txIva2.setText(fmMain.FormatoTotal(Iva));
+    txTotal2.setText(fmMain.FormatoTotal(Total));
+    
+    
+}
+
+private String FormatoVisual (String Texto){
+        DecimalFormat Formato = new DecimalFormat("###,###.##");
+        return Formato.format(Texto);
+    }
+private String FormatoGuardar(String Texto){
+        return Texto.replace(".", "");
+}
+//--------------------------------------------------------------------------------
+// ABRIR ORDEN DE COMPRA PROVEEDOR
+//--------------------------------------------------------------------------------
+public void AbrirOCP(String NumeroOCP){
+    ExeSql Sql = new ExeSql();
+    ResultSet Rs;
+    DefaultTableModel TableModel = (DefaultTableModel) Grilla.getModel();
+    
+    while(TableModel.getRowCount()>0)
+        TableModel.removeRow(0);
+    
+    try {
+        Rs = Sql.Select("select * from ctacteprv cp where tipdocto='OCP' and nrodocto=" + NumeroOCP +" OR tipdocto='OCP' and occhilemat =" + NumeroOCP);
+        
+        Rs.next();
+  
+        txRut.setText(Rs.getString("Rut"));
+        btIr.setEnabled(true);
+        btIr.doClick();
+
+        
+        txNroOc.setText(Rs.getString("nrodocto"));
+        txComentario.setText(Rs.getString("comentarios").trim());
+        
+        dtEmision.setDate(Rs.getDate("femision"));
+        dtDespacho.setDate(Rs.getDate("fdespacho"));
+        
+        txNeto.setText(fmMain.FormatoTotal(Rs.getDouble("totalafecto")));
+        txExento.setText(fmMain.FormatoTotal(Rs.getDouble("totalexento")));
+        txIva.setText(fmMain.FormatoTotal(Rs.getDouble("totaliva")));
+        txImpEspecifico.setText(fmMain.FormatoTotal(Rs.getDouble("totalotroimp")));
+        txTotal.setText(fmMain.FormatoTotal(Rs.getDouble("totaldocto")));
+        txSku.setText(Rs.getString("nrodocto"));     
+        txSku.setVisible(false);
+
+        jComboBox1.setSelectedIndex(Rs.getInt("tipodespacho"));
+        txDias.setText(Rs.getString("dias"));
+        cbCuotas.setSelectedIndex(Rs.getInt("cuotas") - 1);
+        PosCuotas = Rs.getInt("cuotas") - 1;
+        
+        if (Rs.getInt("occhilemat")>1)
+        {
+            lblNroChilemat.setText(Rs.getString("occhilemat"));
+        }
+        else
+        {
+            lblNroChilemat.setText("");
+        }
+        
+        // ESTADOS
+        
+        if(Rs.getInt("estado")==-1){
+            btImprimir.setEnabled(false);
+            txEstado.setText("Por Autorizar");
+            txEstado.setBackground(Color.yellow);
+            btActualizar.setEnabled(true);
+        }
+        else if(Rs.getInt("estado")==-2){
+            btImprimir.setEnabled(false);
+            txEstado.setText("Rechazado");
+            txEstado.setBackground(Color.red);
+            btActualizar.setEnabled(true);
+        }
+        else if(Rs.getInt("estado")==-3){
+            btImprimir.setEnabled(true);
+            txEstado.setText("Autorizado");
+            txEstado.setBackground(Color.green);
+            btActualizar.setEnabled(true);
+        }
+        else{
+            btImprimir.setEnabled(true);
+            txEstado.setText("Emitida");
+            txEstado.setBackground(Color.white);
+            btActualizar.setEnabled(false);
+        }
+                
+        
+        
+        Rs = Sql.Select("select pd.sku, cb.codbar, p.nombre, pu.um, pd.cantidad, pd.valorunitario,pd.totallinea\n" +
+                        "from ctacteprvdet pd\n" +
+                        "left join producto   p  on pd.sku=p.sku\n" +
+                        "left join par_unidad pu on p.unidad =pu.codigo \n" +
+                        "left join codbar cb on pd.sku=cb.sku and pd.rut=cb.rutprv \n" +
+                        "where pd.nrodocto=" + txSku.getText() + " and pd.tipdocto='OCP'");
+        while(Rs.next()){
+            
+                TableModel.addRow(new Object[]{ Rs.getString("sku").trim(), 
+                                                Rs.getString("codbar"), 
+                                                Rs.getString("nombre"), 
+                                                Rs.getString("um"),
+                                                fmMain.FormatoNumero(Rs.getDouble("cantidad")),
+                                                fmMain.FormatoNumero(Rs.getDouble("valorunitario")),
+                                                fmMain.FormatoNumero(Rs.getDouble("totallinea")),
+                                                Rs.getDouble("valorunitario"),
+                                                Rs.getDouble("cantidad")});
+            }
+        CargaBlog();
+        SetTipo(2);
+        fmMain.pnPestanas.setTitleAt(fmMain.pnPestanas.getSelectedIndex(), "OC Proveedor " + NumeroOCP);
+        fmMain.pnPestanas.repaint();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Orden de Compra no encontrada");
+        Limpia();
+        Habilita(false);
+    }
+    finally{
+        Sql.Close();
+    }
+}
+    
+//--------------------------------------------------------------------------------
+// EDICION
+//--------------------------------------------------------------------------------
+
+    private void Edicion(boolean Estado) {
+
+        txNroOc.setEditable(!Estado);
+
+        txRut.setEditable(Estado);
+        txDv.setEditable(Estado);
+        txNeto.setEditable(Estado);
+        txExento.setEditable(Estado);
+        txIva.setEditable(Estado);
+        txTotal.setEditable(Estado);
+        btAgregar.setEnabled(Estado);
+        btEliminar.setEnabled(Estado);
+        btAsociados.setEnabled(Estado);
+        if(Estado==false) btAsociados.setForeground(Color.GRAY);
+        else    btAsociados.setForeground(Color.BLUE);
+        txComentario.setEditable(Estado);
+//        txNroOc.setEditable(Estado);
+        
+        dtEmision.setEditable(Estado);
+        dtDespacho.setEditable(Estado);
+
+    }
+//--------------------------------------------------------------------------------
+// LIMPIA
+//--------------------------------------------------------------------------------
+
+    private void Limpia() {
+        txRut.setText("");
+        txNombre.setText("");
+        txDv.setText("");
+        txNeto.setText("");
+        txExento.setText("");
+        txIva.setText("");
+        txImpEspecifico.setText("0");
+        txTotal.setText("");
+        txComentario.setText("");
+        txVendedor.setText("");
+        txNroOc.setText("");
+        lblNroChilemat.setText("");
+        dtEmision.setDate(null);
+        dtDespacho.setDate(null);
+        txEstado.setText("");
+        cbCuotas.setSelectedIndex(-1);
+        txDias.setText("");
+        jCheckBox1.setSelected(false);
+        
+        //LIMPIA LAS GRILLAS
+        DefaultTableModel   dfTm = (DefaultTableModel) Grilla.getModel();
+        while(dfTm.getRowCount()>0)
+        dfTm.removeRow(0);
+        DefaultTableModel   dfTmh = (DefaultTableModel) GrillaBlog.getModel();
+        while(dfTmh.getRowCount()>0)
+        dfTmh.removeRow(0);
+        
+
+
+    }
+//--------------------------------------------------------------------------------
+// HABILITA
+//--------------------------------------------------------------------------------
+
+    private void Habilita(boolean Estado) {
+
+        txRut.setEnabled(Estado);
+        txDv.setEnabled(Estado);
+        txNombre.setEnabled(Estado);
+        txVendedor.setEnabled(Estado);
+        btContacto.setEnabled(Estado);
+        jComboBox1.setEnabled(Estado);
+        txNroOc.setEnabled(Estado);
+        dtEmision.setEnabled(Estado);
+        dtDespacho.setEnabled(Estado);
+        btAgregar.setEnabled(Estado);
+        btEliminar.setEnabled(Estado);
+        btAsociados.setEnabled(Estado);
+        btIr.setEnabled(Estado);
+        cbCuotas.setEnabled(Estado);
+        txDias.setEnabled(Estado);
+        txComentario.setEnabled(Estado);
+        txNroOc.setEnabled(Estado);
+        txEstado.setEnabled(Estado);
+        
+        
+        txNeto.setEnabled(Estado);
+        txExento.setEnabled(Estado);
+        txIva.setEnabled(Estado);
+        txImpEspecifico.setEnabled(Estado);
+        txTotal.setEnabled(Estado);
+        btContacto.setEnabled(Estado);
+        btOtrasOrdenes.setEnabled(Estado);
+        btMostrarHistorial.setVisible(Estado);
+        
+        if(Estado==false) btAsociados.setForeground(Color.GRAY);
+        else    btAsociados.setForeground(Color.BLUE);
+    }
+//--------------------------------------------------------------------------------
+// Funcion CODIGO desde COMBOBOX
+//--------------------------------------------------------------------------------
+
+    private int cbId_Accion(JComboBox Combo) {
+        int Codigo = -1;
+        if (Combo.getSelectedIndex() != -1) {
+            ComboCodigos id = (ComboCodigos) Combo.getSelectedItem();
+            Codigo = id.getId();
+            String nombre = Combo.getSelectedItem().toString();
+            Combo.hidePopup();
+        }
+        return Codigo;
+    }
+
+//------------------------------------------------------------------------------
+// Carga Proveedor
+//------------------------------------------------------------------------------
+
+    private boolean CargaProveedor(String Rut) {
+        ExeSql Sql = new ExeSql();
+        ExeSql_Econa Sql_Econa = new ExeSql_Econa();
+        ResultSet Rs,Rs2;
+        DefaultComboBoxModel cbMd = new DefaultComboBoxModel();
+        try {
+            Rs = Sql_Econa.Select("select * from proveedor where rut="+Rut);
+              if(Sql_Econa.GetRowCount()==0){
+                    fmMain.Mensaje("No Existen Registros");
+                  return false;
+                }
+      
+            Rs.next();
+            txRut.setText(Rs.getString("Rut"));
+            txDv.setText(Rs.getString("dv"));
+            txNombre.setText(Rs.getString("nombre").trim());
+            RutMaster = Rs.getString("Rut");
+            try {
+                txDias.setText(Rs.getString("dias").trim());
+                cbCuotas.setSelectedIndex(Rs.getInt("cuotas")-1);
+            } catch (Exception e) {
+                
+            }
+            
+             
+            Rs = Sql_Econa.Select("select nombre,id from prv_contacto where rut=" + Rut  + " order by tipo");
+            Rs.next();
+            if(Rs.getRow()>0){
+                txVendedor.setText(Rs.getString("nombre").trim());
+                IdVendedor = Rs.getInt("id");
+                System.out.println("ID VENDEDOR: "+ Rs.getInt("id"));
+                
+                
+            }
+            else{
+                IdVendedor=0;
+            }
+                
+            
+            dtEmision.setDate(new Date());
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, 4);
+            dtDespacho.setDate(cal.getTime());
+            
+            SetTipo(1);
+            return true;
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(txRut, e);
+            return false;
+        }
+        finally{
+            Sql.Close();
+        }
+    }
+//------------------------------------------------------------------------------
+// BOTON  CANCELAR
+//------------------------------------------------------------------------------
+    private void btCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarActionPerformed
+
+        if (fmMain.GetEstado(fmMain.pnPestanas.getSelectedIndex()) == 0) {
+            SetTipo(-1);
+        } else if(fmMain.OkCancel("¿Esta seguro de cancelar?") == JOptionPane.OK_OPTION){
+            SetTipo(-1);
+        }
+    }//GEN-LAST:event_btCancelarActionPerformed
+
+    private void txRutKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txRutKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            btIr.doClick();
+        }
+    }//GEN-LAST:event_txRutKeyPressed
+
+//-----------------------------------------------------------------------------
+//  BOTON IR
+//-----------------------------------------------------------------------------
+    private void btIrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIrActionPerformed
+        boolean Carga;
+        if (!txRut.getText().isEmpty()) {
+            Carga = CargaProveedor(txRut.getText());
+//            if(txRut.getText().equals("76086361")){
+//                if((JOptionPane.showConfirmDialog(null,"¿Compra através de ECONA?", "ECONA",JOptionPane.YES_NO_OPTION))==0){
+//                    OCLuvalyEcona.setEnabled(false);
+//                    OCLuvalyEcona.setSelected(true);
+//
+//                }
+//                else {
+//                    OCLuvalyEcona.setEnabled(false);
+//
+//                }
+//            }
+//            else {
+//                OCLuvalyEcona.setEnabled(false);
+//        
+//            }
+        } else {
+            jdBuscarCliPrv BPC = new jdBuscarCliPrv(null, true);
+            BPC.setLocationRelativeTo(null);
+            BPC.setTitle("Buscar Proveedor");
+            BPC.SetTipo(1);
+            BPC.setVisible(true);
+            Carga = CargaProveedor(BPC.GetRut());
+
+            
+        }
+        
+            if (!Carga){
+                txRut.requestFocus();
+            } 
+            
+    }//GEN-LAST:event_btIrActionPerformed
+//-----------------------------------------------------------------------------
+//  BOTON DETALLE
+//-----------------------------------------------------------------------------
+    private void btContactoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btContactoActionPerformed
+        String Vendedor;
+        try {
+            jdContactos_Econa Con = new jdContactos_Econa(null, true);
+            Vendedor = Con.Show(RutMaster, "PRV",true).trim();
+            if(!Vendedor.equals("")){
+                txVendedor.setText(Con.GetUsuario());
+                IdVendedor =(Integer.valueOf(Con.GetUsuarioId()));
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
+        
+          
+    }//GEN-LAST:event_btContactoActionPerformed
+//-----------------------------------------------------------------------------
+//  BOTON AGREGAR PRODUCTO
+//-----------------------------------------------------------------------------
+    private boolean ExisteEnGrilla(String Sku){
+        for(int i=0; i< Grilla.getRowCount(); i++){
+            if(Grilla.getValueAt(i,0).toString().trim().equals(Sku)){
+//                Grilla.setRowSelectionInterval(i, 1);
+                return true;
+            }
+        }
+        return false;
+    }
+    private boolean ExisteEnGrillaEcona(String Sku){
+        for(int i=0; i< Grilla_Econa.getRowCount(); i++){
+            if(Grilla_Econa.getValueAt(i,0).toString().trim().equals(Sku)){
+//                Grilla.setRowSelectionInterval(i, 1);
+                return true;
+            }
+        }
+        return false;
+    }
+
+//-----------------------------------------------------------------------------
+//  BOTON AGREGAR PRODUCTO
+//-----------------------------------------------------------------------------
+    private void btAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAgregarActionPerformed
+        DefaultTableModel tbModel = (DefaultTableModel) Grilla.getModel();
+        DefaultTableModel tbModel_E = (DefaultTableModel) Grilla_Econa.getModel();
+        ExeSql exe = new ExeSql();
+        ExeSql_Econa exe_ec = new ExeSql_Econa();
+        jdOCCAgregaProducto_Econa AgregaProducto = new jdOCCAgregaProducto_Econa(null, true);
+        AgregaProducto.setLocationRelativeTo(null);
+        AgregaProducto.setTitle("Agregar Producto");
+        AgregaProducto.Activa_Prv(txRut.getText().trim());
+        AgregaProducto.setVisible(true);
+        
+        
+    tbModel.addRow(AgregaProducto.GetFilaOCP_Porcentaje());
+                Sumador_Porcentaje();
+                tbModel_E.addRow(AgregaProducto.GetFilaOCP_Econa());
+                Sumador_Econa();
+//        
+//        if(!CheckPorductoEcona(AgregaProducto.GetSku(),AgregaProducto.GetNombre())){
+//            String sql = "select sku from producto where rel_luvaly = '"+AgregaProducto.GetSku()+"'";
+//            try {
+//                ResultSet rs = exe_ec.Select(sql);
+//                rs.next();
+//                if(rs.getRow()>0 && !rs.getString("sku").equals("0")){
+//                    String sku = rs.getString("sku");
+//                    if(JOptionPane.showConfirmDialog(null, "Se encontró producto relacionado: "+sku+"\nDesea utilizarlo?")==0){
+//                        tbModel.addRow(AgregaProducto.GetFilaOCP_Porcentaje());
+//                        Sumador();
+//                        tbModel_E.addRow(AgregaProducto.GetFilaOCP_Econa());
+//                        Sumador_Econa();
+//                    }
+//                }
+//                else {
+//                    JOptionPane.showMessageDialog(null, "No se encontró el producto ni relacionados.");
+//                    tbModel.addRow(AgregaProducto.GetFilaOCP_Porcentaje());
+//                    Sumador();
+//                    tbModel_E.addRow(AgregaProducto.GetFilaOCP_Econa());
+//                    Sumador_Econa();
+//                }
+//            } catch (SQLException ex) {
+//                Logger.getLogger(pfOCProveedor_Econa.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+//        
+        
+//        
+//        
+//        if(!ExisteEnGrilla(AgregaProducto.GetSku())){
+//            
+//            if(!OCLuvalyEcona.isSelected()){
+//                tbModel.addRow(AgregaProducto.GetFilaOCP());
+//                Sumador();
+//            }
+//            else {
+//                if(CheckPorductoEcona(AgregaProducto.GetSku(),AgregaProducto.GetNombre())){
+//                    tbModel.addRow(AgregaProducto.GetFilaOCP_Porcentaje());
+//                    Sumador();
+//                    Sumador_Porcentaje();
+//                }
+//                else {
+//                    JOptionPane.showMessageDialog(null, "Producto '"+AgregaProducto.GetSku()+"' no se encuentra en base de datos de Econa.\n"
+//                            + "No concuerda SKU/Nombre.");
+//                    if(JOptionPane.showConfirmDialog(null, "Desea crearlo o asociarlo?")==0){
+//                        pfProductos_Econa PrvOC = new pfProductos_Econa();
+//            //        PrvOC.setOpaque(false);
+//                        pnPestanas.addTab("Ficha Producto Econa        ", PrvOC);
+//                        PanelTab btc=new PanelTab(pnPestanas,0);
+//                        pnPestanas.setTabComponentAt(pnPestanas.indexOfComponent(PrvOC), btc);
+//                        pnPestanas.setSelectedIndex(pnPestanas.getTabCount()-1);
+//                        PrvOC.setRel(AgregaProducto.GetSku());
+//                    }
+//                }
+//            }
+//
+
+//            
+//        }
+//        else
+//            JOptionPane.showMessageDialog(null, "El producto ya esta en el listado");
+//        
+
+    }//GEN-LAST:event_btAgregarActionPerformed
+
+    public boolean CheckPorductoEcona(String sku, String descripcion) {
+        boolean existe = false;
+        String query = "select sku, nombre from producto where sku = '"+sku+"' and nombre = '"+descripcion+"'";
+        ExeSql_Econa sql = new ExeSql_Econa();
+        try {
+            ResultSet rs = sql.Select(query);
+            rs.next();
+            if(rs.getRow()>0){
+                existe = true;
+            }
+            else {
+                existe = false;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(pfOCProveedor_Econa.class.getName()).log(Level.SEVERE, null, ex);
+        }      
+        return existe;
+    }
+
+//-----------------------------------------------------------------------------
+//  BOTON ELIMINAR PRODUCTO
+//-----------------------------------------------------------------------------
+    private void btEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEliminarActionPerformed
+        if (!Grilla.getValueAt(Grilla.getSelectedRow(), 0).toString().isEmpty()) {
+            if (JOptionPane.showConfirmDialog(null, "¿Desea Eliminar el registro?") == JOptionPane.YES_OPTION) {
+                DefaultTableModel tbMd = (DefaultTableModel) Grilla.getModel();
+                tbMd.removeRow(Grilla.getSelectedRow());
+                Sumador();
+            }
+        }
+    }//GEN-LAST:event_btEliminarActionPerformed
+//-----------------------------------------------------------------------------
+//  BOTON ABRIR
+//-----------------------------------------------------------------------------
+    private void btAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAbrirActionPerformed
+        AbrirOCP(JOptionPane.showInputDialog("Numero de Orden:"));
+    }//GEN-LAST:event_btAbrirActionPerformed
+//-----------------------------------------------------------------------------
+//  BOTON NUEVO
+//-----------------------------------------------------------------------------
+    private void btNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNuevoActionPerformed
+        if (fmMain.GetEstado(fmMain.pnPestanas.getSelectedIndex()) == 0) {
+            SetTipo(-1);
+            Limpia();
+            txRut.setEnabled(true);
+            txDv.setEnabled(true);
+            txRut.setEditable(true);
+            txDv.setEditable(true);
+            btIr.setEnabled(true);
+            btChilemat.setEnabled(true);
+            txRut.requestFocus();
+        }
+    }//GEN-LAST:event_btNuevoActionPerformed
+//-----------------------------------------------------------------------------
+//  BOTON NUEVO
+//-----------------------------------------------------------------------------
+
+    private int BoolToInt(boolean Input) {
+        if (Input == true) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+public String getFechaEmisionAsString() {
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+return( sdf.format( (dtEmision.getDate()).getTime() ) );
+}
+public String getFechaDespachoAsString() {
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+return( sdf.format( (dtDespacho.getDate()).getTime() ) );
+}
+//-----------------------------------------------------------------------------
+//  BOTON GUARDAR
+//-----------------------------------------------------------------------------
+    private void btGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGuardarActionPerformed
+
+        ProcederGuardadoEcona();
+
+
+     //Actuaiza Orden de Compra
+    }//GEN-LAST:event_btGuardarActionPerformed
+
+    public void GuardarLuvalyOCP() {
+    ExeSql Sql = new ExeSql();
+    ResultSet Rs;
+    String Query;
+    String NroChm;
+    String Codigos="";
+    String NewCorrelativo;
+    
+    if(JOptionPane.showConfirmDialog(null, "Guardar los cambios realizados.","Guardar",JOptionPane.YES_OPTION)!= JOptionPane.YES_OPTION){
+        return;
+    }
+    
+                NroChm = lblNroChilemat.getText().trim();
+            
+            if (NroChm.equals("")){
+                NroChm = "-1";
+            }
+    
+    //Nueva Orden de Compra
+     if(Tipo==1){
+         try {
+             
+             //Busca si existen folios liberados
+            Rs = Sql.Select("select count(*) as Existe from folioslibres where tipdocto='OCP' and estado=0");
+            Rs.next();
+            if(Rs.getInt("Existe")>0){
+                NewCorrelativo = Sql.SelectUnico("select min(nrodocto) as folio from folioslibres where tipdocto='OCP' and estado=0");
+                Sql.ExeSql("update folioslibres set estado=1 where tipdocto='OCP' and nrodocto=" + NewCorrelativo);
+            }
+            //Sino obtiene uno nuevo
+            else{
+                Sql.ExeSql("update par_correlativo set numero=numero + 1 where tipo='OCP'");
+                NewCorrelativo = Sql.SelectUnico("select numero from par_correlativo where tipo='OCP'");
+            }
+
+            Sql.ExeSql("  INSERT INTO ctacteprv\n" +
+                        "  (rut,tipdocto,nrodocto,femision,totalexento,totalafecto,totaliva,\n" +
+                        "  totalotroimp,totaldocto,fdespacho,contacto,comentarios, tipodespacho,cuotas,dias, occhilemat) \n" +
+                        "  VALUES (\n" +
+                           txRut.getText() + ",\n" +
+                        "  'OCP',\n" +
+                           NewCorrelativo              +  ",\n'" +
+                           getFechaEmisionAsString()   + "',\n" +
+                           fmMain.SetGuardar(txExento.getText())          + ",\n" +
+                           fmMain.SetGuardar(txNeto.getText())             + ",\n" +
+                           fmMain.SetGuardar(txIva.getText())             + ",\n" +
+                           fmMain.SetGuardar(txImpEspecifico.getText())   + ",\n" +
+                           fmMain.SetGuardar(txTotal.getText())           + ",'\n" +
+                           getFechaDespachoAsString()  + "',\n" +
+                           IdVendedor     + ",\n'" +
+                           txComentario.getText()     + "',\n" +
+                           jComboBox1.getSelectedIndex() + "," +
+                           cbCuotas.getSelectedItem().toString().trim() +",'" + 
+                           txDias.getText().trim() + "', '"+NroChm+"')" );
+             // Guarda Productos
+                for(int i=0; i< Grilla.getRowCount(); i++){
+                    Query = "INSERT INTO ctacteprvdet\n" +
+                            "(rut,tipdocto,nrodocto,sku,cantidad, valorunitario,totallinea) \n" +
+                            "VALUES (\n" +
+                            txRut.getText() + ",\n" +
+                            "  'OCP',\n" +
+                            NewCorrelativo               +  ",\n'" +
+                            Grilla.getModel().getValueAt(i,GetCol("Sku")).toString().trim() + "'," +
+                            fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("CantReal")).toString()) + "," +
+                            fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString()) + "," +
+                            fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("Total")).toString()) + ")";
+                    Sql.ExeSql(Query);
+                }
+                
+//ACTUALIZA DIAS - CUOTAS PAGO
+            try {
+                Rs = Sql.Select("SELECT cuotas, dias from proveedor WHERE rut="+ txRut.getText().trim());
+                Rs.next();
+                if(!Rs.getString("cuotas").equals(cbCuotas.getSelectedItem().toString().trim()) || !Rs.getString("dias").equals(txDias.getText().trim()))
+                    { 
+                    if(fmMain.OkCancel("¿desa guardar esta condicion de pago para el proveedor?")== JOptionPane.OK_OPTION)
+                        {
+                        Sql.ExeSql("UPDATE proveedor SET \n" +
+                        "cuotas=" + cbCuotas.getSelectedItem().toString().trim() + ",\n "+
+                        "dias='"  + txDias.getText().trim() + "' where rut = " + txRut.getText());
+                        }
+                    }
+            }
+            catch (Exception e) {   
+                         JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                        }
+// FIN
+            
+                        // Actualiza OC de Chilemat para dejarla Autorizada y Emitida
+                if (!NroChm.equals("-1")){
+                    try{
+                        Sql.ExeSql("update ctacteprv \n" +
+                                      " set estado=-3\n" +
+                                      " where tipdocto='OCP'\n" +
+                                      " and rut= "+ txRut.getText() +
+                                      "and nrodocto=" +  NewCorrelativo );
+                        
+//                          Sql.Commit();
+//                          fmMain.Mensaje("Autorizado");
+                        
+          // Se emite OCP
+                      Sql.ExeSql("update ctacteprv \n" +
+                                      "  set estado=0\n" +
+                                      " where tipdocto='OCP'\n" +
+                                      " and rut= "+ txRut.getText() +
+                                      " and nrodocto=" + NewCorrelativo + " and estado=-3");			
+
+                        } catch (SQLException | HeadlessException e) {
+                       JOptionPane.showMessageDialog(null, e);
+                       Sql.Rollback();
+
+                   }
+//                   finally{
+//                       Sql.Close();
+//                   }
+                 }
+                
+             Sql.Commit();
+             AbrirOCP(NewCorrelativo);
+//             txNroOc.setText(NewCorrelativo);
+//             SetTipo(2);
+             JOptionPane.showMessageDialog(null, "Orden Guardada. Numero:" + NewCorrelativo);
+         } catch (SQLException | HeadlessException e) {
+             JOptionPane.showMessageDialog(null, e.getMessage());
+             System.out.println(e.getMessage());
+             Sql.Rollback();
+         }
+         finally{
+             Sql.Close();
+         }
+             
+     }
+     /**  
+      * Actualiza OCP
+      */
+     else{
+         try{
+         Sql.ExeSql("UPDATE ctacteprv  \n" +
+                    "SET \n" +
+                    "femision = '"+ getFechaEmisionAsString()  +"',\n" +
+                    "totalexento = "+ fmMain.SetGuardar(txExento.getText()) +",\n" +
+                    "totalafecto = "+fmMain.SetGuardar(txNeto.getText())+",\n" +
+                    "totaliva = "+fmMain.SetGuardar(txIva.getText())+",\n" +
+                    "totalotroimp = "+fmMain.SetGuardar(txImpEspecifico.getText())+",\n" +
+                    "totaldocto = "+fmMain.SetGuardar(txTotal.getText())+",\n" +
+                    "fdespacho = '"+getFechaDespachoAsString()+"',\n" +
+                    "contacto = "+ IdVendedor +",\n" +
+                    "comentarios = '"+txComentario.getText()+"',\n" +
+                    "tipodespacho = " + jComboBox1.getSelectedIndex() +",\n" +
+                    "cuotas=" + cbCuotas.getSelectedItem().toString().trim() + ",\n"+
+                    "occhilemat=" + NroChm + ",\n"+
+                    "dias='" + txDias.getText().trim() + "'\n"+
+                    "WHERE rut = "+txRut.getText()+"\n" +
+                    "AND  tipdocto = 'OCP'\n" +
+                    "AND  nrodocto = " + txNroOc.getText());
+         
+         //ACTUALIZA EL DETALLE
+        for(int i=0; i< Grilla.getRowCount(); i++){
+            
+             // 1. Verifica si existe
+            Rs = Sql.Select("select count(*) as Existe from ctacteprvdet \n" +
+                                    "  where  rut= "+ txRut.getText() +
+                                    "  and nrodocto=" + txNroOc.getText().trim() + "\n" +
+                                    "  and tipdocto='OCP'\n" + 
+                                    "  and sku='"+ Grilla.getModel().getValueAt(i,GetCol("Sku")).toString().trim() +"'");
+            Rs.next();
+         // 2. Si Existe UPDATE
+            if(Rs.getInt("Existe")>0)
+                        Query =  "  update ctacteprvdet set \n" +
+                                     "  cantidad = " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("CantReal")).toString()) + ",\n" +
+                                     "  valorunitario="+ fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString()) +",\n" +
+                                     "  totallinea ="+ fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("Total")).toString()) +"\n" +
+                                     "  where  rut= "+ txRut.getText() +
+                                     "  and nrodocto=" + txNroOc.getText().trim() + "\n" +
+                                     "  and tipdocto='OCP'\n" + 
+                                     "  and sku='"+ Grilla.getModel().getValueAt(i,GetCol("Sku")).toString() +"'";
+         // 3. Si no existe INSERT
+             else
+                        Query = "INSERT INTO ctacteprvdet\n" +
+                            "(rut,tipdocto,nrodocto,sku,cantidad, valorunitario,totallinea) \n" +
+                            "VALUES (\n" +
+                            txRut.getText() + ",\n" +
+                            "  'OCP',\n" +
+                            txNroOc.getText()               +  ",\n'" +
+                            Grilla.getModel().getValueAt(i,GetCol("Sku")).toString().trim() + "'," +
+                            fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("CantReal")).toString()) + "," +
+                            fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString()) + "," +
+                            fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("Total")).toString()) + ")";
+        
+
+        
+        Sql.ExeSql(Query); 
+        // 4. Agrega sku al LISTADO
+            Codigos = Codigos + "'" + Grilla.getModel().getValueAt(i,GetCol("Sku")).toString().trim() + "',";
+        } 
+        
+//ACTUALIZA DIAS - CUOTAS PAGO
+            try {
+                Rs = Sql.Select("SELECT cuotas, dias from proveedor WHERE rut="+ txRut.getText().trim());
+                Rs.next();
+                if(!Rs.getString("cuotas").equals(cbCuotas.getSelectedItem().toString().trim()) || !Rs.getString("dias").equals(txDias.getText().trim()))
+                    { 
+                    if(fmMain.OkCancel("¿desa guardar esta condicion de pago para el proveedor?")== JOptionPane.OK_OPTION)
+                        {
+                        Sql.ExeSql("UPDATE proveedor SET \n" +
+                        "cuotas=" + cbCuotas.getSelectedItem().toString().trim() + ",\n "+
+                        "dias='"  + txDias.getText().trim() + "' where rut = " + txRut.getText());
+                        }
+                    }
+            }
+            catch (Exception e) {   
+                         JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                        }
+// FIN
+        
+        
+         // 5. Elimina productos que ya no pertenecen
+             Query =  " DELETE from ctacteprvdet " + 
+                      " WHERE  rut= "+ txRut.getText() +
+                      " AND nrodocto=" + txNroOc.getText().trim() + "\n" +
+                      " AND tipdocto='OCP'\n" + 
+                      " AND sku not in (" + Codigos.substring(0, Codigos.length()-1) + ")";
+             Sql.ExeSql(Query);        
+
+            
+
+        Sql.Commit();
+//        SetTipo(2);
+             AbrirOCP(txNroOc.getText());
+        JOptionPane.showMessageDialog(null, "Orden de Compra Actualizada"); 
+        
+         } catch (SQLException | HeadlessException e) {
+             JOptionPane.showMessageDialog(null, e);
+             Sql.Rollback();
+
+         }
+         finally{
+             Sql.Close();
+         }
+         
+     }
+    }
+    
+    public void GuardarLuvalyEconaOCP() {
+        
+        ExeSql Sql = new ExeSql();
+        ExeSql_Econa SqlE = new ExeSql_Econa();
+        ResultSet Rs, RsE;
+        
+        boolean existe_rut, todos_productos;
+        
+        
+        try {
+            Rs = SqlE.Select("select * from proveedor where rut="+txRut.getText()+"");
+            Rs.next();
+            if(Rs.getRow()>0) existe_rut = true; else existe_rut = false;
+            int cantidad = Grilla.getRowCount();
+            int existe = 0;
+            for(int i=0; i< Grilla.getRowCount(); i++){
+                String sku = Grilla.getValueAt(i,0).toString().trim();
+                RsE = SqlE.Select("select count(*) conteo from producto p\n" +
+                                    "where p.sku in ('"+sku+"')");
+                existe = existe + RsE.getInt("conteo");
+            }
+            if(existe == cantidad){
+                todos_productos = true;
+            }
+            else {
+                todos_productos = false;
+            }
+            
+            if(todos_productos && existe_rut){
+                ProcederGuardadoEcona();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(pfOCProveedor_Econa.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        
+    }
+    
+    private void ProcederGuardadoEcona() {
+        ExeSql Sql = new ExeSql();
+        ExeSql_Econa SqlE = new ExeSql_Econa();
+        ResultSet Rs, RsE;
+        String Query;
+        String NroChm;
+        String Codigos="";
+        String NewCorrelativo, NewCorrelativo_Econa;
+
+        if(JOptionPane.showConfirmDialog(null, "Guardar los cambios realizados.","Guardar",JOptionPane.YES_OPTION)!= JOptionPane.YES_OPTION){
+            return;
+        }
+        NroChm = lblNroChilemat.getText().trim();
+
+        if (NroChm.equals("")){
+            NroChm = "-1";
+        }
+//Nueva Orden de Compra
+        if(Tipo==1){
+            try {
+
+                 //Busca si existen folios liberados
+                Rs = Sql.Select("select count(*) as Existe from folioslibres where tipdocto='OCP' and estado=0");
+                Rs.next();
+                if(Rs.getInt("Existe")>0){
+                    NewCorrelativo = Sql.SelectUnico("select min(nrodocto) as folio from folioslibres where tipdocto='OCP' and estado=0");
+                    Sql.ExeSql("update folioslibres set estado=1 where tipdocto='OCP' and nrodocto=" + NewCorrelativo);
+                }
+                else{
+                    Sql.ExeSql("update par_correlativo set numero=numero + 1 where tipo='OCP'");
+                    NewCorrelativo = Sql.SelectUnico("select numero from par_correlativo where tipo='OCP'");
+                }
+                /*Econa********************/
+                RsE = SqlE.Select("select count(*) as Existe from folioslibres where tipdocto='OCP' and estado=0");/*Econa*/
+                RsE.next();
+                if(RsE.getInt("Existe")>0){
+                    NewCorrelativo_Econa = SqlE.SelectUnico("select min(nrodocto) as folio from folioslibres where tipdocto='OCP' and estado=0");
+                    SqlE.ExeSql("update folioslibres set estado=1 where tipdocto='OCP' and nrodocto=" + NewCorrelativo_Econa);
+                }
+                else{
+                    SqlE.ExeSql("update par_correlativo set numero=numero + 1 where tipo='OCP'");
+                    NewCorrelativo_Econa = SqlE.SelectUnico("select numero from par_correlativo where tipo='OCP'");
+                }
+                //Sino obtiene uno nuevo
+                
+//                for(int i=0; i< Grilla.getRowCount(); i++){
+//                    Double unid = Double.valueOf(Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString());
+//                    Double total = Double.valueOf(Grilla.getModel().getValueAt(i,GetCol("Total")).toString());
+//
+//                    String unidad_porcentaje = ""+(unid+((unid*5)/100));
+//                    String total_porcentaje = ""+(total+((total*5)/100));
+//                }
+//                
+                
+                
+                
+                
+                Sql.ExeSql("  INSERT INTO ctacteprv\n" +
+                            "  (rut,tipdocto,nrodocto,femision,totalexento,totalafecto,totaliva,\n" +
+                            "  totalotroimp,totaldocto,fdespacho,contacto,comentarios, tipodespacho,cuotas,dias, occhilemat) \n" +
+                            "  VALUES (76440015,\n" +
+                            "  'OCP',\n" +
+                               NewCorrelativo              +  ",\n'" +
+                               getFechaEmisionAsString()   + "',\n" +
+                               fmMain.SetGuardar(txExento.getText())          + ",\n" +
+                               fmMain.SetGuardar(txNeto.getText())             + ",\n" +
+                               fmMain.SetGuardar(txIva.getText())             + ",\n" +
+                               fmMain.SetGuardar(txImpEspecifico.getText())   + ",\n" +
+                               fmMain.SetGuardar(txTotal.getText())           + ",'\n" +
+                               getFechaDespachoAsString()  + "',\n" +
+                               IdVendedor     + ",\n'" +
+                               txComentario.getText()     + "',\n" +
+                               jComboBox1.getSelectedIndex() + "," +
+                               cbCuotas.getSelectedItem().toString().trim() +",'" + 
+                               txDias.getText().trim() + "', '"+NroChm+"')" );
+                 // Guarda Productos
+                    for(int i=0; i< Grilla.getRowCount(); i++){
+                        
+                        Query = "INSERT INTO ctacteprvdet\n" +
+                                "(rut,tipdocto,nrodocto,sku,cantidad, valorunitario,totallinea) \n" +
+                                "VALUES (76440015,\n" +
+                                "  'OCP',\n" +
+                                NewCorrelativo               +  ",\n'" +
+                                Grilla.getModel().getValueAt(i,GetCol("Sku")).toString().trim() + "'," +
+                                fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("CantReal")).toString()) + "," +
+                                fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString()) + "," +
+                                fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("TotalPorcentaje")).toString()) + ")";
+                        Sql.ExeSql(Query);
+                    }
+                    
+                    //Econa Insert***********************************/
+                    
+                    SqlE.ExeSql("  INSERT INTO ctacteprv\n" +
+                            "  (rut,tipdocto,nrodocto,femision,totalexento,totalafecto,totaliva,\n" +
+                            "  totalotroimp,totaldocto,fdespacho,contacto,comentarios, tipodespacho,cuotas,dias, occhilemat) \n" +
+                            "  VALUES (\n" +
+                               txRut.getText() + ",\n" +
+                            "  'OCP',\n" +
+                               NewCorrelativo_Econa              +  ",\n'" +
+                               getFechaEmisionAsString()   + "',\n" +
+                               fmMain.SetGuardar(txExento2.getText())          + ",\n" +
+                               fmMain.SetGuardar(txNeto2.getText())             + ",\n" +
+                               fmMain.SetGuardar(txIva2.getText())             + ",\n" +
+                               fmMain.SetGuardar(txImpEspecifico2.getText())   + ",\n" +
+                               fmMain.SetGuardar(txTotal2.getText())           + ",'\n" +
+                               getFechaDespachoAsString()  + "',\n" +
+                               IdVendedor    + ",\n'" +
+                               txComentario.getText()     + "',\n" +
+                               jComboBox1.getSelectedIndex() + "," +
+                               cbCuotas.getSelectedItem().toString().trim() +",'" + 
+                               txDias.getText().trim() + "', '"+NroChm+"')" );
+                 // Guarda Productos
+                 
+                    for(int i=0; i< Grilla_Econa.getRowCount(); i++){
+                        System.out.println("Producto Econa: "+Grilla_Econa.getModel().getValueAt(i,GetCol("Sku")).toString().trim());
+                        Query = "INSERT INTO ctacteprvdet\n" +
+                                "(rut,tipdocto,nrodocto,sku,cantidad, valorunitario,totallinea) \n" +
+                                "VALUES (\n" +
+                                txRut.getText() + ",\n" +
+                                "  'OCP',\n" +
+                                NewCorrelativo_Econa+  ",\n'" +
+                                Grilla_Econa.getModel().getValueAt(i,GetCol("Sku")).toString().trim() + "'," +
+                                fmMain.SetGuardar(Grilla_Econa.getModel().getValueAt(i,GetCol("CantReal")).toString()) + "," +
+                                fmMain.SetGuardar(Grilla_Econa.getModel().getValueAt(i,GetCol("UniReal")).toString()) + "," +
+                                fmMain.SetGuardar(Grilla_Econa.getModel().getValueAt(i,GetCol("Total")).toString()) + ")";
+                        SqlE.ExeSql(Query);
+                    }
+
+        //ACTUALIZA DIAS - CUOTAS PAGO
+                try {
+                    Rs = Sql.Select("SELECT cuotas, dias from proveedor WHERE rut="+ txRut.getText().trim());
+                    Rs.next();
+                    if(!Rs.getString("cuotas").equals(cbCuotas.getSelectedItem().toString().trim()) || !Rs.getString("dias").equals(txDias.getText().trim())){ 
+                        if(fmMain.OkCancel("¿desa guardar esta condicion de pago para el proveedor?")== JOptionPane.OK_OPTION) {
+                            Sql.ExeSql("UPDATE proveedor SET \n" +
+                            "cuotas=" + cbCuotas.getSelectedItem().toString().trim() + ",\n "+
+                            "dias='"  + txDias.getText().trim() + "' where rut = " + txRut.getText());
+                        }
+                    }
+                }
+                catch (Exception e) {   
+                    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                }
+                /*Econa Cuotas*************************************/
+                try {
+                    RsE = SqlE.Select("SELECT cuotas, dias from proveedor WHERE rut="+ txRut.getText().trim());
+                    RsE.next();
+                    if(!RsE.getString("cuotas").equals(cbCuotas.getSelectedItem().toString().trim()) || !RsE.getString("dias").equals(txDias.getText().trim())){ 
+                        if(fmMain.OkCancel("¿desa guardar esta condicion de pago para el proveedor?")== JOptionPane.OK_OPTION) {
+                            SqlE.ExeSql("UPDATE proveedor SET \n" +
+                            "cuotas=" + cbCuotas.getSelectedItem().toString().trim() + ",\n "+
+                            "dias='"  + txDias.getText().trim() + "' where rut = " + txRut.getText());
+                        }
+                    }
+                }
+                catch (Exception e) {   
+                    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                }
+        // FIN
+
+                            // Actualiza OC de Chilemat para dejarla Autorizada y Emitida
+                if (!NroChm.equals("-1")){
+                    try{
+                        Sql.ExeSql("update ctacteprv \n" +
+                                      " set estado=-3\n" +
+                                      " where tipdocto='OCP'\n" +
+                                      " and rut= 76440015 and nrodocto=" +  NewCorrelativo );
+    //                          Sql.Commit();
+    //                          fmMain.Mensaje("Autorizado");
+          // Se emite OCP
+                      Sql.ExeSql("update ctacteprv \n" +
+                                      "  set estado=0\n" +
+                                      " where tipdocto='OCP'\n" +
+                                      " and rut= 76440015 and nrodocto=" + NewCorrelativo + " and estado=-3");			
+                    } 
+                    catch (SQLException | HeadlessException e) {
+                        JOptionPane.showMessageDialog(null, e);
+                        Sql.Rollback();
+                    }
+    //                   finally{
+    //                       Sql.Close();
+    //                   }
+                }
+                /*Econa***************************/
+                if (!NroChm.equals("-1")){
+                    try{
+                        SqlE.ExeSql("update ctacteprv \n" +
+                                      " set estado=-3\n" +
+                                      " where tipdocto='OCP'\n" +
+                                      " and rut= "+ txRut.getText() +
+                                      "and nrodocto=" +  NewCorrelativo_Econa );
+    //                          Sql.Commit();
+    //                          fmMain.Mensaje("Autorizado");
+          // Se emite OCP
+                      SqlE.ExeSql("update ctacteprv \n" +
+                                      "  set estado=0\n" +
+                                      " where tipdocto='OCP'\n" +
+                                      " and rut= "+ txRut.getText() +
+                                      " and nrodocto=" + NewCorrelativo_Econa + " and estado=-3");			
+                    } 
+                    catch (SQLException | HeadlessException e) {
+                        JOptionPane.showMessageDialog(null, e);
+                        SqlE.Rollback();
+                    }
+    //                   finally{
+    //                       Sql.Close();
+    //                   }
+                }
+
+             
+                Sql.Commit();
+                SqlE.Commit();
+                AbrirOCP(NewCorrelativo);
+                //             txNroOc.setText(NewCorrelativo);
+        //             SetTipo(2);
+                JOptionPane.showMessageDialog(null, "Orden Guardada Luvaly, Numero:" + NewCorrelativo);
+                JOptionPane.showMessageDialog(null, "Orden Guardada ECONA, Numero:" + NewCorrelativo_Econa);
+            } catch (SQLException | HeadlessException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+                System.out.println(e.getMessage());
+                Sql.Rollback();
+                SqlE.Rollback();
+            }
+            finally{
+                Sql.Close();
+                SqlE.Close();
+            }
+
+        }
+         /**  
+          * Actualiza OCP
+          */
+//        else{
+//            try{
+//                Sql.ExeSql("UPDATE ctacteprv  \n" +
+//                "SET \n" +
+//                "femision = '"+ getFechaEmisionAsString()  +"',\n" +
+//                "totalexento = "+ fmMain.SetGuardar(txExento.getText()) +",\n" +
+//                "totalafecto = "+fmMain.SetGuardar(txNeto.getText())+",\n" +
+//                "totaliva = "+fmMain.SetGuardar(txIva.getText())+",\n" +
+//                "totalotroimp = "+fmMain.SetGuardar(txImpEspecifico.getText())+",\n" +
+//                "totaldocto = "+fmMain.SetGuardar(txTotal.getText())+",\n" +
+//                "fdespacho = '"+getFechaDespachoAsString()+"',\n" +
+//                "contacto = "+ IdVendedor +",\n" +
+//                "comentarios = '"+txComentario.getText()+"',\n" +
+//                "tipodespacho = " + jComboBox1.getSelectedIndex() +",\n" +
+//                "cuotas=" + cbCuotas.getSelectedItem().toString().trim() + ",\n"+
+//                "occhilemat=" + NroChm + ",\n"+
+//                "dias='" + txDias.getText().trim() + "'\n"+
+//                "WHERE rut = 76440015\n" +
+//                "AND  tipdocto = 'OCP'\n" +
+//                "AND  nrodocto = " + txNroOc.getText());
+//                
+//
+//                //ACTUALIZA EL DETALLE
+//                for(int i=0; i< Grilla.getRowCount(); i++){
+//
+//                    // 1. Verifica si existe
+//                    Rs = Sql.Select("select count(*) as Existe from ctacteprvdet \n" +
+//                                            "  where  rut= 76440015\n"+
+//                                            "  and nrodocto=" + txNroOc.getText().trim() + "\n" +
+//                                            "  and tipdocto='OCP'\n" + 
+//                                            "  and sku='"+ Grilla.getModel().getValueAt(i,GetCol("Sku")).toString().trim() +"'");
+//                    Rs.next();
+//                    // 2. Si Existe UPDATE
+//                    if(Rs.getInt("Existe")>0)
+//                        Query =  "  update ctacteprvdet set \n" +
+//                        "  cantidad = " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("CantReal")).toString()) + ",\n" +
+//                        "  valorunitario="+ fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString()) +",\n" +
+//                        "  totallinea ="+ fmMain.SetGuardar(Grilla.getModel().getValueAt(i,9).toString()) +"\n" +
+//                        "  where  rut=76440015\n"+
+//                        "  and nrodocto=" + txNroOc.getText().trim() + "\n" +
+//                        "  and tipdocto='OCP'\n" + 
+//                        "  and sku='"+ Grilla.getModel().getValueAt(i,GetCol("Sku")).toString() +"'";
+//                    // 3. Si no existe INSERT
+//                    else
+//                        Query = "INSERT INTO ctacteprvdet\n" +
+//                        "(rut,tipdocto,nrodocto,sku,cantidad, valorunitario,totallinea) \n" +
+//                        "VALUES (76440015,\n" +
+//                        "  'OCP',\n" +
+//                        txNroOc.getText()               +  ",\n'" +
+//                        Grilla.getModel().getValueAt(i,GetCol("Sku")).toString().trim() + "'," +
+//                        fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("CantReal")).toString()) + "," +
+//                        fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString()) + "," +
+//                        fmMain.SetGuardar(Grilla.getModel().getValueAt(i,9).toString()) + ")";
+//
+//                    Sql.ExeSql(Query); 
+//                // 4. Agrega sku al LISTADO
+//                    Codigos = Codigos + "'" + Grilla.getModel().getValueAt(i,GetCol("Sku")).toString().trim() + "',";
+//                }   
+//
+//                
+//                 
+//                
+//                
+//                
+//        //ACTUALIZA DIAS - CUOTAS PAGO
+//                try {
+//                    Rs = Sql.Select("SELECT cuotas, dias from proveedor WHERE rut="+ txRut.getText().trim());
+//                    Rs.next();
+//                    if(!Rs.getString("cuotas").equals(cbCuotas.getSelectedItem().toString().trim()) || !Rs.getString("dias").equals(txDias.getText().trim()))
+//                        { 
+//                        if(fmMain.OkCancel("¿desa guardar esta condicion de pago para el proveedor?")== JOptionPane.OK_OPTION)
+//                            {
+//                            Sql.ExeSql("UPDATE proveedor SET \n" +
+//                            "cuotas=" + cbCuotas.getSelectedItem().toString().trim() + ",\n "+
+//                            "dias='"  + txDias.getText().trim() + "' where rut = " + txRut.getText());
+//                            }
+//                        }
+//                }
+//                catch (Exception e) {   
+//                    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+//                }
+//                
+//        // FIN
+//
+//
+//                // 5. Elimina productos que ya no pertenecen
+//                Query =  " DELETE from ctacteprvdet " + 
+//                " WHERE  rut= "+ txRut.getText() +
+//                " AND nrodocto=" + txNroOc.getText().trim() + "\n" +
+//                " AND tipdocto='OCP'\n" + 
+//                " AND sku not in (" + Codigos.substring(0, Codigos.length()-1) + ")";
+//                Sql.ExeSql(Query);     
+//                
+//                Sql.Commit();
+//
+//                
+//                
+//                
+//                
+//                
+//                //        SetTipo(2);
+//                AbrirOCP(txNroOc.getText());
+//                JOptionPane.showMessageDialog(null, "Orden de Compra Actualizada"); 
+//
+//                } 
+//                catch (SQLException | HeadlessException e) {
+//                    JOptionPane.showMessageDialog(null, e);
+//                    Sql.Rollback();
+//                }
+//                finally{
+//                    Sql.Close();
+//                }
+//
+//         }
+    }
+    
+    
+    private void btEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditarActionPerformed
+        SetTipo(3);
+        btIr.setEnabled(false);
+    }//GEN-LAST:event_btEditarActionPerformed
+
+    private void dtEmisionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dtEmisionMouseClicked
+        if (Tipo == 2) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_dtEmisionMouseClicked
+
+    private void cbCuotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCuotasActionPerformed
+        if(Tipo==2)
+            cbCuotas.setSelectedIndex(PosCuotas);
+    }//GEN-LAST:event_cbCuotasActionPerformed
+
+    private void btOtrasOrdenesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOtrasOrdenesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btOtrasOrdenesActionPerformed
+
+    private void btImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btImprimirActionPerformed
+        
+        jdQuienFirma qf = new jdQuienFirma(null, true);
+        qf.setLocationRelativeTo(null);
+        qf.setTitle("Firma Comprador");
+        qf.CargaComboPrv();
+        qf.setVisible(true);
+        firmacompra=qf.getNombre();
+        
+        
+        URL in = this.getClass().getResource("/Reportes/repOCP.jasper");
+        JasperReport repo = null;
+        HashMap<String, Object> parametros = new HashMap<>();
+        List listaProd = new ArrayList();
+        String Atento = "Ventas";
+        
+        
+        Atento = txVendedor.getText().trim();
+        
+        try {
+            repo = (JasperReport)JRLoader.loadObject(in);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null,ex);
+        }
+
+        
+
+        
+        
+        //String Atento = cbVendedor.getSelectedItem().toString();
+        
+//        if(Atento.isEmpty()) Atento="  ";
+         
+        ResultSet Rs, Rs4;
+        ExeSql Sql = new ExeSql();
+        String codprv="";
+        //--------------
+        try {
+            
+            // Se emite OCP
+            Sql.ExeSql("update ctacteprv \n" +
+                            "set estado=0\n" +
+                            "where tipdocto='OCP'\n" +
+                            "and nrodocto=" + txNroOc.getText() + " and estado=-3");
+            
+//            JOptionPane.showMessageDialog(null, System.getProperty("user.dir")+"\\src\\Reportes\\ClaudiaTorres.jpg");
+            Rs = Sql.Select("select pd.sku,p.nombre, pu.um, pd.cantidad, pd.valorunitario,pd.totallinea\n" +
+                            "from ctacteprvdet pd\n" +
+                            "left join producto   p  on pd.sku=p.sku\n" +
+                            "left join par_unidad pu on p.unidad =pu.codigo\n" +
+                            "where pd.nrodocto="+ txNroOc.getText() + " and tipdocto='OCP'");
+            while(Rs.next()){
+                Rs4 = Sql.Select("Select codbar from codbar where rutprv="+txRut.getText().trim()+"  and sku='"+Rs.getString("sku").trim()+"'" );
+                if (Rs4.next())
+                    {
+                    codprv=Rs4.getString("codbar");
+                    }
+                else
+                {
+                    codprv="- - -";
+                }
+                ListarProductos lista = new ListarProductos(
+                                            Rs.getString("sku").trim(), 
+                                            Rs.getString("nombre").trim(), 
+                                            Rs.getString("um").trim(),
+                                            fmMain.FormatoTotal(Rs.getDouble("cantidad")),
+                                            fmMain.FormatoNumero(Rs.getDouble("valorunitario")),
+                                            fmMain.FormatoTotal(Rs.getDouble("totallinea")),
+                                            codprv);
+                listaProd.add(lista);
+            }
+            
+                    
+            
+            Rs = Sql.Select( "select p.rut || '-' || p.dv as ElRut,p.nombre as nombreprv,p.direccion,p.fono,cp.* \n" +
+                             "from ctacteprv cp \n" +
+                             "left join proveedor p on p.rut=cp.rut \n" +
+                             "where cp.tipdocto='OCP' and cp.nrodocto=" + txNroOc.getText()); 
+            Rs.next();
+            parametros.put("NroOc",txNroOc.getText() );
+            parametros.put("Nombre", Rs.getString("nombreprv"));
+            parametros.put("Rut", Rs.getString("ElRut"));
+            parametros.put("Direccion", Rs.getString("Direccion"));
+            parametros.put("Fecha", dtEmision.getDate());
+            parametros.put("Atencion",  Atento);
+            parametros.put("Fono", Rs.getString("fono"));
+            parametros.put("FechaDespacho", dtDespacho.getDate());
+            parametros.put("ImagenComprador", this.getClass().getResourceAsStream("/Reportes/"+firmacompra+".png"));
+            parametros.put("ImagenLogo", this.getClass().getResourceAsStream("/Reportes/Logo.jpg"));
+            parametros.put("Cuotas", "3");
+            parametros.put("Dias", Rs.getString("dias"));
+            parametros.put("Comentarios", txComentario.getText());
+            parametros.put("TotalNeto", txNeto.getText());
+            parametros.put("TotalIva", txIva.getText());
+            parametros.put("TotalDocto",txTotal.getText());
+           
+            
+//            JasperPrint informe =  JasperFillManager.fillReport(master, parametros ,new JREmptyDataSource());
+            JasperPrint informe =  JasperFillManager.fillReport(repo, parametros, new JRBeanCollectionDataSource(listaProd));
+            JasperViewer.viewReport(informe,false);
+            Sql.Commit();
+        } catch (SQLException | JRException e) {
+            JOptionPane.showMessageDialog(null,e);
+            
+        }
+        finally{
+            Sql.Close();
+        }
+    }//GEN-LAST:event_btImprimirActionPerformed
+
+   
+    private void txDiasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txDiasMouseClicked
+        if(evt.getClickCount()==2 && (Tipo==1 || Tipo==3)){
+        jdDiasOCP Dias = new jdDiasOCP(null, true);
+        Dias.setTitle("Dias");
+        Dias.setLocationRelativeTo(txDias);
+        Dias.SetFilas(Integer.valueOf(cbCuotas.getSelectedItem().toString()));
+        Dias.setVisible(true);
+//        Dias.SetFoco();
+        txDias.setText(Dias.GetFilas());
+        }
+    }//GEN-LAST:event_txDiasMouseClicked
+
+    private void GrillaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_GrillaKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_GrillaKeyPressed
+
+    private void GrillaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_GrillaKeyTyped
+//        if(evt.getKeyChar()==',' || evt.getKeyChar()=='.'){
+//            evt.consume();
+//            if(!txCantidad.getText().contains(fmMain.GetDecimal()))
+//                txCantidad.setText(txCantidad.getText() + fmMain.GetDecimal() );
+//        }
+    }//GEN-LAST:event_GrillaKeyTyped
+
+    private void GrillaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_GrillaMouseClicked
+        DefaultTableModel tbModel = (DefaultTableModel) Grilla.getModel();
+    
+        try {
+            
+        
+        if(evt.getClickCount()==2 && Tipo==1 || Tipo==3){
+            jdOCCAgregaProducto AgregaProducto = new jdOCCAgregaProducto(null,true);
+            AgregaProducto.setLocationRelativeTo(null);
+            AgregaProducto.setTitle("Agragar Producto");
+            
+            ExeSql sql = new ExeSql();
+            ResultSet rs = null;
+            int porcentaje = 0;
+            String porcent = "0";
+            String sku = Grilla.getValueAt(Grilla.getSelectedRow(),GetCol("Sku")).toString().trim();
+            String query = "select porcentaje from prv_producto_porcentaje where sku = '"+sku+"'";
+            try {
+                rs = sql.Select(query);
+                rs.next();
+                if(rs.getRow()>0){
+                    porcentaje = rs.getInt("porcentaje");
+                    porcent = "0."+(100 - porcentaje); 
+                }
+                else {
+                    porcentaje = 1;
+                    porcent = "1";
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(jdOCCAgregaProducto.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            double total = Double.parseDouble(Grilla.getValueAt(Grilla.getSelectedRow(),GetCol("UniReal")).toString());
+            double ConPorcentaje = ((total/Double.parseDouble(porcent)));
+            AgregaProducto.SetProducto(Grilla.getValueAt(Grilla.getSelectedRow(),GetCol("Sku")).toString().trim(),
+                               Grilla.getValueAt(Grilla.getSelectedRow(),GetCol("Cantidad")).toString(),
+                               String.valueOf(ConPorcentaje));
+            AgregaProducto.setVisible(true);
+
+                if(AgregaProducto.GetFilaOCP_Porcentaje()!=null){
+                    tbModel.insertRow(Grilla.getSelectedRow(), AgregaProducto.GetFilaOCP_Porcentaje());
+                    tbModel.removeRow(Grilla.getSelectedRow()+1);
+                    Sumador();
+
+                    Sumador_Porcentaje();
+                }
+            
+        }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_GrillaMouseClicked
+
+    private void txDiasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txDiasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txDiasActionPerformed
+
+    private void btLiberarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLiberarActionPerformed
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+
+        try {
+            //Verificar Recepción
+            Rs = Sql.Select("select count(*) as Existe from recepcionprv where ocp=" + txNroOc.getText().trim());
+            Rs.next();
+            if(Rs.getInt("Existe")>0){
+                JOptionPane.showMessageDialog(null, "Orden de Compra con movimientos. No se puede liberar");
+                return;
+            }
+            if(fmMain.OkCancel("¿Realmente desea liberar ésta Orden de compra?")== JOptionPane.OK_OPTION){
+                Sql.ExeSql("delete from ctacteprv where rut=" + txRut.getText().trim() + " and tipdocto='OCP' and nrodocto=" + txNroOc.getText().trim());
+                Sql.ExeSql( "insert into folioslibres \n" +
+                            "(tipdocto,nrodocto) values\n" +
+                            "('OCP',"+ txNroOc.getText().trim() + ")");
+                Sql.Commit();
+                SetTipo(-1);
+                JOptionPane.showMessageDialog(null, "Orden Liberada");
+            }
+        } catch (SQLException | HeadlessException e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        finally{
+            Sql.Close();
+        }
+        
+    }//GEN-LAST:event_btLiberarActionPerformed
+
+    private void btActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btActualizarActionPerformed
+        AbrirOCP(txNroOc.getText());
+    }//GEN-LAST:event_btActualizarActionPerformed
+
+    private void btAsociadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAsociadosActionPerformed
+        String Codigos="";
+        DefaultTableModel tbModel = (DefaultTableModel) Grilla.getModel();
+        
+        for(int i=0; i< Grilla.getRowCount();i++){
+            Codigos = "'" + Grilla.getValueAt(i,0).toString().trim() + "',";
+        }
+        if(Codigos.length()>0){
+            Codigos = Codigos.substring(0, Codigos.length()-1);
+        }
+        else{
+            Codigos = "'09090'";
+        }
+        
+        jdProductosAsociadosPrv Prod = new jdProductosAsociadosPrv(null, true);
+        Prod.setLocationRelativeTo(null);
+        Prod.setTitle("Productos Asociados al Proveedor");
+        Prod.Show(RutMaster, Codigos);
+        if(!Prod.GetCodigoSelect().isEmpty()){
+            jdOCCAgregaProducto AgregaProducto = new jdOCCAgregaProducto(null,true);
+            AgregaProducto.setLocationRelativeTo(null);
+            AgregaProducto.setTitle("Agragar Producto");
+            AgregaProducto.Activa_Prv(txRut.getText().trim());
+            AgregaProducto.SetProducto(Prod.GetCodigoSelect(),
+                                       "",
+                                       Prod.GetCostoSelect());
+            AgregaProducto.setVisible(true);
+            tbModel.addRow(AgregaProducto.GetFilaOCP());
+            Sumador();
+        }
+        
+    }//GEN-LAST:event_btAsociadosActionPerformed
+
+    private void dtDespachoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dtDespachoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dtDespachoActionPerformed
+
+    private void btAgregarBlogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAgregarBlogActionPerformed
+        jdAgregaBlog AddBlog = new jdAgregaBlog(null, true);
+        AddBlog.SetDatos(txRut.getText().trim(),"OCP",txNroOc.getText().trim());
+        AddBlog.setTitle("Nuevo Registro");
+        AddBlog.setLocationRelativeTo(btAgregarBlog);
+        AddBlog.setVisible(true);
+        if(AddBlog.GetGuardar())
+        CargaBlog();
+    }//GEN-LAST:event_btAgregarBlogActionPerformed
+
+    // ********* CARGA OC DESDE CONTROL DE INVENTARIO NEGATIVOS ************** //
+    
+    public void CargaNuevaOC(String rutProv){
+        DefaultTableModel Model = (DefaultTableModel)Grilla.getModel();
+        btNuevo.doClick();
+        txRut.setText(rutProv);
+        btIr.doClick();
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        try {
+            Rs = Sql.Select("select DISTINCT(i.sku) as sku, pro.nombre, u.um as umedida, ABS(i.stock+i.ocp+i.occ+i.gdc) as cantidad,\n" +
+                    "round (cast(pro.valultcompra as numeric),2) as unitario,\n" +
+                    "round(((cast(ABS(i.stock+i.ocp+i.occ+i.gdc) as numeric)) * round (cast(pro.valultcompra as numeric),2)),2) as totlinea from inventario i\n" +
+                    "left join producto pro on i.sku=pro.sku\n" +
+                    "left join par_unidad u on pro.unidad=u.codigo\n" +
+                    "left join ctacteprvdet d on i.sku=d.sku\n" +
+                    "left join proveedor p on d.rut=p.rut\n" +
+                    "WHERE i.stock+i.ocp+i.occ+i.gdc<0 \n" +
+                    "and p.nombre is not null\n" +
+                    "and p.rut="+rutProv);
+             while(Rs.next()){
+                    Model.addRow(new Object[]{Rs.getString("sku").trim(), Rs.getString("nombre").trim(), Rs.getString("umedida").trim(), Rs.getString("cantidad").trim(),  Rs.getString("unitario").trim(),  Rs.getString("totlinea").trim(), Rs.getString("unitario").trim(), Rs.getString("cantidad").trim()});
+                   
+             }
+            Sumador();
+            //btAgregar.doClick();
+        } catch (Exception e)  {
+          System.out.println(e.getMessage());
+        }
+        finally{
+            Sql.Close();
+        }
+        
+    }
+    
+      // ********* FIN ************** //
+    
+    private void txRutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txRutActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txRutActionPerformed
+
+    private void txDvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txDvActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txDvActionPerformed
+
+    
+    
+    private void btChilematActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btChilematActionPerformed
+        try {
+            CargarChilemat(JOptionPane.showInputDialog("Ingrese OC Chilemat:"));
+        }catch (HeadlessException | ParseException e){
+            fmMain.Mensaje("Error general al cargar: " + e);
+        }
+    }//GEN-LAST:event_btChilematActionPerformed
+
+    private void btMostrarHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMostrarHistorialActionPerformed
+        String StrRut, NroDocto;
+        jdBuscarHistorial BuscaHistorial = new jdBuscarHistorial(null,true);
+        BuscaHistorial.setLocationRelativeTo(null);
+        StrRut = txRut.getText().trim();
+        NroDocto = txNroOc.getText().trim();
+        BuscaHistorial.AbrirHistorial(StrRut, NroDocto);
+        BuscaHistorial.setVisible(true);
+    }//GEN-LAST:event_btMostrarHistorialActionPerformed
+
+    private void Grilla_EconaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Grilla_EconaMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Grilla_EconaMouseClicked
+
+    private void Grilla_EconaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Grilla_EconaKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Grilla_EconaKeyPressed
+
+    private void Grilla_EconaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Grilla_EconaKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Grilla_EconaKeyTyped
+
+    private void btEliminar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEliminar1ActionPerformed
+        if (!Grilla_Econa.getValueAt(Grilla_Econa.getSelectedRow(), 0).toString().isEmpty()) {
+            if (JOptionPane.showConfirmDialog(null, "¿Desea Eliminar el registro?") == JOptionPane.YES_OPTION) {
+                DefaultTableModel tbMd = (DefaultTableModel) Grilla_Econa.getModel();
+                tbMd.removeRow(Grilla_Econa.getSelectedRow());
+                Sumador_Econa();
+            }
+        }
+    }//GEN-LAST:event_btEliminar1ActionPerformed
+
+    public void CargarChilemat(String NumeroOC) throws ParseException {
+        
+        LimpiaTemporales();
+
+        ExeSql Sql = new ExeSql();
+        
+        ResultSet Rs;
+        String server, user, pass, ruta_local = "";
+        int puerto = 21;
+        String filtro = "";
+        String archivo_local = "";
+
+        try {
+
+            Rs = Sql.Select("SELECT count(occhilemat) as cuantos from ctacteprv where occhilemat=" + NumeroOC+"");
+            Rs.next();
+            if (Rs.getInt("cuantos") >= 1) {
+
+                if (JOptionPane.showConfirmDialog(null, "La orden " + NumeroOC + " ya esta ingresada, desea abrirla?") == JOptionPane.YES_NO_OPTION) {
+
+                    btCancelar.doClick();
+                    AbrirOCP(NumeroOC);
+                }
+
+                return;
+            }
+            lblNroChilemat.setText(NumeroOC);
+
+            final String Tipo;
+            final String Numero;
+            int cont = 0;
+
+            server = "";
+            puerto = 0;
+            user = "";
+            pass = "";
+            Rs = Sql.Select("SELECT * from conexiones where tipo='xml_chilem'");
+            if (Rs.next()) {
+                server = Rs.getString("serv");
+                user = Rs.getString("usu");
+                puerto = Rs.getInt("port");
+                pass = Rs.getString("pass");
+            }
+
+//                  //Verifica SO
+            String sistema = System.getProperty("os.name").toLowerCase();
+            File folder = new File("");
+            if (sistema.contains("win")) {
+                ruta_local = "c:/xml/";
+                folder = new File(ruta_local.substring(0, ruta_local.length() - 1));
+            } else {
+                ruta_local = "/xml/";
+                folder = new File(ruta_local);
+            }
+            if (!folder.exists()) {
+                folder.mkdir();
+            }
+
+            System.out.println("Carpeta Asignada " + ruta_local);
+
+            // Primer buscara el archivo en ruta local
+            filtro = NumeroOC + ".xml";
+            System.out.println("Busca en carpeta  local" + ruta_local + "/" + filtro);
+            archivo_local = BuscaArchivos(new File(ruta_local), filtro);
+            System.out.println("Busca archivo en FTP -->" + ruta_local + "/" + filtro);
+            Ftp.busca_archivo_ftp(server, puerto, user, pass, ruta_local, archivo_local, filtro);
+            System.out.println("Sale de Busca Archivo" + filtro);
+        } catch (Exception e) {
+            fmMain.Mensaje("Error al buscar xml: " + e);
+        } finally {
+            Sql.Close();
+        }
+
+        SAXBuilder builder = new SAXBuilder();
+        File xmlFile = new File(ruta_local + NumeroOC + ".xml");
+
+        try {
+          
+            Document OrdenCompra = (Document) builder.build(xmlFile);
+
+            Element rootNode      = OrdenCompra.getRootElement();
+            Element cp            = (Element) rootNode.getChild("CondicionPago");
+            Element detalle       = (Element) rootNode.getChild("Detalle");
+            Element Proveedor     = (Element) rootNode.getChild("Proveedor");
+            Element Observaciones = (Element) rootNode.getChild("Observaciones");
+            Element FechaIngreso  = (Element) rootNode.getChild("FechaIngreso");
+                     
+            List condicion_pago  = cp.getChildren();
+            String plazo_pago = "";
+            if (condicion_pago.size()>1)
+                {
+                for ( int i = 0; i < condicion_pago.size(); i++ )
+                    {
+                         Element plazo = (Element) condicion_pago.get(i);
+                         
+                         if (i>0)
+                            {
+                                plazo_pago =  plazo_pago+"-"+plazo.getValue();   
+                            }
+                         else{
+                                plazo_pago =  plazo.getValue();   
+                         }
+                    }
+                }
+            else{
+                Element plazo = (Element) condicion_pago.get(0);
+                 plazo_pago =  plazo.getValue();
+                
+            }
+            
+            List pro = detalle.getChildren();
+            for ( int p = 0; p < pro.size(); p++ )
+                {
+                    ExeSql Sql2 = new ExeSql();
+                    ResultSet Rs1;
+                    Element Producto = (Element) pro.get(p);
+                    System.out.println("Codigo: "+Producto.getChildText("CodigoProducto"));
+                    System.out.println("Codigo: "+Producto.getChildText("DescripcionProducto"));
+                    System.out.println("Unidad: "+Producto.getChildText("UnidadProducto"));
+                    try{
+                        Rs1 = Sql2.Select("select count(sku) as cuantos from codbar where rutprv=96726970 and codbar='"+Producto.getChildText("CodigoProducto").trim()+"'");
+                        Rs1.next();
+                        if (Rs1.getInt("cuantos")<=0)
+                            {
+                            jdAsociaCodChilemat acc = new jdAsociaCodChilemat(null, true);
+                            acc.setLocationRelativeTo(null);
+                            acc.setTitle("Asociar Codigos Chilemat");
+                            acc.txCodChilemat.setText(Producto.getChildText("CodigoProducto").trim());
+                            acc.txDescChilemat.setText(Producto.getChildText("DescripcionProducto").trim());
+                            acc.txUmChilemat.setText(Producto.getChildText("UnidadProducto").trim());
+                            acc.setVisible(true);
+                            }
+                        Rs1 = Sql2.Select("select c.sku,c.codbar, p.nombre, u.um from codbar c left join producto p on c.sku=p.sku left"
+                                + " join par_unidad u on p.unidad=u.codigo where c.codbar='"+Producto.getChildText("CodigoProducto").trim()+"'");
+                        Rs1.next();
+                        txSkuTemporal.setText(Rs1.getString("sku").trim());
+                        txDescTemporal.setText(Rs1.getString("nombre").trim());
+                        txUMTemporal.setText(Rs1.getString("um").trim());
+                        txCodBarTemporal.setText(Rs1.getString("codbar").trim());
+                        txCantidadTemporal.setText(Producto.getChildText("CantidadProducto").trim().replace(",", "."));
+                        txUnitarioTemporal.setText(Producto.getChildText("PrecioFinalProducto").trim().replace(",", "."));
+                        txTotlineaTemporal.setText(Producto.getChildText("TotalProducto").trim().replace(",", "."));
+                    }
+                    catch (Exception e)
+                    {
+                        fmMain.Mensaje("Error al buscar codigo: "+e);
+                    }
+                    finally{
+                        Sql2.Close();
+                    }
+                    
+                    DefaultTableModel tbModel = (DefaultTableModel) Grilla.getModel();
+
+                    if(!ExisteEnGrilla(txSkuTemporal.getText().trim())){
+                                tbModel.addRow(GetTemporalOCP()); 
+                                Sumador();
+                            }
+                    
+                    else
+                            {
+                                JOptionPane.showMessageDialog(null, "El producto ya esta en el listado");
+                            } 
+                    
+                }
+            
+            
+
+            String rutprv = Proveedor.getChildText("RutProveedor");
+            rutprv = rutprv.substring(0, rutprv.length() - 2);
+            rutprv = rutprv.replace(".", "");
+           
+            txRut.setText(rutprv);
+            btIr.doClick();
+
+            String Femision = FechaIngreso.getValue().trim();
+            Femision = Femision.substring(0, 10);
+            Femision = Femision.replace("-", "//");
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd//MM//yyyy");
+            Date fe = sdf.parse(Femision);
+            Calendar c = Calendar.getInstance();
+            c.setTime(fe);
+            c.add(Calendar.DATE, 4);
+            Date fr = c.getTime();
+
+            String obs = Observaciones.getValue().trim();
+                        
+            
+            txComentario.setText(obs);
+            dtEmision.setDate(fe);
+            dtDespacho.setDate(fr);
+            cbCuotas.setSelectedIndex(condicion_pago.size()-1);
+            txDias.setText(plazo_pago.trim());
+            LimpiaTemporales();
+        } catch (JDOMException | IOException e) {
+            fmMain.Mensaje("Error al cargar xml: " + e);
+            LimpiaTemporales();
+        }
+    }
+    
+    public void LimpiaTemporales(){
+                        txSkuTemporal.setText("");
+                        txDescTemporal.setText("");
+                        txUMTemporal.setText("");
+                        txCodBarTemporal.setText("");
+                        txCantidadTemporal.setText("");
+                        txUnitarioTemporal.setText("");
+                        txTotlineaTemporal.setText("");
+    }
+    
+    public Object[] GetTemporalOCP(){
+        double TotLineaTemporal =  Float.parseFloat(txCantidadTemporal.getText().trim()) * Float.parseFloat(txUnitarioTemporal.getText().trim());
+        return new Object[]{txSkuTemporal.getText().trim(),
+                                                    txCodBarTemporal.getText().trim(),
+                                                    txDescTemporal.getText().trim(),
+                                                    txUMTemporal.getText().trim(),
+                                                    fmMain.FormatoNumero(Double.valueOf(fmMain.SetGuardar(txCantidadTemporal.getText().trim()))),
+                                                    fmMain.FormatoNumero(Double.valueOf(fmMain.SetGuardar(txUnitarioTemporal.getText().trim()))),
+                                                    fmMain.FormatoNumeroSinDecimal(TotLineaTemporal),
+                                                    Double.valueOf(fmMain.SetGuardar(txUnitarioTemporal.getText().trim())),
+                                                    Double.valueOf(fmMain.SetGuardar(txCantidadTemporal.getText().trim()))};  
+    }
+    
+
+    
+    public void CargaBlog(){
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        String StrRut, NroDocto;
+        
+        
+        GrillaBlog.setDefaultRenderer(Object.class, new ImgTabla());
+        DefaultTableModel tm = (DefaultTableModel) GrillaBlog.getModel();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy - hh:mm");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MMM-yyyy");
+        
+        while(tm.getRowCount()>0)
+            tm.removeRow(0); 
+        
+        JLabel lbCall = new JLabel();
+        JLabel lbMail = new JLabel();
+        JLabel lbFin  = new JLabel();
+        JLabel lbIni  = new JLabel();
+        JLabel lbInfo = new JLabel();
+        
+        URL urlCall = this.getClass().getResource("/Iconos/Llamada.png");  
+        URL urlMail = this.getClass().getResource("/Iconos/email.png");  
+        URL urlIni =  this.getClass().getResource("/Iconos22/Go.png");  
+        URL urlFin =  this.getClass().getResource("/Iconos/camion.png");  
+        URL urlInfo =  this.getClass().getResource("/Iconos/info.png");
+         
+        ImageIcon IconoCall =  new ImageIcon(urlCall); 
+        ImageIcon IconoMail =  new ImageIcon(urlMail); 
+        ImageIcon IconoIni  =  new ImageIcon(urlIni); 
+        ImageIcon IconoFin  =  new ImageIcon(urlFin); 
+        ImageIcon IconoInfo =  new ImageIcon(urlInfo); 
+        
+        lbCall.setIcon(IconoCall);
+        lbMail.setIcon(IconoMail);
+        lbIni.setIcon(IconoIni);
+        lbFin.setIcon(IconoFin);
+        lbInfo.setIcon(IconoInfo);
+        
+        try {
+            Rs = Sql.Select("SELECT id,fecha,usuario,texto,tipo,compromiso,fcompromiso\n" +
+                            "FROM blog_ocp\n" +
+                            "where rut=" + txRut.getText().trim() + "\n" +
+                            "and tipdocto='OCP' \n" + 
+                            "and nrodocto=" + txNroOc.getText().trim());
+            
+            while(Rs.next()){
+                 //Tipo 0 = Llamada
+                if(Rs.getInt("tipo")==1){
+                    tm.addRow(new Object[]{lbCall,sdf.format(Rs.getTimestamp("fecha"))+ "   [" + Rs.getString("usuario").trim().toUpperCase() + "]",Rs.getString("id")});
+                    
+                }
+                //Tipo 1 = Correo
+                else if(Rs.getInt("tipo")==2) {
+                    tm.addRow(new Object[]{lbMail,sdf.format(Rs.getTimestamp("fecha"))+ "   [" + Rs.getString("usuario").trim().toUpperCase() + "]",Rs.getString("id")});
+                }
+                // Tipo 2 = Bloque
+                else if(Rs.getInt("tipo")==3) {
+                    tm.addRow(new Object[]{lbIni,sdf.format(Rs.getTimestamp("fecha"))+ "   [" + Rs.getString("usuario").trim().toUpperCase() + "]",Rs.getString("id")});
+                }
+                // Tipo 3 = Desbloqueo
+                else if(Rs.getInt("tipo")==4) {
+                    tm.addRow(new Object[]{lbFin,sdf.format(Rs.getTimestamp("fecha"))+ "   [" + Rs.getString("usuario").trim().toUpperCase() + "]",Rs.getString("id")});
+                }
+                
+                else if(Rs.getInt("tipo")==5) {
+                    tm.addRow(new Object[]{lbInfo,sdf.format(Rs.getTimestamp("fecha"))+ "   [" + Rs.getString("usuario").trim().toUpperCase() + "]",Rs.getString("id")});
+                }
+                
+                 //Mensaje
+                String texto = Rs.getString("texto").trim(); 
+                tm.addRow(new Object[]{" ",texto ,Rs.getString("id")});
+                if(Rs.getBoolean("compromiso"))
+                    tm.addRow(new Object[]{" ", "Compromiso: " + sdf2.format(Rs.getTimestamp("fcompromiso"))});
+                    
+            }
+            
+        } catch (Exception e) {
+            fmMain.Mensaje("Ha ocurrido un error");
+            LogError.Guardar(this.getClass().getSimpleName(),e.getMessage());
+        } finally {
+            Sql.Close();
+        }
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable Grilla;
+    private javax.swing.JTable GrillaBlog;
+    private javax.swing.JTable Grilla_Econa;
+    private javax.swing.JButton btAbrir;
+    private javax.swing.JButton btActualizar;
+    private javax.swing.JButton btAgregar;
+    private javax.swing.JButton btAgregarBlog;
+    private javax.swing.JButton btAsociados;
+    private javax.swing.JButton btCancelar;
+    private javax.swing.JButton btChilemat;
+    private javax.swing.JButton btContacto;
+    private javax.swing.JButton btEditar;
+    private javax.swing.JButton btEliminar;
+    private javax.swing.JButton btEliminar1;
+    private javax.swing.JButton btGuardar;
+    private javax.swing.JButton btImprimir;
+    private javax.swing.JButton btIr;
+    private javax.swing.JButton btLiberar;
+    private javax.swing.JButton btMostrarHistorial;
+    private javax.swing.JButton btNuevo;
+    private javax.swing.JButton btOtrasOrdenes;
+    private javax.swing.JComboBox cbCuotas;
+    private org.jdesktop.swingx.JXDatePicker dtDespacho;
+    private org.jdesktop.swingx.JXDatePicker dtEmision;
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane4;
+    private org.jdesktop.swingx.JXLabel jXLabel1;
+    private javax.swing.JLabel lblNroChilemat;
+    private javax.swing.JPanel pnMenu;
+    private javax.swing.JTextField txCantidadTemporal;
+    private javax.swing.JTextField txCodBarTemporal;
+    private javax.swing.JTextField txComentario;
+    private javax.swing.JTextField txDescTemporal;
+    private javax.swing.JTextField txDias;
+    private javax.swing.JTextField txDv;
+    private javax.swing.JTextField txEstado;
+    private javax.swing.JTextField txExento;
+    private javax.swing.JTextField txExento2;
+    private javax.swing.JTextField txImpEspecifico;
+    private javax.swing.JTextField txImpEspecifico2;
+    private javax.swing.JTextField txIva;
+    private javax.swing.JTextField txIva2;
+    private javax.swing.JTextField txNeto;
+    private javax.swing.JTextField txNeto2;
+    private javax.swing.JTextField txNombre;
+    private javax.swing.JTextField txNroOc;
+    private javax.swing.JTextField txRut;
+    private javax.swing.JLabel txSku;
+    private javax.swing.JTextField txSkuTemporal;
+    private javax.swing.JTextField txTotal;
+    private javax.swing.JTextField txTotal2;
+    private javax.swing.JTextField txTotlineaTemporal;
+    private javax.swing.JTextField txUMTemporal;
+    private javax.swing.JTextField txUnitarioTemporal;
+    private javax.swing.JTextField txVendedor;
+    // End of variables declaration//GEN-END:variables
+}
+

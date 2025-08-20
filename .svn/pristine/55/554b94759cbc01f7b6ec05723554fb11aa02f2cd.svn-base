@@ -1,0 +1,366 @@
+
+package Dialogos;
+
+
+import Formularios.fmMain;
+import Dialogos.jdRecepcion;
+
+/**
+ *
+ * @author Roberto Lopez
+ */
+public class jdAjustarPrecio extends javax.swing.JDialog {
+
+    private boolean Retorno;
+        
+    double Unitario = 0;
+    double Unitario2 = 0;
+    double Recibido = 0;
+    
+    double Cantidad = 0;
+    double valora = 0;
+    double valorajusta = 0;
+    
+    String Sku, Nombre, Medida, Pendiente = "";
+    
+    String unit = "";
+    String unit2 = "";
+    String dif = "";
+    String valor = "";
+    String txRecibido = "";
+    
+    
+    
+    public jdAjustarPrecio(java.awt.Frame parent, boolean modal) {
+        
+        super(parent, modal);
+        initComponents();
+        
+    }
+    
+   
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        btAjustar = new javax.swing.JButton();
+        btCancelar = new javax.swing.JButton();
+        jLabel17 = new javax.swing.JLabel();
+        txPrecioActual = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        txPrecioAjustado = new javax.swing.JTextField();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        btAjustar.setText("Ajustar");
+        btAjustar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAjustarActionPerformed(evt);
+            }
+        });
+
+        btCancelar.setText("Cancelar");
+        btCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCancelarActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setBackground(new java.awt.Color(242, 222, 184));
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel17.setText("Precio Ajustado ");
+        jLabel17.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        jLabel17.setOpaque(true);
+
+        txPrecioActual.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txPrecioActual.setDisabledTextColor(new java.awt.Color(51, 51, 51));
+        txPrecioActual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txPrecioActualActionPerformed(evt);
+            }
+        });
+        txPrecioActual.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txPrecioActualKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txPrecioActualKeyTyped(evt);
+            }
+        });
+
+        jLabel12.setBackground(new java.awt.Color(242, 222, 184));
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("Precio Actual");
+        jLabel12.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        jLabel12.setOpaque(true);
+
+        txPrecioAjustado.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txPrecioAjustado.setToolTipText("");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(30, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btAjustar, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addComponent(btCancelar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE))
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txPrecioActual, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                            .addComponent(txPrecioAjustado))))
+                .addGap(25, 25, 25))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(txPrecioActual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(txPrecioAjustado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btAjustar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    public void SetAjusta(String sku, String nombre, String medida, String valor_unitario,String cantidad,String recibido, String pendiente, String valor_actual){
+
+        Sku = sku;
+        Nombre = nombre;
+        Medida = medida;
+        Unitario = Double.parseDouble(valor_unitario);
+        Cantidad = Double.parseDouble(cantidad);
+        txRecibido = recibido.toString().replaceAll(",", "");
+        Recibido = Double.parseDouble(txRecibido);
+//      Recibido = Double.parseDouble(recibido);
+        Pendiente = pendiente;
+        txPrecioActual.setText(valor_actual);
+        valor = txPrecioActual.getText().replaceAll(",","");
+        valora = Double.parseDouble(valor);
+                       
+    }
+    
+    
+    public String GetValor(){
+
+        return valor;
+    }
+    
+    
+    public String GetUnitario(){
+
+        return unit2;
+    }
+    
+    
+    public String GetUnitAnterior(){
+
+        return unit;
+    }
+    public String GetDif(){
+
+        return dif;
+    }
+    
+    
+    
+     public Object[] GetAjusta(){
+       
+       
+         
+         
+//        if(Retorno){    
+            
+            return new Object[]{Sku,
+                                Nombre,
+                                Medida,
+                                unit2,
+                                Cantidad,
+                                Recibido,
+                                Pendiente,
+                                valor};   
+            
+            
+//        }else{
+//        
+//         
+//            
+//          return null;
+//        
+//        }     
+            
+       
+    }
+    
+    
+    
+    private void btCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarActionPerformed
+       
+       Retorno= false;
+       dispose(); 
+       
+    }//GEN-LAST:event_btCancelarActionPerformed
+
+    private void btAjustarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAjustarActionPerformed
+        
+        double diferencia = 0;
+        if (txPrecioAjustado.getText().equals("")){
+        
+             txPrecioAjustado.setText("0");
+        
+        }
+        
+        valorajusta = Double.parseDouble(txPrecioAjustado.getText());
+        valora = valorajusta;
+        
+        Unitario2 = valora / Recibido;
+        
+//        System.out.println("EL UNITARIO 2 ES "+Unitario2);
+        
+        
+        diferencia = Unitario - Unitario2;
+        
+        
+//        System.out.println("LA DIFERENCIA ES "+diferencia);
+        
+//        if (diferencia > 2 || diferencia < -2){
+//           
+//            fmMain.Mensaje("Solicitar ajuste a Compras");
+//            return;
+//       
+//        }  
+        
+        valor = String.valueOf(valora);
+        unit2 = String.valueOf(Unitario2);
+        unit = String.valueOf(Unitario);
+        dif = String.valueOf(diferencia);
+        
+        Retorno = true;
+      
+        dispose();
+       
+        
+    }//GEN-LAST:event_btAjustarActionPerformed
+    
+    
+    private void txPrecioActualKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txPrecioActualKeyTyped
+        
+//        char car = evt.getKeyChar();
+//        
+//        if (car=='.'){   
+//           
+//           char x;
+//           int conta=0;
+//           
+//           for (int y=0; y < txPrecioActual.getText().length(); y++ ){
+//                        
+//                x = txPrecioActual.getText().charAt(y);
+//                 
+//                if (x=='.'){
+//                   conta++;
+//                }
+//                
+//                if (conta==1){
+//                    evt.consume(); 
+//                }
+//           }
+//        }
+//            
+//        if(((car<'0') || (car>'9')) && ((car<'.') || (car>'.'))){
+//           evt.consume(); 
+//        }        
+        
+        
+    }//GEN-LAST:event_txPrecioActualKeyTyped
+
+    private void txPrecioActualKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txPrecioActualKeyReleased
+       
+    }//GEN-LAST:event_txPrecioActualKeyReleased
+
+    private void txPrecioActualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txPrecioActualActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txPrecioActualActionPerformed
+     
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(jdAjustarPrecio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(jdAjustarPrecio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(jdAjustarPrecio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(jdAjustarPrecio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the dialog */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                jdAjustarPrecio dialog = new jdAjustarPrecio(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btAjustar;
+    private javax.swing.JButton btCancelar;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JTextField txPrecioActual;
+    private javax.swing.JTextField txPrecioAjustado;
+    // End of variables declaration//GEN-END:variables
+}

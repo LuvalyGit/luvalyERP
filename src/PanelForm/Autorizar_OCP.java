@@ -1,0 +1,1108 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package PanelForm;
+
+import Conexion.ExeSql;
+import Formularios.fmMain;
+import static Formularios.fmMain.pnPestanas;
+import Utilidades.PanelTab;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Font;
+import java.awt.HeadlessException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
+
+/**
+ *
+ * @author David Alcaman
+ */
+public class Autorizar_OCP extends javax.swing.JPanel {
+    
+    DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    
+    public static Color DARK_GREEN = new Color(0,153,0);
+    static boolean sobre_stock = false; 
+    boolean autoriza = false;
+    
+    
+       /**
+     * Creates new form OC_Clientes
+     */
+    public Autorizar_OCP() {
+        initComponents();
+       
+        //System.out.println("EL USUARIO  ES : "+ fmMain.GetUsuario().toLowerCase());        
+        
+        
+        btAutorizar.setVisible(false);
+        btRechazar.setVisible(false);
+        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        GrillaProductos.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        GrillaProductos.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        GrillaProductos.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        GrillaProductos.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+        GrillaProductos.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
+        GrillaProductos.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+        GrillaProductos.getColumnModel().getColumn(8).setCellRenderer(centerRenderer);
+                
+//        GrillaOCP.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+//        GrillaOCP.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+//        
+//        GrillaOCP.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
+//        GrillaOCP.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
+//        GrillaOCP.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
+                
+        GrillaOCP.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            //Se ejecuta automáticamente cada vez que se hace una nueva selección. 
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                
+                if(GrillaOCP.getSelectedRowCount()>0){
+                    sobre_stock = false;
+                    
+                     if (!autoriza){
+                        //CargaProductos((Integer) GrillaOCP.getValueAt(GrillaOCP.getSelectedRow(),0));
+                        CargaProductos(Integer.valueOf(GrillaOCP.getValueAt(GrillaOCP.getSelectedRow(),0).toString().trim()));
+                     }
+                }
+                    
+            }
+
+        });
+        GrillaProductos.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            //Se ejecuta automáticamente cada vez que se hace una nueva selección. 
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+//                    if(GrillaProductos.getRowCount()>0 && GrillaDatos.getRowCount()>0){
+//                       
+//                        GrillaDatos.getSelectionModel().setSelectionInterval(GrillaProductos.getSelectedRow(),GrillaProductos.getSelectedRow());
+//                        GrillaDatos.repaint();
+//                    }
+            }
+
+        });
+        
+        
+        btActualizar.doClick();
+                //MOSTRAR BOTÓN AUTORIZAR
+        int pruebaUusario = 85;
+        int intNivelUsuario = 0;
+        intNivelUsuario = fmMain.trae_nivel(fmMain.GetUsuario());
+        
+        if( intNivelUsuario >= pruebaUusario){
+            btAutorizar.setVisible(true);
+            btRechazar.setVisible(true);
+        }else{
+        }
+                
+         pnOCC.setVisible(false);
+       
+        
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jPopupMenu2 = new javax.swing.JPopupMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        GrillaOCP = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        GrillaProductos = new javax.swing.JTable();
+        btActualizar = new javax.swing.JButton();
+        btAutorizar = new javax.swing.JButton();
+        btRechazar = new javax.swing.JButton();
+        pnOCC = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        Grilla_OCC = new javax.swing.JTable();
+
+        jMenuItem1.setText("Ver Producto");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItem1);
+
+        jMenuItem2.setText("Ver Productos");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jPopupMenu2.add(jMenuItem2);
+
+        setToolTipText("");
+
+        GrillaOCP.setAutoCreateRowSorter(true);
+        GrillaOCP.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        GrillaOCP.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Número", "Fecha", "Rut", "Proveedor", "Neto", "Iva", "Total", "occhilemat", "Usuario"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        GrillaOCP.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        GrillaOCP.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                GrillaOCPMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(GrillaOCP);
+        if (GrillaOCP.getColumnModel().getColumnCount() > 0) {
+            GrillaOCP.getColumnModel().getColumn(0).setMinWidth(70);
+            GrillaOCP.getColumnModel().getColumn(0).setPreferredWidth(70);
+            GrillaOCP.getColumnModel().getColumn(0).setMaxWidth(70);
+            GrillaOCP.getColumnModel().getColumn(1).setMinWidth(80);
+            GrillaOCP.getColumnModel().getColumn(1).setPreferredWidth(80);
+            GrillaOCP.getColumnModel().getColumn(1).setMaxWidth(80);
+            GrillaOCP.getColumnModel().getColumn(2).setMinWidth(70);
+            GrillaOCP.getColumnModel().getColumn(2).setPreferredWidth(70);
+            GrillaOCP.getColumnModel().getColumn(2).setMaxWidth(70);
+            GrillaOCP.getColumnModel().getColumn(3).setMinWidth(300);
+            GrillaOCP.getColumnModel().getColumn(3).setPreferredWidth(300);
+            GrillaOCP.getColumnModel().getColumn(4).setMinWidth(70);
+            GrillaOCP.getColumnModel().getColumn(4).setPreferredWidth(70);
+            GrillaOCP.getColumnModel().getColumn(4).setMaxWidth(70);
+            GrillaOCP.getColumnModel().getColumn(5).setMinWidth(60);
+            GrillaOCP.getColumnModel().getColumn(5).setPreferredWidth(60);
+            GrillaOCP.getColumnModel().getColumn(5).setMaxWidth(60);
+            GrillaOCP.getColumnModel().getColumn(6).setMinWidth(70);
+            GrillaOCP.getColumnModel().getColumn(6).setPreferredWidth(70);
+            GrillaOCP.getColumnModel().getColumn(6).setMaxWidth(70);
+            GrillaOCP.getColumnModel().getColumn(7).setMinWidth(0);
+            GrillaOCP.getColumnModel().getColumn(7).setPreferredWidth(0);
+            GrillaOCP.getColumnModel().getColumn(7).setMaxWidth(0);
+            GrillaOCP.getColumnModel().getColumn(8).setMinWidth(80);
+            GrillaOCP.getColumnModel().getColumn(8).setPreferredWidth(80);
+            GrillaOCP.getColumnModel().getColumn(8).setMaxWidth(80);
+        }
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setText("ORDENES DE COMPRA PROVEEDOR");
+
+        GrillaProductos.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        GrillaProductos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Codigo", "Nombre", "Cant*Emb", "Cant.", "Stock", "OCC", "OCP", "Total", "Vta. en 3 Meses", "CodPrv", "Valor Unitario", "Ult. Compra", "idchile"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true, false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        GrillaProductos.setComponentPopupMenu(jPopupMenu1);
+        GrillaProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                GrillaProductosMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(GrillaProductos);
+        if (GrillaProductos.getColumnModel().getColumnCount() > 0) {
+            GrillaProductos.getColumnModel().getColumn(0).setMinWidth(70);
+            GrillaProductos.getColumnModel().getColumn(0).setPreferredWidth(70);
+            GrillaProductos.getColumnModel().getColumn(0).setMaxWidth(70);
+            GrillaProductos.getColumnModel().getColumn(1).setMinWidth(350);
+            GrillaProductos.getColumnModel().getColumn(1).setPreferredWidth(350);
+            GrillaProductos.getColumnModel().getColumn(2).setMinWidth(70);
+            GrillaProductos.getColumnModel().getColumn(2).setPreferredWidth(70);
+            GrillaProductos.getColumnModel().getColumn(2).setMaxWidth(70);
+            GrillaProductos.getColumnModel().getColumn(3).setMinWidth(50);
+            GrillaProductos.getColumnModel().getColumn(3).setPreferredWidth(50);
+            GrillaProductos.getColumnModel().getColumn(3).setMaxWidth(50);
+            GrillaProductos.getColumnModel().getColumn(4).setMinWidth(50);
+            GrillaProductos.getColumnModel().getColumn(4).setPreferredWidth(50);
+            GrillaProductos.getColumnModel().getColumn(4).setMaxWidth(50);
+            GrillaProductos.getColumnModel().getColumn(5).setMinWidth(50);
+            GrillaProductos.getColumnModel().getColumn(5).setPreferredWidth(50);
+            GrillaProductos.getColumnModel().getColumn(5).setMaxWidth(50);
+            GrillaProductos.getColumnModel().getColumn(6).setMinWidth(50);
+            GrillaProductos.getColumnModel().getColumn(6).setPreferredWidth(50);
+            GrillaProductos.getColumnModel().getColumn(6).setMaxWidth(50);
+            GrillaProductos.getColumnModel().getColumn(7).setMinWidth(55);
+            GrillaProductos.getColumnModel().getColumn(7).setPreferredWidth(55);
+            GrillaProductos.getColumnModel().getColumn(7).setMaxWidth(55);
+            GrillaProductos.getColumnModel().getColumn(8).setMinWidth(90);
+            GrillaProductos.getColumnModel().getColumn(8).setPreferredWidth(90);
+            GrillaProductos.getColumnModel().getColumn(8).setMaxWidth(90);
+            GrillaProductos.getColumnModel().getColumn(9).setMinWidth(65);
+            GrillaProductos.getColumnModel().getColumn(9).setPreferredWidth(65);
+            GrillaProductos.getColumnModel().getColumn(9).setMaxWidth(65);
+            GrillaProductos.getColumnModel().getColumn(10).setMinWidth(50);
+            GrillaProductos.getColumnModel().getColumn(10).setPreferredWidth(50);
+            GrillaProductos.getColumnModel().getColumn(11).setMinWidth(50);
+            GrillaProductos.getColumnModel().getColumn(11).setPreferredWidth(50);
+            GrillaProductos.getColumnModel().getColumn(12).setMinWidth(0);
+            GrillaProductos.getColumnModel().getColumn(12).setPreferredWidth(0);
+            GrillaProductos.getColumnModel().getColumn(12).setMaxWidth(0);
+        }
+
+        btActualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/refresh16.png"))); // NOI18N
+        btActualizar.setText("Actualizar");
+        btActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btActualizarActionPerformed(evt);
+            }
+        });
+
+        btAutorizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/ok_16.png"))); // NOI18N
+        btAutorizar.setText("Autorizar");
+        btAutorizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAutorizarActionPerformed(evt);
+            }
+        });
+
+        btRechazar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/Cancel16.png"))); // NOI18N
+        btRechazar.setText("Rechazar");
+        btRechazar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btRechazarActionPerformed(evt);
+            }
+        });
+
+        pnOCC.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        Grilla_OCC.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Codigo OC", "Orden", "Cant", "Venta Neto", "Margen"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(Grilla_OCC);
+        if (Grilla_OCC.getColumnModel().getColumnCount() > 0) {
+            Grilla_OCC.getColumnModel().getColumn(2).setMinWidth(40);
+            Grilla_OCC.getColumnModel().getColumn(2).setPreferredWidth(40);
+            Grilla_OCC.getColumnModel().getColumn(3).setMinWidth(70);
+            Grilla_OCC.getColumnModel().getColumn(3).setPreferredWidth(70);
+            Grilla_OCC.getColumnModel().getColumn(4).setMinWidth(45);
+            Grilla_OCC.getColumnModel().getColumn(4).setPreferredWidth(45);
+        }
+
+        javax.swing.GroupLayout pnOCCLayout = new javax.swing.GroupLayout(pnOCC);
+        pnOCC.setLayout(pnOCCLayout);
+        pnOCCLayout.setHorizontalGroup(
+            pnOCCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 309, Short.MAX_VALUE)
+            .addGroup(pnOCCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        pnOCCLayout.setVerticalGroup(
+            pnOCCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(pnOCCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnOCCLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(199, 199, 199)
+                        .addComponent(btAutorizar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btRechazar)
+                        .addGap(103, 103, 103)
+                        .addComponent(btActualizar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 829, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(pnOCC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btAutorizar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btRechazar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(pnOCC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
+                .addGap(10, 10, 10)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btActualizarActionPerformed
+        autoriza = true;
+        String us = "";
+        
+        
+        ExeSql Sql = new ExeSql();
+        ExeSql Sql2 = new ExeSql();
+        ExeSql Sql3 = new ExeSql();
+        
+        ResultSet Rs = null;
+        ResultSet Rs2 = null;
+        ResultSet Rs3 = null;
+        
+        DefaultTableModel Tmodel = (DefaultTableModel) GrillaOCP.getModel();
+        DefaultTableModel TableModel4 = (DefaultTableModel) GrillaProductos.getModel();
+        
+        
+        while(Tmodel.getRowCount()>0)
+        Tmodel.removeRow(0);
+        
+        while(TableModel4.getRowCount()>0)
+        TableModel4.removeRow(0);
+        
+     
+//        
+        try {
+            Rs = Sql.Select("select oc.nrodocto, cast(oc.fcreacion as date) as fecha, oc.rut, p.nombre, \n"+
+                            "oc.totalafecto,oc.totaliva,oc.totaldocto,oc.cuotas,oc.dias, \n"+
+                            "case when oc.occhilemat is null then 0 else oc.occhilemat end as chilemat,\n"+
+                            "case when par.nombre is null then '' else par.nombre end as tipopago, oc.usuario \n" +
+                            "from ctacteprv oc\n" +
+                            "left join proveedor p on p.rut=oc.rut\n" +
+                            "left join par_general par on par.tipo='TIPOPAGOPRV' and par.codigo=oc.tipopago\n" +
+                            "where oc.tipdocto='OCP'\n" +
+                            "and oc.estado=-1 \n"+
+                            "order by oc.nrodocto DESC");
+            
+            
+            for(int i = 0;Rs.next(); i++){
+                
+                
+                Rs2 = Sql2.Select("select p.usuario,p.rutmp \n"+
+                                  "from personal p\n" +                                                                 //a la consulta SQL
+                                  "where p.usuario='" + Rs.getString("usuario").trim().toUpperCase() + "'");
+                
+                 Rs2.next();
+                
+                if(Rs2.getString("usuario").trim().contains("BODEG") || Rs2.getString("usuario").trim().contains("bodeg") ||
+                   Rs2.getString("usuario").trim().contains("ADMIN") || Rs2.getString("usuario").trim().contains("admi") ||
+                   Rs2.getString("usuario").trim().contains("JBODEG") || Rs2.getString("usuario").trim().contains("jbodeg")||
+                   Rs2.getString("usuario").trim().contains("COMPRA") || Rs2.getString("usuario").trim().contains("compra")){
+                 
+                 
+                    String rutmp = "0";
+                    
+                    if (Rs2.getString("rutmp").trim().equals("0")){
+                    
+                        rutmp = "00";
+                        
+                    
+                    }else{
+                    
+                       rutmp =  Rs2.getString("rutmp").trim();
+                    
+                    }
+                    
+                    
+                    Rs3 = Sql3.Select("select p.nombre,p.apellidopaterno,p.usuario \n"+
+                                      "from personal p\n" +                                                                 //a la consulta SQL
+                                      "where p.rut='" + rutmp.trim().substring(0,rutmp.trim().length()-1 ) + "'");
+                
+                    if (Sql3.GetRowCount() > 0){
+                    
+                        Rs3.next();
+                
+                        us = Rs3.getString("usuario");
+                    
+                    }else {
+                    
+                        us = Rs.getString("usuario");
+                        
+                    } 
+                     
+                 
+                 
+                }else{
+                
+                    us = Rs.getString("usuario");
+                
+                }
+                 
+                 
+                 
+                
+                
+                
+                Tmodel.addRow(new Object[]{ Rs.getString("nrodocto"),
+                                            Rs.getString("fecha"), 
+                                            Rs.getString("rut"), 
+                                            Rs.getString("nombre"),
+                                            fmMain.FormatoTotal(Rs.getDouble("totalafecto")),
+                                            fmMain.FormatoTotal(Rs.getDouble("totaliva")),
+                                            fmMain.FormatoTotal(Rs.getDouble("totaldocto")),
+//                                            Rs.getInt("cuotas"),
+//                                            Rs.getString("dias"),
+//                                            Rs.getString("tipopago"),
+                                            Rs.getString("chilemat"),
+                                            us
+                                         });
+            }
+            
+            
+             
+             GrillaOCP.setDefaultRenderer(Object.class, new Elrender2()); 
+
+        } catch (SQLException e) {
+            
+            System.out.println(e);
+            Logger.getLogger(Autorizar_OCP.class.getName()).log(Level.SEVERE, null, e);
+            
+        }finally{
+            
+            Sql.Close();
+            Sql2.Close();
+            Sql3.Close();
+            autoriza = false;
+        }
+    }//GEN-LAST:event_btActualizarActionPerformed
+
+    private void btAutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAutorizarActionPerformed
+        
+        if(fmMain.OkCancel("Autorizar Orden de Compra " + GrillaOCP.getValueAt(GrillaOCP.getSelectedRow(),0))== JOptionPane.OK_OPTION){
+            ExeSql Sql = new ExeSql();
+            String usuario_autoriza = fmMain.GetUsuario().toLowerCase();
+            try {
+                Sql.ExeSql("update ctacteprv \n" +
+                            "set estado = -3, \n" +
+                            "autoriza_usuario ='"+usuario_autoriza+"' \n"+
+                            "where tipdocto in ('OCP') \n" +
+                            "and nrodocto=" + GrillaOCP.getValueAt(GrillaOCP.getSelectedRow(),0).toString());
+                Sql.Commit();
+                fmMain.Mensaje("Autorizado");
+                autoriza = true;
+                eliminar(GrillaOCP.getSelectedRow());
+                
+            } catch (SQLException e) {
+
+                JOptionPane.showMessageDialog(null,"Error: "+e);
+                Logger.getLogger(Autorizar_OCP.class.getName()).log(Level.SEVERE, null, e);
+            } finally{
+                Sql.Close();
+                
+            }
+            
+        }
+            
+    }//GEN-LAST:event_btAutorizarActionPerformed
+
+     private void eliminar(int fila){
+    
+        DefaultTableModel Tmodel = (DefaultTableModel) GrillaOCP.getModel();
+        DefaultTableModel TableModel4 = (DefaultTableModel) GrillaProductos.getModel();
+  
+        Tmodel.removeRow(fila);
+       
+        while(TableModel4.getRowCount()>0)
+            TableModel4.removeRow(0);
+        
+      
+        autoriza = false;
+    }
+    
+    
+    private void btRechazarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRechazarActionPerformed
+        
+        if(fmMain.OkCancel("Rechazar Orden de Compra " + GrillaOCP.getValueAt(GrillaOCP.getSelectedRow(),0))== JOptionPane.OK_OPTION){
+            
+//            ExeSql Sql = new ExeSql();
+//            
+//            try {
+//                
+//                Sql.ExeSql("update ctacteprv \n" +
+//                           "set estado=-2\n" +
+//                           "where tipdocto='OCP'\n" +
+//                           "and nrodocto=" + GrillaOCP.getValueAt(GrillaOCP.getSelectedRow(),0).toString());
+//                Sql.Commit();
+//            
+//                fmMain.Mensaje("Rechazado");
+//                
+//                btActualizar.doClick();
+//            
+//            } catch (Exception e) {
+//            
+//                JOptionPane.showMessageDialog(null,"Error: "+e);
+//                Logger.getLogger(Autorizar_OCP.class.getName()).log(Level.SEVERE, null, e);
+//            
+//            } finally{
+//                Sql.Close();
+//            }
+            
+            
+                ExeSql Sql = new ExeSql();
+                ResultSet Rs;
+
+                String Rut = "";
+                String Orden = "";
+        
+                try {
+            
+            
+                    Orden = GrillaOCP.getValueAt(GrillaOCP.getSelectedRow(),0).toString().trim();
+                    Rut   = GrillaOCP.getValueAt(GrillaOCP.getSelectedRow(),2).toString().trim();
+            
+                    //Verificar Recepción
+                    Rs = Sql.Select("select count(*) as Existe from recepcionprv where ocp=" + Orden.trim());
+                    Rs.next();
+            
+                    if(Rs.getInt("Existe")>0){
+                        
+                        JOptionPane.showMessageDialog(null, "Orden de Compra con movimientos. No se puede Eliminar");
+                        return;
+                    }
+            
+                    Sql.ExeSql("delete from ctacteprv where rut=" + Rut.trim() + " and tipdocto='OCP' and nrodocto=" + Orden.trim());
+                
+                    Sql.ExeSql("insert into folioslibres \n" +
+                               "(tipdocto,nrodocto) values\n" +
+                               "('OCP',"+ Orden.trim() + ")");
+                
+                    Sql.Commit();
+               
+                    //JOptionPane.showMessageDialog(null, "Orden Liberada");
+            
+                } catch (SQLException | HeadlessException e) {
+                
+                    JOptionPane.showMessageDialog(null, e);
+                
+                }finally{
+            
+                    Sql.Close();
+                }
+            
+        }
+    }//GEN-LAST:event_btRechazarActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        pfProductos Pro = new pfProductos();
+        Pro.setOpaque(false);
+        pnPestanas.addTab("Producto", Pro);
+        PanelTab btc = new PanelTab(pnPestanas, 0);
+        pnPestanas.setTabComponentAt(pnPestanas.indexOfComponent(Pro), btc);
+        pnPestanas.setSelectedIndex(pnPestanas.getTabCount() - 1);
+        Pro.txSku.requestFocus();
+        Pro.CargaProducto(GrillaProductos.getValueAt(GrillaProductos.getSelectedRow(), 0).toString().trim());
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        pfProductos Pro = new pfProductos();
+        Pro.setOpaque(false);
+        pnPestanas.addTab("Producto", Pro);
+        PanelTab btc = new PanelTab(pnPestanas, 0);
+        pnPestanas.setTabComponentAt(pnPestanas.indexOfComponent(Pro), btc);
+        pnPestanas.setSelectedIndex(pnPestanas.getTabCount() - 1);
+        Pro.txSku.requestFocus();
+        
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void GrillaOCPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_GrillaOCPMouseClicked
+        if(evt.getClickCount()==2){
+            pfOCProveedor PrvOC = new pfOCProveedor();
+            PrvOC.setOpaque(false);
+            pnPestanas.addTab("OC Proveedor", PrvOC);
+            PanelTab btc=new PanelTab(pnPestanas,0);
+            pnPestanas.setTabComponentAt(pnPestanas.indexOfComponent(PrvOC), btc);
+            pnPestanas.setSelectedIndex(pnPestanas.getTabCount()-1);
+            PrvOC.AbrirOCP(GrillaOCP.getValueAt(GrillaOCP.getSelectedRow(), 0).toString().trim());
+        }
+    }//GEN-LAST:event_GrillaOCPMouseClicked
+
+    private void GrillaProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_GrillaProductosMouseClicked
+        
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs = null;
+        
+        DefaultTableModel TableModel  = (DefaultTableModel) Grilla_OCC.getModel();
+       
+        while(TableModel.getRowCount()>0)
+              TableModel.removeRow(0);
+        
+        int occ = 0;
+        double costo = 0;
+        String Sku = "";
+        
+        if(evt.getClickCount()==1){
+            
+            Sku = GrillaProductos.getValueAt(GrillaProductos.getSelectedRow(), 0).toString().trim();
+            occ = Integer.parseInt(GrillaProductos.getValueAt(GrillaProductos.getSelectedRow(), 5).toString().trim());
+            costo = Double.parseDouble(GrillaProductos.getValueAt(GrillaProductos.getSelectedRow(), 10).toString().trim().replaceAll("\\,", ""));
+            
+        
+            System.out.println("LA occ ES : "+occ);
+        
+            if (occ < 0){
+            
+                
+                System.out.println("ENTRA!!!!");
+                
+                pnOCC.setVisible(true);
+                
+                try {
+                    
+                    Rs = Sql.Select("select ocd.sku,ocd.codigo_oc, ocd.orden, (ocd.cantidad - ocd.despachado) as occ, ocd.valorunitario from occhdet ocd\n" +
+                            "where ocd.sku IN ('"+Sku.trim()+"') and (ocd.cantidad - ocd.despachado) > 0\n" +
+                            "and ocd.codigo_oc <> 99999");
+                    
+                    if (Sql.GetRowCount() > 0){
+                    
+                        while (Rs.next()){
+                        
+                            double venta = Rs.getDouble("valorunitario");
+                            double margen =  Math.round(((venta - costo)  / venta) * 100);
+                        
+                            TableModel.addRow(new Object[]{   Rs.getString("codigo_oc").trim(),  
+                                                              Rs.getString("orden").trim(), 
+                                                              Rs.getString("occ").trim(),
+                                                              Rs.getDouble("valorunitario"),
+                                                              margen
+                                                  
+                            });
+                        
+                        }
+                        
+                        
+                    
+                    
+                    
+                    }
+                    
+                    
+                } catch (SQLException ex) {
+                    Logger.getLogger(Autorizar_OCP.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                
+                
+                
+                
+            
+            }else {
+            
+                System.out.println("NO PUEDE ENTRAR!!!!");
+                
+                pnOCC.setVisible(false);
+            
+            
+            }
+            
+            
+            
+        
+        
+        }
+        
+        
+        
+        
+    }//GEN-LAST:event_GrillaProductosMouseClicked
+    private void CargaProductos(int Numero){
+        ExeSql Sql = new ExeSql();
+        ExeSql Sql2 = new ExeSql();
+        ResultSet Rs = null;
+        ResultSet Rs2 = null;
+        DefaultTableModel TableModel  = (DefaultTableModel) GrillaProductos.getModel();
+       
+        
+        while(TableModel.getRowCount()>0)
+              TableModel.removeRow(0);
+        
+        
+        
+        try {
+            
+            
+//            Rs = Sql.Select("select distinct on (d.sku) d.sku,p.nombre, d.cantidad,d.totallinea,i.stock, i.ocp,i.occ,\n" +
+//                            "case when p.display is null then 0 else p.display end, \n"+
+//                            "case when cb.codbar is null then '' else cb.codbar end, \n" +
+//                            "d.valorunitario, p.valultcompra \n"+
+//                            "from ctacteprvdet d\n" +
+//                            "left join producto p on p.sku=d.sku\n" +
+//                            "left join inventario i on i.sku=d.sku \n" +
+//                            "left join codbar cb on d.sku=cb.sku and d.rut = cb.rutprv \n" +
+//                            "where d.tipdocto='OCP'\n" +
+//                            "and d.nrodocto=" + Numero);
+            
+            
+            Rs = Sql.Select("select distinct on (d.sku) d.sku,p.nombre, d.cantidad,d.totallinea,i.stock, i.ocp,i.occ,\n" +
+                            "case when p.display is null then 0 else p.display end, \n"+
+                            "case when cb.codbar is null then '' else cb.codbar end, \n" +
+                            "d.valorunitario, p.valultcompra, \n"+
+                            "case when cch.sku  is null then '0' else '1' end as idchile \n"+
+                            "from ctacteprvdet d\n" +
+                            "left join producto p on p.sku=d.sku\n" +
+                            "left join inventario i on i.sku=d.sku \n" +
+                            "left join codbar cb on d.sku=cb.sku and d.rut = cb.rutprv \n" +
+                            "left join codchile cch on d.sku = cch.sku \n"+
+                            "where d.tipdocto='OCP'\n" +
+                            "and d.nrodocto=" + Numero);
+            
+            
+            
+            while(Rs.next()){
+                
+                int total = Rs.getInt("cantidad") + (Rs.getInt("occ") + Rs.getInt("stock") + ((Rs.getInt("ocp")-Rs.getInt("cantidad"))));
+                String Sku = Rs.getString("sku").trim();
+                String vendido = "";
+                
+                Rs2 = Sql2.Select("SELECT case when sum(cli.cantidad) is null then 0 else sum(cli.cantidad) end as vendido from ctacteclidet cli\n" +
+                                  "LEFT JOIN ctactecli cl ON cli.rut = cl.rut AND cli.tipdocto = cl.tipdocto AND cli.nrodocto = cl.nrodocto\n" +
+                                  "WHERE cli.tipdocto IN ('BOC','FAC') \n"+
+                                  "AND (cl.femision BETWEEN current_date-90 AND current_date-1) AND cli.sku = '"+Sku+"'");
+                
+                if (Sql2.GetRowCount() > 0){
+                    
+                    Rs2.next();
+                    
+                    vendido = Rs2.getString("vendido");
+                }else {
+                
+                    vendido = "0";    
+                }
+                
+                
+                TableModel.addRow(new Object[]{   Rs.getString("sku").trim(),  
+                                                  Rs.getString("nombre").trim(), 
+                                                  Rs.getString("display").trim(), 
+                                                  Rs.getInt("cantidad"),
+                                                  Rs.getString("stock").trim(),
+                                                  Rs.getString("occ").trim(),
+                                                  Rs.getInt("ocp")-Rs.getInt("cantidad"),
+                                                  total,
+                                                  vendido,
+                                                  Rs.getString("codbar").trim(), 
+                                                  fmMain.FormatoTotal(Rs.getDouble("valorunitario")),
+                                                  fmMain.FormatoTotal(Rs.getDouble("valultcompra")),
+                                                  Rs.getString("idchile")
+                                                  
+                                             });
+            
+                 
+                 
+            }
+            
+            GrillaProductos.setDefaultRenderer(Object.class, new Elrender()); 
+          //  GrillaProductos.getColumnModel().getColumn(9).setCellRenderer(new Elrender());
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }finally{
+            Sql.Close();
+        }
+        
+    }
+    
+//    class Elrender extends DefaultTableCellRenderer {
+//         
+//        @Override
+//        public Component getTableCellRendererComponent(JTable tabla, Object valor, boolean isSelected, boolean hasFocus, int fila, int columna) {
+//        
+//            JLabel cell = (JLabel) super.getTableCellRendererComponent(tabla,valor,isSelected, hasFocus, fila, columna);    
+//           
+//            if (valor instanceof String){ 
+//           
+//                String cvalor = (String) valor;
+//                
+//                if (cvalor.isEmpty()){
+//              
+//                    cell.setBackground(Color.red);
+//                    cell.setForeground(Color.white);
+//                                   
+//                }else{
+//                        
+//                    cell.setBackground(DARK_GREEN);    
+//                    cell.setForeground(Color.white);   
+//                
+//                }
+//            
+//            }
+//            
+//            return cell;
+//        }
+//        
+//    }
+    
+    
+    class Elrender extends DefaultTableCellRenderer {
+         
+        @Override
+        public Component getTableCellRendererComponent(JTable tabla, Object valor, boolean isSelected, boolean hasFocus, int fila, int columna) {
+        
+            Component componente = super.getTableCellRendererComponent(tabla,valor,isSelected, hasFocus, fila, columna);    
+           
+            
+            
+            if(fila==tabla.getSelectedRow()){
+                
+                    componente.setForeground(Color.white);
+                    componente.setBackground(Color.blue);
+                    //componente.setFont(new Font("Arial", Font.BOLD, 12));
+                    componente.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);  //alinia a la izquierda
+                
+                
+            }else{
+                 
+                componente.setForeground(Color.black);
+                componente.setBackground(Color.white);
+                componente.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+                    
+                    
+            }    
+            
+            
+           
+            if (columna == 9){ 
+           
+                String cvalor = tabla.getValueAt(fila,9).toString().trim();
+                
+                if (cvalor.isEmpty()){
+              
+                    componente.setBackground(Color.red);
+                    componente.setForeground(Color.white);
+                    
+                                   
+                }else{
+                        
+                    componente.setBackground(DARK_GREEN);    
+                    componente.setForeground(Color.white);   
+                
+                }
+            
+            }
+            
+            
+            if (columna == 10){ 
+           
+                Double unitario = Double.parseDouble(tabla.getValueAt(fila,10).toString().trim().replaceAll("\\,", ""));
+                Double ultcompra = Double.parseDouble(tabla.getValueAt(fila,11).toString().trim().replaceAll("\\,", ""));
+                
+//               System.out.println("unitario ES : "+unitario);
+//               System.out.println("ultcompra ES : "+ultcompra);
+//                
+                
+                
+                if (unitario > ultcompra && ultcompra > 0 ){
+                    
+                    if(isSelected==true){
+                    
+                        componente.setForeground(Color.white);
+                        componente.setBackground(Color.red);
+                        componente.setFont(new Font("Tahoma", Font.BOLD, 11));
+                        componente.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);  //alinia a la derecha
+                    
+                    }else {
+                        
+                        componente.setForeground(Color.red);
+                        componente.setFont(new Font("Tahoma", Font.BOLD, 11));
+                        componente.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                    
+                    }
+                                   
+                }else{
+
+                    if(isSelected==true){
+                    
+                        componente.setForeground(Color.white);
+                        componente.setBackground(Color.blue);
+                        componente.setFont(new Font("Tahoma", Font.BOLD, 11));
+                        componente.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                        
+                    }else{
+                        
+                        componente.setForeground(Color.black);
+                        componente.setBackground(Color.white);
+                        componente.setFont(new Font("Tahoma", Font.BOLD, 11));
+                        componente.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                    
+                    
+                    }
+                }
+            
+            }
+            
+            
+            if (columna == 11){ 
+             
+                componente.setFont(new Font("Tahoma", Font.BOLD, 11));
+                componente.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+             
+            }
+            
+            
+            if (columna == 0){ 
+             
+                 if (tabla.getValueAt(fila,12).toString().trim().equals("1")){
+                 
+                    componente.setForeground(Color.black);
+                    componente.setBackground(Color.YELLOW);
+                     
+                 
+                 }else {
+                 
+                    componente.setForeground(Color.black);
+                    componente.setBackground(Color.white);
+                 
+                 
+                 }
+               
+             
+            }
+            
+            
+            
+            
+            return componente;
+        }
+        
+    }
+    
+    
+    
+    
+    class Elrender2 extends DefaultTableCellRenderer {
+         
+        @Override
+        public Component getTableCellRendererComponent(JTable tabla, Object valor, boolean isSelected, boolean hasFocus, int fila, int columna) {
+        
+            super.getTableCellRendererComponent(tabla,valor,isSelected, hasFocus, fila, columna);    
+           
+             if (!tabla.getValueAt(fila,7).toString().trim().equals("0")){       
+            
+                if(isSelected==true){ 
+                 
+                    this.setForeground(Color.white);
+                    this.setBackground(DARK_GREEN);   
+                    this.setFont(new Font("Tahoma", Font.BOLD, 11));
+                
+                
+                }else{
+                
+                     
+                    this.setForeground(Color.black);
+                    this.setBackground(Color.GREEN);  
+                    this.setFont(new Font("Tahoma", Font.BOLD, 11));
+                
+                }
+                   
+            
+            }else{
+                
+                 if(isSelected==true){  
+                 
+                    this.setForeground(Color.white);
+                    this.setBackground(Color.blue);
+                    this.setFont(new Font("Tahoma", Font.BOLD, 11));
+                    
+                 
+                 }else{
+                 
+                    this.setForeground(Color.black);
+                    this.setBackground(Color.white);
+                    this.setFont(new Font("Tahoma", Font.PLAIN, 11));
+                    
+                     
+                 
+                 }
+             
+            }
+            
+            
+            
+            return this;
+        }
+        
+    } 
+    
+    
+   
+    
+    
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable GrillaOCP;
+    private javax.swing.JTable GrillaProductos;
+    private javax.swing.JTable Grilla_OCC;
+    private javax.swing.JButton btActualizar;
+    private javax.swing.JButton btAutorizar;
+    private javax.swing.JButton btRechazar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JPopupMenu jPopupMenu2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JPanel pnOCC;
+    // End of variables declaration//GEN-END:variables
+}

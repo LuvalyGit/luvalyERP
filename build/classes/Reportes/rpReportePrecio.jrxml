@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c822d537-b639-4541-9667-a2ed8192fa9a">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="NOMREPO" class="java.lang.String"/>
+	<parameter name="FECHA" class="java.lang.String"/>
+	<parameter name="FOLIO" class="java.lang.String"/>
+	<field name="COLUMN_1" class="java.lang.String"/>
+	<field name="COLUMN_2" class="java.lang.String"/>
+	<field name="COLUMN_3" class="java.lang.String"/>
+	<field name="COLUMN_0" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="205" splitType="Stretch">
+			<staticText>
+				<reportElement x="185" y="90" width="184" height="20" uuid="e874341a-13f5-449d-8d48-690f24ffca07"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE PRECIOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="417" y="69" width="54" height="20" uuid="b6bdbace-04d3-4a4b-b083-9e7c53a1725d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA  :  ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="473" y="69" width="74" height="20" uuid="88ad7506-ef45-4264-8f4a-efc530abf8bd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FECHA}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="18" y="148" width="335" height="40" uuid="788a54af-e819-4126-905d-4a9223865d05"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="26" y="160" width="68" height="14" uuid="59fdbd07-b8cb-43bb-9f7f-805dcec93911"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[EMITE REPORTE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="104" y="160" width="233" height="14" uuid="b4c59f41-4653-403a-9f37-8fdabc61f5b8"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NOMREPO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="419" y="100" width="54" height="20" uuid="17515b66-33a2-4a80-8535-278bcbf8be3f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FOLIO N°  :  ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="475" y="100" width="73" height="20" uuid="3fe05984-054e-4a15-9af4-3eddc4227fba"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FOLIO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="16" splitType="Stretch">
+			<staticText>
+				<reportElement x="21" y="2" width="47" height="14" uuid="ea66d85b-f10a-45f9-a8da-6454c5fc6536"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[SKU]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="2" width="94" height="14" uuid="6eb015ac-babf-4fd3-b155-e9730e442c17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[NUEVO PRECIO WEB]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="18" y="2" width="50" height="14" uuid="9f4b116e-440c-43e4-b9d8-564dc64349b9"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="460" y="2" width="96" height="14" uuid="2b615c41-514a-4e12-8e03-b28a44394410"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="68" y="2" width="301" height="14" uuid="18347f52-edd6-4bd0-b6ce-73944a2b3df5"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="71" y="2" width="298" height="14" uuid="6730806a-ae1c-4a75-9b4e-459456c38fc7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="369" y="2" width="91" height="14" uuid="9d556bf7-4a50-4740-85df-d670f60a10fc"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="369" y="2" width="91" height="14" uuid="0b2986fc-db3c-42d1-98bd-dbbae9bfdd17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[PRECIO WEB ACTUAL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="18" y="0" width="50" height="14" uuid="c4f23768-9bc2-4389-91e7-efceb4cc1380"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="460" y="0" width="96" height="14" uuid="b71505a7-ebd3-4735-b103-b02051d8df1c"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="21" y="0" width="47" height="15" uuid="7ea2e6e0-a14f-41c0-a5c0-6456ee626f1f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COLUMN_0}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;-#,##0">
+				<reportElement x="369" y="0" width="89" height="15" uuid="d8674b31-e132-4e71-b131-5af9393ac6cf"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COLUMN_2}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="68" y="0" width="301" height="14" uuid="bd6ce8e6-facf-4dc5-ab2d-57762ff99142"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="369" y="1" width="91" height="14" uuid="7862db01-22e3-45be-9449-1c9a2754b2a5"/>
+			</rectangle>
+			<textField>
+				<reportElement x="73" y="0" width="296" height="15" uuid="46de3b3a-72c8-4621-b0a4-8b6eca63232b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COLUMN_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0;-###0">
+				<reportElement x="478" y="0" width="70" height="14" uuid="3eb35778-aed6-4435-803f-6747b46df195"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COLUMN_3}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="212" splitType="Stretch"/>
+	</summary>
+</jasperReport>

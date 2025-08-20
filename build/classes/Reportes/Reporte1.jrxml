@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="283" pageHeight="141" whenNoDataType="AllSectionsNoDetail" columnWidth="283" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="4a2c2456-7e0f-487b-96bd-45535ef3153b">
+	<property name="ireport.zoom" value="1.9487171000000019"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<summary>
+		<band height="140" splitType="Stretch">
+			<rectangle>
+				<reportElement x="225" y="84" width="46" height="25" uuid="3883b7c2-af6f-4d03-88b1-ae020b0e4a94"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="184" y="84" width="41" height="25" uuid="43daa836-d2dd-4084-a97a-5e3ba84e15b5"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="133" y="84" width="51" height="25" uuid="4167d0b6-edd0-48f9-ba08-a991cf060bf7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="12" y="84" width="121" height="25" uuid="ba3d0e5f-7966-46b1-b187-200a30bcd9b3"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="12" y="29" width="259" height="50" uuid="0dc4393e-692d-48f8-98a9-bb4382a2cd84"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="12" y="11" width="259" height="11" uuid="fe51d1c8-f390-45e9-aa82-6e21218e0896"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="16" y="13" width="33" height="9" uuid="c074016c-bfad-4f5e-948a-e6ed0981a675"/>
+				<textElement>
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<text><![CDATA[Remitente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="57" y="13" width="76" height="9" uuid="b33569c6-8658-4489-b62c-0843df012ba0"/>
+				<textElement>
+					<font fontName="Verdana" size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Luvaly SPA.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="30" width="41" height="9" uuid="ee36f2cf-fadb-4336-838d-b75e0913ddef"/>
+				<textElement>
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<text><![CDATA[Destinatario:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="57" y="29" width="214" height="10" uuid="4ddcf5f1-06e2-4ec6-8645-91e174a4ef85"/>
+				<textElement>
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PARQUE METROPOLITANO DE SANTIAGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="39" width="33" height="9" uuid="39cec226-31c9-4a02-a59a-5df32b57eb03"/>
+				<textElement>
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<text><![CDATA[Dirección:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="48" width="33" height="9" uuid="ec1d7194-b3d2-4f64-b450-1b3890b47c50"/>
+				<textElement>
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<text><![CDATA[Comuna:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="151" y="48" width="33" height="9" uuid="a141765b-00c0-47cd-83ae-ce779a55297b"/>
+				<textElement>
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<text><![CDATA[Ciudad:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="57" y="39" width="214" height="10" uuid="0568151d-0443-489a-aef4-8da09e8711ce"/>
+				<textElement>
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dominica 129]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="57" y="49" width="94" height="10" uuid="ff853df9-c79c-4705-912f-0efa5c8466aa"/>
+				<textElement>
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Providencia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="184" y="48" width="87" height="10" uuid="c9d96617-dffd-4b2d-941c-58c4d923d1e4"/>
+				<textElement>
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Santiago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="57" y="59" width="94" height="10" uuid="40c918f5-de0a-4df4-bb54-5bc350d0b0bb"/>
+				<textElement>
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Juan Perez Perez]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="184" y="58" width="87" height="10" uuid="f16814fc-0106-479f-ab06-529b53f9b2e4"/>
+				<textElement>
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[45-2592336]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="58" width="33" height="9" uuid="02cb18c0-0b73-4d21-a449-68876bfe9e9a"/>
+				<textElement>
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<text><![CDATA[Contacto:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="151" y="58" width="33" height="9" uuid="ba4bbcf8-498d-4306-b2e0-43d2b790cc62"/>
+				<textElement>
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<text><![CDATA[Fono]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="57" y="69" width="94" height="10" uuid="157a0a61-098b-48c6-80b9-847a19adc526"/>
+				<textElement>
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[342365]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="184" y="68" width="87" height="10" uuid="45c6a749-1f20-48c5-92d8-bbca439a51fe"/>
+				<textElement>
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Santiago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="68" width="41" height="9" uuid="45c738b7-8e4e-408f-b486-e9f6b144bc35"/>
+				<textElement>
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<text><![CDATA[Nro Factura:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="151" y="68" width="33" height="9" uuid="c674750c-e6ed-4d37-999c-fb88aa9e4eb8"/>
+				<textElement>
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<text><![CDATA[Ciudad:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="84" width="41" height="9" uuid="bfc02e09-4b00-4a44-870e-64b7d25b6276"/>
+				<textElement>
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<text><![CDATA[Transporte]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="143" y="84" width="41" height="9" uuid="057bebf6-b889-4b99-bb57-3470c11ad412"/>
+				<textElement>
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<text><![CDATA[Bulto Nro.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="84" width="41" height="9" uuid="04e45e7f-5385-4822-b078-f61dc7203df9"/>
+				<textElement>
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<text><![CDATA[Peso (Kg)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="186" y="84" width="41" height="9" uuid="bd42472c-9aed-41af-8a16-61a2656abdae"/>
+				<textElement>
+					<font fontName="Verdana" size="6"/>
+				</textElement>
+				<text><![CDATA[Bultos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="93" width="121" height="10" uuid="b0797871-47a3-44b1-9aab-a83c8fe2a925"/>
+				<textElement>
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lit cargo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="143" y="93" width="41" height="10" uuid="c12e96c9-7c07-42ca-8202-1c66d9b25326"/>
+				<textElement>
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[9]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="93" width="29" height="10" uuid="72532cf9-7961-4748-be62-4f21a2098ab8"/>
+				<textElement>
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[12]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="93" width="41" height="10" uuid="ca65ace9-e007-4d8c-8ac2-08535844dd60"/>
+				<textElement>
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[100]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="112" width="259" height="21" uuid="2872524d-6af9-4ae3-b319-2016b3208e70"/>
+				<textElement>
+					<font fontName="Verdana" size="7" isBold="false" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Favor comprobar peso, sello y que no se encuentre adulterado.
+Favor comprobar bultos contra factura, guía o nota de venta.]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,520 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Utilidades;
+
+
+import Conexion.ExeSql;
+import Formularios.fmMain;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+import java.io.BufferedInputStream;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import org.apache.commons.net.ftp.FTP;  
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
+
+/**
+ *
+ * @author David Alcaman
+ */
+public class GeneraDTE_FTP {
+    private static String Rut;
+    private static String Tipo;
+    private static String Numero;
+    private static String TipoNro;
+    private static String LaComuna;
+    
+    public static boolean Generar(String ParRut,String ParTipo, String ParNumero) throws SQLException {
+        boolean Resultado=true;
+        Rut = ParRut;
+        Tipo = ParTipo;
+        Numero = ParNumero;
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs,Rs1;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        
+        String server,user,pass,ruta_local="";
+        int puerto =21;
+        String rutaimage="";
+        
+        
+        
+        try {
+            Rs = Sql.Select("select * from ctactecli where tipdocto='" + Tipo +"' and nrodocto=" + Numero);
+            Rs.next();
+        
+            switch (Tipo){
+                case "GDC": TipoNro="52"; break;
+                case "FAC": TipoNro="33"; break;
+                case "NCC": TipoNro="61"; break;
+                case "NDC": TipoNro="56"; break;
+                case "FEC": TipoNro="34"; break;
+            }
+             // Lo copia en ruta compartida
+            //File archivo = new File("\\\\192.168.0.130\\incoming\\DTE_LUVALY_" + Tipo + "_" + Numero + ".txt");
+            
+
+             //trae datos ftp
+                        server="";
+                        puerto=0;
+                        user=""; 
+                        pass="";
+                            Rs1 = Sql.Select("SELECT * from conexiones where tipo='ftp_d_txt'");
+//                            Rs1 = Sql.Select("SELECT * from conexiones where tipo='ftp'");  //PARA PRUEBAS
+                            if (Rs1.next())
+                            {
+                                if(!fmMain.GetInternet()){
+                                    server = Rs1.getString("serv");
+                                    user  = Rs1.getString("usu");
+                                    puerto  = Rs1.getInt("port");
+                                    pass = Rs1.getString("pass");
+                                }
+                                else {
+                                    server = "186.67.157.227";
+                                    user  = Rs1.getString("usu");
+                                    puerto  = 21;
+                                    pass = Rs1.getString("pass");
+                                }
+                            }
+           //trae datos ftp
+            
+            
+            // Lo copiamos en FTP
+                
+            FTPClient ftpClient = new FTPClient();
+            ftpClient.connect(InetAddress.getByName(server));
+            ftpClient.login(user,pass);
+           //Verificar conexión con el servidor.
+            
+            
+            String archivo ="DTE_LUVALY_" + Tipo + "_" + Numero + ".txt";
+            
+             OutputStream out1 = ftpClient.storeFileStream("/" + archivo );
+             BufferedWriter buffer = new BufferedWriter(new OutputStreamWriter(out1,"Cp1252"));
+            
+            
+            // Lo copia en el disco C
+            //File archivo = new File("C:/fotos/DTE_LUVALY_" + Tipo + "_" + Numero + ".txt");
+            //BufferedWriter buffer = new BufferedWriter(new FileWriter(archivo));
+            
+            ImprimeEncDocumento(buffer, sdf.format(Rs.getDate("femision")));
+            ImprimeEncEmpresa(buffer);
+            ImprimeEncReceptor(buffer);
+            ImprimeEncTraslado(buffer);
+            ImprimeEncTotales(buffer);
+            buffer.write("~\r\n\n");
+            ImprimeProductos(buffer);
+            buffer.write("~\r\n\n");
+            
+            buffer.write("||||||}\r\n\n");
+            buffer.write("~\r\n\n");
+            
+            ImprimeReferencia(buffer);
+            buffer.write("~\r\n\n");
+            
+            ImprimeAdjuntos(buffer);
+            buffer.write("~\r\n\n");
+            buffer.write("\\");
+            buffer.close();
+            
+            
+        } catch (IOException ex) {
+            Logger.getLogger(GeneraDTE_FTP.class.getName()).log(Level.SEVERE, null, ex);
+            fmMain.Mensaje("Error al generar DTE: "+ex);
+        }finally{
+            Sql.Close();
+        }
+        
+        return true;
+    }
+    
+    private static void ImprimeEncDocumento(BufferedWriter buffer,String Fecha){
+        String Traslado="";
+        
+        if(Tipo.equals("GDC")) Traslado="1";
+        try {
+            buffer.write( TipoNro + "|" + Numero +"|" + Fecha + "|||" + Traslado + "||}\r\n\n" );
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    private static void ImprimeEncEmpresa(BufferedWriter buffer) throws IOException{
+        String Rut          = "76231391-K";
+        String Nombre       = "EMPRESA COMERCIALIZADORA LUIS VALDES LYON S.P.A.";
+        String Giro         = "COMERCIALIZADORA DE ARTICULOS DE FERRETERIA";
+        //String NroRes       = "523924";
+        String NroRes       = "475201";
+        String Direccion    = "AV. HUERFANOS 01871, MODULO 11";
+        String Comuna       = "TEMUCO";
+        String Ciudad       = "TEMUCO";
+        
+        buffer.write( Rut       + "|" + 
+                      Nombre    + "|" + 
+                      Giro      + "|" + 
+                      NroRes    + "|||" +
+                      Direccion + "|" + 
+                      Comuna    + "|" + 
+                      Ciudad    + "|" + 
+                      "|}\r\n\n");
+    }
+    private static void ImprimeEncReceptor(BufferedWriter buffer) throws IOException {
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+
+        try {
+            String Query = "select d.rut || '-' || co.dv as rut, co.nombre,c.giro,c.direccion,c.comuna,c.ciudad, d.comuna_despacho \n"
+                    + "from ctactecli d\n"
+                    + "left join cliente co \n"
+                    + "on co.rut=d.rut\n"
+                    + "left join clicontacto c\n"
+                    + "on d.rut=c.rut and d.codigo_oc = c.codigo_oc\n"
+                    + "where d.rut=" + Rut + "\n"
+                    + "and d.tipdocto='" + Tipo + "'\n"
+                    + "and d.nrodocto=" + Numero;
+            System.out.println(Query);
+            Rs = Sql.Select(Query);
+            Rs.next();
+
+            buffer.write(Rs.getString("rut").trim() + "||"
+                    + Rs.getString("Nombre").trim() + "|"
+                    + Rs.getString("giro").trim() + "||"
+                    + Rs.getString("direccion").trim() + "|"
+                    + Rs.getString("comuna").trim() + "|"
+                    + Rs.getString("ciudad").trim() + "||}\r\n\n");
+            if (TipoNro =="52"){
+                LaComuna = Rs.getString("comuna_despacho").trim();
+            }
+            else
+            {
+                LaComuna = Rs.getString("comuna").trim();
+            }
+            
+            
+        } catch (SQLException | IOException e) {
+        } finally {
+            Sql.Close();
+        }
+    }
+    private static void ImprimeEncTraslado(BufferedWriter buffer) throws IOException{
+        String Patente="";
+        String RutTransportista="";
+        String DireccionDestino="";
+        String ComunaDestino = "";
+        String CiudadDestino = "";
+        
+        if(Tipo.equals("GDC")) ComunaDestino = LaComuna;
+        
+        buffer.write( Patente           + "|" +
+                      RutTransportista  + "|" + 
+                      DireccionDestino  + "|" + 
+                      ComunaDestino     + "|" + 
+                      CiudadDestino     + "|}\r\n\n");
+    }
+    private static void ImprimeEncTotales(BufferedWriter buffer) throws IOException {
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        String TazaIVA = "0";
+        
+        
+        if (TipoNro.equals("34"))
+        {
+            TazaIVA = "0";
+        }
+        else
+        {
+            TazaIVA = "19.00";
+        }
+        try {
+            Rs = Sql.Select("select * from ctactecli where tipdocto='" + Tipo + "' and nrodocto=" + Numero);
+            Rs.next();
+
+            buffer.write(Rs.getString("totalafecto") + "|"
+                    + Rs.getString("totalexento") + "|"
+                    + TazaIVA + "|"
+                    + Rs.getString("totaliva") + "|"
+                    + Rs.getString("totaldocto") + "|"
+                    + "||||||||||||} \r\n\n");
+
+        } catch (SQLException | IOException e) {
+        } finally {
+            Sql.Close();
+        }
+    }
+    private static void ImprimeProductos(BufferedWriter buffer) throws IOException{
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        String Exento="";
+        if(Tipo=="FEC") Exento="1";
+        
+        
+        try {
+            Rs = Sql.Select("select d.sku,p.nombre,u.um,d.cantidad,d.valorunitario,d.totallinea\n" +
+                            "from ctacteclidet d\n" +
+                            "left join producto p on d.sku=p.sku \n" +
+                            "left join par_unidad u on u.codigo=p.unidad\n" +
+                            "where d.tipdocto='"+ Tipo +"'\n" +
+                            "and d.rut="+ Rut +"\n" +
+                            "and d.nrodocto=" + Numero);
+            
+            while(Rs.next()){
+                buffer.write(Exento + "|" + 
+                            Rs.getString("nombre").trim()                       + "||" + 
+                            FormatoNumero(Rs.getDouble("cantidad"))      + "|" +
+                            Rs.getString("um")                                  + "|" + 
+                            FormatoNumero(Rs.getDouble("valorunitario")) + "|||" + 
+                            FormatoTotal(Rs.getDouble("totallinea"))     + "|" +
+                            Rs.getString("sku").trim()      + "|}\r\n\n" );
+            }
+            if(Tipo=="NCC"){
+                String ElTexto="";
+                Rs = Sql.Select("select motivo from corrige_texto where nrodocto="+ Numero);
+                if(Sql.GetRowCount()>0){
+                    Rs.next();
+                    ElTexto = Rs.getString("motivo").trim();
+                        buffer.write("|CORRIGE TEXTO:|" + ElTexto + "||||||0||}\r\n\n" );
+                }
+                
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally{
+            Sql.Close();
+        }
+    }
+    private static void ImprimeReferencia(BufferedWriter buffer) throws IOException {
+        ExeSql Sql = new ExeSql();
+        String TipoDocumento = "";
+        String Folio = "";
+        String Fecha = "";
+        String CodRef = "";
+        String Razon = "";
+        ResultSet Rs;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        // SI ES FACTURA REFERENCIA LAS GUIAS ASOCIADAS (Maximo 3)
+        //--------------------------------------------------------
+        if (Tipo.equals("FAC")) {
+            int Cont = 0;
+            TipoDocumento = "52";
+            CodRef = "";
+            Razon = "";
+            try {
+                Rs = Sql.Select("select nrodocto,femision \n"
+                        + "from ctactecli\n"
+                        + "where tipdocto='GDC'\n"
+                        + "and tipdocrel='FAC'\n"
+                        + "and nrodocrel=" + Numero);
+                while (Rs.next() && Cont < 4) {
+                    Cont++;
+                    Folio = Rs.getString("nrodocto").trim();
+                    Fecha = sdf.format(Rs.getDate("femision"));
+                    buffer.write(TipoDocumento + "||"
+                            + Folio + "|"
+                            + Fecha + "|"
+                            + CodRef + "|"
+                            + Razon + "||}\r\n\n");
+                }
+            } catch (SQLException | IOException e) {
+                System.out.println(e);
+            }
+        }
+       
+         // Si es factura busca referencia externa
+        if (Tipo.equals("FAC")) {
+            try {
+                Rs = Sql.Select("select cod_ref,doc_ref,fecha\n" +
+                            "from fac_referencias\n" +
+                            "where tipdocto='FAC'\n" +
+                            "and nrodocto=" + Numero);
+                if(Sql.GetRowCount()>0){
+                    while(Rs.next()){
+                    TipoDocumento = Rs.getString("cod_ref").trim();
+                    switch (TipoDocumento){
+                            case "801"  : TipoDocumento="801"; break;
+                            case "802"  : TipoDocumento="802"; break;
+                            case "10801": TipoDocumento="HES"; break;
+                            case "20801": TipoDocumento="UDP"; break;
+                            }
+                    Folio = Rs.getString("doc_ref").trim();
+                    Fecha = sdf.format(Rs.getDate("fecha"));
+                    CodRef = "";
+                    Razon = "";
+                    buffer.write(TipoDocumento + "||"
+                            + Folio + "|"
+                            + Fecha + "|"
+                            + CodRef + "|"
+                            + Razon + "||}\r\n\n");
+                    }
+                }
+            } catch (SQLException | IOException e) {
+                System.out.println(e);
+            }
+            
+        }
+        //SI ES NOTA DE CREDITO REFERENCIA EL ORIGEN
+        if (Tipo.equals("NCC") || Tipo.equals("NDC")) {
+            try {
+                Rs = Sql.Select("select cc.tipdocto,cc.nrodocto,cc.femision, c.tipo  \n"
+                        + "from ctactecli c\n"
+                        + "left join ctactecli cc on c.rut=cc.rut and c.nrodocorigen = cc.nrodocto and c.tipdocorigen=cc.tipdocto\n"
+                        + "where c.tipdocto='" + Tipo + "'\n"
+                        + "and c.nrodocto=" + Numero);
+                Rs.next();
+                if (Rs.getString("tipdocto").equals("FAC")) {
+                    TipoDocumento = "33";
+                }
+                if (Rs.getString("tipdocto").equals("FEC")) {
+                    TipoDocumento = "34";
+                }
+                if (Rs.getString("tipdocto").equals("NCC")) {
+                    TipoDocumento = "61";
+                }
+
+                Folio = Rs.getString("nrodocto");
+                Fecha = sdf.format(Rs.getDate("femision"));
+                CodRef = Rs.getString("tipo");
+
+                switch (Rs.getInt("tipo")) {
+                    case 1:
+                        Razon = "";
+                        break;
+                    case 2:
+                        Razon = "";
+                        break;
+                    case 3:
+                        Razon = "";
+                        break;
+                }
+                buffer.write(TipoDocumento + "||"
+                        + Folio + "|"
+                        + Fecha + "|"
+                        + CodRef + "|"
+                        + Razon + "||}\r\n\n");
+
+            } catch (SQLException | IOException e) {
+                System.out.println(e);
+            } finally{
+                Sql.Close();
+            }
+        }
+
+        //REFERENCIA A ORDEN DE COMPRA - Todos los Documentos - NCC
+        if (!Tipo.equals("NCC")) {
+            TipoDocumento = "801";
+            CodRef = "";
+            Razon = "";
+
+            try {
+                Rs = Sql.Select("select oc.codigo_oc || '-' || oc.orden as folio, oc.femision \n"
+                        + "from ctactecli c\n"
+                        + "left join occh oc on c.rut=oc.rut and c.codigo_oc=oc.codigo_oc and c.occh=oc.orden\n"
+                        + "where c.tipdocto='" + Tipo + "'\n"
+                        + "and c.nrodocto=" + Numero);
+                Rs.next();
+                if(Rs.getString("folio").trim().length()>18)
+                    Folio = Rs.getString("folio").substring(0, 18).trim();
+                else
+                    Folio = Rs.getString("folio").trim();
+                Fecha = sdf.format(Rs.getDate("femision"));
+
+                buffer.write(TipoDocumento + "||"
+                        + Folio + "|"
+                        + Fecha + "|"
+                        + CodRef + "|"
+                        + Razon + "||}\r\n\n");
+
+            } catch (Exception e) {
+                System.out.println(e);
+            } finally{
+                Sql.Close();
+            }
+        }
+        
+    }
+    private static void ImprimeAdjuntos(BufferedWriter buffer) throws IOException{
+        String DirEnvio="";
+        String Query="";
+        if(Tipo.equals("GDC")){
+            ExeSql Sql = new ExeSql();
+            ResultSet Rs;
+            
+            try {
+//-----------------------------                
+// Concatenar Direccion Comuna y Ciudad                
+//                Query = "  select c.direccion_despacho || ' (' || c.comuna_despacho || ')' || c.ciudad_despacho as dirdespacho\n" +
+//                        "  from ctactecli c\n" +
+//                        "  where c.tipdocto='GDC'\n" +
+//                        "  and c.nrodocto=" + Numero;
+  
+                
+            
+                Query = "  select c.direccion_despacho  as dirdespacho" +
+                        "  from ctactecli c\n" +
+                        "  where c.tipdocto='GDC'\n" +
+                        "  and c.nrodocto=" + Numero;
+            
+//-----------------------------      
+                
+//                Rs  =   Sql.Select( "select oc.dirdespacho \n" +
+//                                    "from ctactecli c\n" +
+//                                    "left join occh oc on c.rut=oc.rut and c.codigo_oc=oc.codigo_oc and c.occh=oc.orden\n" +
+//                                    "where c.tipdocto='GDC'\n" +
+//                                    "and c.nrodocto=" + Numero);
+                
+
+                Rs  =   Sql.Select(Query);
+
+                Rs.next();
+                DirEnvio="Entregar en:" + Rs.getString("dirdespacho").trim();
+            } catch (Exception e) {
+                System.out.println("Error ImprimeAdjunto:" + e);
+            } finally{
+                Sql.Close();
+            }
+                
+        }
+        String usuario = fmMain.GetUsuario().toLowerCase().trim();
+        if(usuario.equals("mrodriguez") || usuario.equals("jcrespo")){
+                buffer.write("|||"+ DirEnvio +"|||||||BROTHER||}\r\n\n");
+        }
+        else {
+            buffer.write("|||"+ DirEnvio +"|||||||||}\r\n\n");
+        }
+    }
+    public static String FormatoNumero(double Numero){
+    DecimalFormatSymbols simbolo=new DecimalFormatSymbols();
+    simbolo.setDecimalSeparator('.');
+    simbolo.setGroupingSeparator(',');
+    DecimalFormat formateador = new DecimalFormat("#0.00",simbolo);
+    return formateador.format(Numero);
+}
+public static String FormatoTotal(double Numero){
+    DecimalFormatSymbols simbolo=new DecimalFormatSymbols();
+    simbolo.setDecimalSeparator('.');
+    simbolo.setGroupingSeparator(',');
+    DecimalFormat formateador = new DecimalFormat("#",simbolo);
+    return formateador.format(Numero);
+}
+    
+}

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Det" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isTitleNewPage="true" uuid="a33d94a4-96ee-4f31-b6da-a3e4ef966c38">
+	<property name="ireport.zoom" value="1.4265583530550023"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="661"/>
+	<parameter name="titulo" class="java.lang.String"/>
+	<parameter name="subtitulo" class="java.lang.String"/>
+	<parameter name="id_catalogo" class="java.lang.String"/>
+	<parameter name="pie" class="java.io.InputStream"/>
+	<parameter name="logo" class="java.io.InputStream"/>
+	<parameter name="logo_txt" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="codigo_cc" class="java.lang.String"/>
+	<field name="sku" class="java.lang.String"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="unidad" class="java.lang.String"/>
+	<field name="precio_real" class="java.lang.String"/>
+	<field name="precio_oferta" class="java.lang.String"/>
+	<field name="bcodigo_cc" class="java.lang.String"/>
+	<field name="bsku" class="java.lang.String"/>
+	<field name="bnombre" class="java.lang.String"/>
+	<field name="bunidad" class="java.lang.String"/>
+	<field name="bprecio_real" class="java.lang.String"/>
+	<field name="bprecio_oferta" class="java.lang.String"/>
+	<field name="imagen_windows1" class="java.lang.String"/>
+	<field name="codigo_cc2" class="java.lang.String"/>
+	<field name="sku2" class="java.lang.String"/>
+	<field name="nombre2" class="java.lang.String"/>
+	<field name="unidad2" class="java.lang.String"/>
+	<field name="precio_real2" class="java.lang.String"/>
+	<field name="precio_oferta2" class="java.lang.String"/>
+	<field name="bcodigo_cc2" class="java.lang.String"/>
+	<field name="bsku2" class="java.lang.String"/>
+	<field name="bnombre2" class="java.lang.String"/>
+	<field name="bunidad2" class="java.lang.String"/>
+	<field name="bprecio_real2" class="java.lang.String"/>
+	<field name="bprecio_oferta2" class="java.lang.String"/>
+	<field name="imagen_windows2" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="605">
+			<staticText>
+				<reportElement x="130" y="11" width="302" height="45" uuid="90772f49-7fb3-4b9d-83b2-6530338a352f"/>
+				<textElement textAlignment="Center">
+					<font size="26" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Catalogo de Productos]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="128" y="70" width="325" height="35" uuid="f2c05079-58ff-4b4d-9c0f-9fa1de3497f8"/>
+				<textElement textAlignment="Center">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{titulo}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="128" y="149" width="327" height="301" uuid="540002c9-8a94-4a20-8557-d268e5407a5a"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="38">
+			<textField>
+				<reportElement x="10" y="5" width="537" height="32" uuid="354a7330-599d-4b11-ae8a-6375c1d50221"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{subtitulo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="333" splitType="Stretch">
+			<textField>
+				<reportElement x="10" y="11" width="244" height="31" uuid="20cd0140-bfc7-45b9-a898-f8a7c29e1c91"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{bcodigo_cc}.equals("true")?
+        "Codigo CC       :" + $F{codigo_cc}
+       :""  )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="73" width="244" height="31" uuid="5e21aea3-60e1-482f-88a6-d572fc23e4fd"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{bnombre}.equals("true") ? 
+  "Nombre          :" + $F{nombre}
+: "")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="42" width="244" height="31" uuid="a7b80d9c-0739-41aa-9b93-5b7ec03ed48c"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{bsku}.equals("true") ? 
+  "SKU             :" + $F{sku}
+: "" )]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="10" y="10" width="521" height="1" uuid="de793e7e-d8d9-47e6-9434-0941e7adfbdc"/>
+			</line>
+			<textField>
+				<reportElement x="10" y="104" width="244" height="31" uuid="fc92b5fc-cb34-4e5e-b326-43393ca4689c"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{bunidad}.equals("true")? 
+  "Unidad          :" + $F{unidad}
+: "" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="135" width="244" height="31" uuid="6d8ca0be-a4c2-4387-9726-90a242680ad3"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{bprecio_real}.equals("true") ? 
+  "Precio Real     :" + $F{precio_real} 
+: "" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="166" width="244" height="31" uuid="c0bf503e-2eba-4a28-9a60-ec7accc3d2bf"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Courier New" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{bprecio_oferta}.equals("true") ? 
+  "Precio Oferta   :" + $F{precio_oferta}
+: "" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="286" y="42" width="245" height="31" uuid="57ed882d-a73b-47a6-b7e4-79f72e0454c1"/>
+				<textElement>
+					<font fontName="Courier New" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{bsku2}.equals("true") ? 
+  "SKU             :" + $F{sku2}
+: "" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="286" y="166" width="245" height="31" uuid="c7dcb4cf-a594-41db-b1ad-0823ea7d4c0d"/>
+				<textElement>
+					<font fontName="Courier New" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{bprecio_oferta2}.equals("true") ? 
+  "Precio Oferta   :" + $F{precio_oferta2}
+: "" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="286" y="73" width="245" height="31" uuid="d9103ab4-9de7-4031-b2c8-0be4edb055f7"/>
+				<textElement>
+					<font fontName="Courier New" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{bnombre2}.equals("true") ? 
+  "Nombre          :" + $F{nombre2}
+: "")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="286" y="135" width="245" height="31" uuid="5e027ce9-ea2d-4e6f-832f-c583ce95c7f3"/>
+				<textElement>
+					<font fontName="Courier New" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{bprecio_real2}.equals("true") ? 
+  "Precio Real     :" + $F{precio_real2}
+: "" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="286" y="11" width="245" height="31" uuid="5d562570-cbd6-466e-a81f-c72527037909"/>
+				<textElement>
+					<font fontName="Courier New" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{codigo_cc2}.equals("true")?
+        "Codigo CC       :" + $F{codigo_cc2}
+       :""  )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="286" y="104" width="245" height="31" uuid="419a64ec-fd3c-4df6-af26-4649925a54d1"/>
+				<textElement>
+					<font fontName="Courier New" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{bunidad2}.equals("true")? 
+  "Unidad          :" +$F{unidad2}
+: "" )]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="332" y="212" width="100" height="100" uuid="cf7cb534-58c7-4020-874a-095c47e86a74"/>
+				<imageExpression><![CDATA[$F{imagen_windows2}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="77" y="212" width="100" height="100" uuid="bca4eae8-a36e-4d4f-8010-4522dbdc4aef"/>
+				<imageExpression><![CDATA[$F{imagen_windows1}]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="269" y="11" width="1" height="322" uuid="93fc86e7-478e-4a47-871f-54f680ecaf8d"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="50">
+			<image>
+				<reportElement x="5" y="7" width="427" height="34" uuid="56a8cc0a-75a0-439d-bc6e-41718ea9b053"/>
+				<imageExpression><![CDATA[$P{pie}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="497" y="9" width="50" height="20" uuid="14643281-c20e-4fca-a43f-433722064db5"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="446" y="9" width="51" height="20" uuid="aac24f0e-b2fd-4135-88fb-ac663a870ac8"/>
+				<text><![CDATA[Página:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="226" pageHeight="283" whenNoDataType="AllSectionsNoDetail" columnWidth="226" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="3c168fb7-b716-4eee-9aef-3a0f11ebb7b1">
+	<property name="ireport.zoom" value="2.1435888100000016"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="Codigo_OC" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="RutCliente" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NombreCliente" class="java.lang.String"/>
+	<parameter name="Orden" class="java.lang.String"/>
+	<parameter name="Indice" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select o.sku,'  ' || p.nombre as  nombre,u.um,o.cantidad 
+from occhdet o
+left join producto p
+on o.sku=p.sku
+left join par_unidad u
+on p.unidad=u.codigo 
+where o.rut=$P{RutCliente}
+and o.orden=$P{Orden}
+and o.codigo_oc=$P{Codigo_OC}]]>
+	</queryString>
+	<field name="sku" class="java.lang.String"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="um" class="java.lang.String"/>
+	<field name="cantidad" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="75" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="47" width="226" height="27" uuid="33a72e79-7466-4550-bd46-118e12d3aec7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="0" width="226" height="37" uuid="f5824df4-2b72-4625-9497-9b2367f4813a"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="226" height="13" uuid="392364ba-ac0b-4a76-ba55-9ba01ddb8943"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Orden de Compra Cliente]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="15" width="226" height="22" uuid="1d8171b4-5c9a-464a-af0c-262e0d4dd736"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Codigo_OC} + "-" + $P{Orden}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="54" width="226" height="10" uuid="94a93e4e-da55-4560-9cbf-53f96a2161eb"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{RutCliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="64" width="226" height="10" uuid="fd959d3d-af96-4023-883d-fd464962a8ba"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NombreCliente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="57" splitType="Stretch">
+			<textField>
+				<reportElement x="15" y="2" width="53" height="12" uuid="c8a7333b-5755-4490-9b31-4b0fb19aad10"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sku}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="163" y="3" width="63" height="12" uuid="9ff5079b-12f3-47ba-b563-54761df22d53"/>
+				<textElement>
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="9" y="14" width="217" height="22" uuid="83cd5331-087d-4eca-bb52-e72d9c3602f2"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="97" y="3" width="36" height="12" uuid="076e3d60-033f-4486-b6f3-f752f8769aa3"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{um}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="56" width="226" height="1" uuid="9b020020-0a4c-4de3-8a43-99529839e487"/>
+			</line>
+			<componentElement>
+				<reportElement x="15" y="36" width="171" height="10" uuid="57fec16d-f4d1-44a6-aa94-23e4f6dc8f14"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="2of7" drawText="false" checksumRequired="false" barWidth="5">
+					<jr:codeExpression><![CDATA[$F{sku}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="71">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="63" y="15" width="100" height="20" uuid="02506223-ccf3-43f9-aa20-6dacd73a189c"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH.mm">
+				<reportElement x="63" y="35" width="100" height="20" uuid="b8048012-62fc-4e0c-80fb-7c5f300d1b40"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

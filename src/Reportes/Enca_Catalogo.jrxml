@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Det" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isTitleNewPage="true" uuid="a33d94a4-96ee-4f31-b6da-a3e4ef966c38">
+	<property name="ireport.zoom" value="1.178973845500001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="462"/>
+	<parameter name="id_catalogo" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[$F{catalogo_productos_id_catalogo}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     catalogo."id_catalogo" AS catalogo_id_catalogo,
+     catalogo."titulo_catalogo" AS catalogo_titulo_catalogo,
+     catalogo."subtitulo_catalogo" AS catalogo_subtitulo_catalogo,
+     catalogo."id_correlativo" AS catalogo_id_correlativo,
+     catalogo_productos."id_generado" AS catalogo_productos_id_generado,
+     catalogo_productos."sku" AS catalogo_productos_sku,
+     catalogo_productos."id_catalogo" AS catalogo_productos_id_catalogo,
+     catalogo_productos."nombre" AS catalogo_productos_nombre,
+     catalogo_productos."codigo_cc" AS catalogo_productos_codigo_cc,
+     catalogo_productos."unidad" AS catalogo_productos_unidad,
+     catalogo_productos."precio_real" AS catalogo_productos_precio_real,
+     catalogo_productos."precio_oferta" AS catalogo_productos_precio_oferta,
+     catalogo_productos."bsku" AS catalogo_productos_bsku,
+     catalogo_productos."bnombre" AS catalogo_productos_bnombre,
+     catalogo_productos."bcodigo_cc" AS catalogo_productos_bcodigo_cc,
+     catalogo_productos."bunidad" AS catalogo_productos_bunidad,
+     catalogo_productos."bprecio_real" AS catalogo_productos_bprecio_real,
+     catalogo_productos."bprecio_oferta" AS catalogo_productos_bprecio_oferta,
+     catalogo_productos."imagen_windows" AS catalogo_productos_imagen_windows,
+     catalogo_productos."imagen_linux" AS catalogo_productos_imagen_linux
+FROM
+       "public"."catalogo_productos" catalogo_productos INNER JOIN "public"."catalogo" catalogo ON catalogo_productos."id_catalogo" = catalogo."id_catalogo"
+WHERE
+      catalogo."id_catalogo"  = $P{id_catalogo}]]>
+	</queryString>
+	<field name="catalogo_id_catalogo" class="java.lang.Integer"/>
+	<field name="catalogo_titulo_catalogo" class="java.lang.String"/>
+	<field name="catalogo_subtitulo_catalogo" class="java.lang.String"/>
+	<field name="catalogo_id_correlativo" class="java.lang.Integer"/>
+	<field name="catalogo_productos_id_generado" class="java.lang.String"/>
+	<field name="catalogo_productos_sku" class="java.lang.String"/>
+	<field name="catalogo_productos_id_catalogo" class="java.lang.Integer"/>
+	<field name="catalogo_productos_nombre" class="java.lang.String"/>
+	<field name="catalogo_productos_codigo_cc" class="java.lang.String"/>
+	<field name="catalogo_productos_unidad" class="java.lang.String"/>
+	<field name="catalogo_productos_precio_real" class="java.lang.String"/>
+	<field name="catalogo_productos_precio_oferta" class="java.lang.String"/>
+	<field name="catalogo_productos_bsku" class="java.lang.String"/>
+	<field name="catalogo_productos_bnombre" class="java.lang.String"/>
+	<field name="catalogo_productos_bcodigo_cc" class="java.lang.String"/>
+	<field name="catalogo_productos_bunidad" class="java.lang.String"/>
+	<field name="catalogo_productos_bprecio_real" class="java.lang.String"/>
+	<field name="catalogo_productos_bprecio_oferta" class="java.lang.String"/>
+	<field name="catalogo_productos_imagen_windows" class="java.lang.String"/>
+	<field name="catalogo_productos_imagen_linux" class="java.lang.String"/>
+	<variable name="catalogo_id_catalogo_1" class="java.lang.Integer" resetType="Page" calculation="First">
+		<variableExpression><![CDATA[$F{catalogo_id_catalogo}]]></variableExpression>
+	</variable>
+	<variable name="catalogo_titulo_catalogo_1" class="java.lang.Integer" resetType="Column" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{catalogo_titulo_catalogo}]]></variableExpression>
+	</variable>
+	<variable name="catalogo_titulo_catalogo_2" class="java.lang.Integer" resetType="Page" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{catalogo_titulo_catalogo}]]></variableExpression>
+	</variable>
+	<group name="catalogo_id_catalogo">
+		<groupExpression><![CDATA[$F{catalogo_id_catalogo}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="589">
+			<staticText>
+				<reportElement x="130" y="11" width="302" height="45" uuid="90772f49-7fb3-4b9d-83b2-6530338a352f"/>
+				<textElement textAlignment="Center">
+					<font size="26" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Catalogo de Productos]]></text>
+			</staticText>
+			<image>
+				<reportElement x="116" y="124" width="327" height="300" uuid="428f29c1-b1a2-4ae9-9588-3806ae487c04"/>
+				<imageExpression><![CDATA["C:\\REPOSITORIO\\trunk\\ERP-Junio\\src\\Reportes\\logo_luvaly.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="105" y="56" width="361" height="34" uuid="d10a398d-6e19-4a21-963b-75518c642423"/>
+				<textElement textAlignment="Center">
+					<font size="20" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{catalogo_titulo_catalogo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="116" y="442" width="350" height="31" uuid="2d5b2631-9f65-48b5-9d33-2e9fa496dc43"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{catalogo_subtitulo_catalogo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="30" y="499" width="471" height="74" uuid="0416b129-c59c-4ed2-86cf-aac1961d0de9"/>
+				<textElement>
+					<font size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Servicio de Calidad
+Av Huerfanos 01871, módulo 11, Temuco-Chile
+45-2658390
+www.luvaly.cl]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="200" splitType="Stretch">
+			<textField>
+				<reportElement x="223" y="34" width="289" height="20" uuid="20cd0140-bfc7-45b9-a898-f8a7c29e1c91"/>
+				<textElement>
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{catalogo_productos_bcodigo_cc}.equals("true")?
+        "Codigo CC       :" +  $F{catalogo_productos_codigo_cc}
+       :""  )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="223" y="74" width="289" height="20" uuid="5e21aea3-60e1-482f-88a6-d572fc23e4fd"/>
+				<textElement>
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{catalogo_productos_bnombre}.equals("true") ? 
+  "Nombre          :" + $F{catalogo_productos_nombre} 
+: "")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="223" y="54" width="289" height="20" uuid="a7b80d9c-0739-41aa-9b93-5b7ec03ed48c"/>
+				<textElement>
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{catalogo_productos_bsku}.equals("true") ? 
+  "SKU             :" + $F{catalogo_productos_sku} 
+: "" )]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="10" y="10" width="521" height="1" uuid="de793e7e-d8d9-47e6-9434-0941e7adfbdc"/>
+			</line>
+			<textField>
+				<reportElement x="223" y="94" width="289" height="20" uuid="fc92b5fc-cb34-4e5e-b326-43393ca4689c"/>
+				<textElement>
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{catalogo_productos_bunidad}.equals("true")? 
+  "Unidad          :" + $F{catalogo_productos_unidad} 
+: "" )]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="10" y="23" width="201" height="160" uuid="aec31739-b519-4fae-bc53-27dc61da8727"/>
+				<box>
+					<pen lineColor="#3300CC"/>
+					<topPen lineColor="#3300CC"/>
+					<leftPen lineColor="#3300CC"/>
+					<bottomPen lineColor="#3300CC"/>
+					<rightPen lineColor="#3300CC"/>
+				</box>
+				<imageExpression><![CDATA[$F{catalogo_productos_imagen_windows}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="223" y="114" width="289" height="20" uuid="6d8ca0be-a4c2-4387-9726-90a242680ad3"/>
+				<textElement>
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{catalogo_productos_bprecio_real}.equals("true") ? 
+  "Precio Real     :" + $F{catalogo_productos_precio_real} 
+: "" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="223" y="134" width="289" height="20" uuid="c0bf503e-2eba-4a28-9a60-ec7accc3d2bf"/>
+				<textElement>
+					<font fontName="Courier New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{catalogo_productos_bprecio_oferta}.equals("true") ? 
+  "Precio Oferta   :" + $F{catalogo_productos_precio_oferta} 
+: "" )]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="50">
+			<textField>
+				<reportElement x="398" y="10" width="34" height="20" uuid="14643281-c20e-4fca-a43f-433722064db5"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="338" y="10" width="51" height="20" uuid="aac24f0e-b2fd-4135-88fb-ac663a870ac8"/>
+				<text><![CDATA[Página:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="438" y="10" width="15" height="20" uuid="5fd8ebc5-a90e-40a7-a6dd-03858de7c6b0"/>
+				<text><![CDATA[de]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="470" y="10" width="61" height="20" uuid="919237bc-fa57-4ee4-ada5-fde8132277d7"/>
+				<textFieldExpression><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+</jasperReport>

@@ -1,0 +1,387 @@
+Namespace ns= Namespace.getNamespace("http://www.sii.cl/SiiDte");
+            
+            
+            Document doc= new Document();    
+            
+                Element root=new Element("DTE").setAttribute("version", "1.0");
+                root.setNamespace(ns);
+                
+                    Element documento=new Element("Documento").setAttribute("ID","F"+lbFolio.getText().trim()+"T"+TipoNro);
+                    documento.setNamespace(ns);
+        
+                        Element encabezado=new Element("Encabezado"); 
+                        encabezado.setNamespace(ns);
+        
+                            Element Iddoc=new Element("IdDoc").setNamespace(ns); 
+                                            
+                                Iddoc.addContent(new Element("TipoDTE").addContent(TipoNro).setNamespace(ns));
+                                Iddoc.addContent(new Element("Folio").addContent(lbFolio.getText().trim()).setNamespace(ns));
+                                Iddoc.addContent(new Element("FchEmis").addContent(Fecha).setNamespace(ns));
+                                Iddoc.addContent(new Element("FmaPago").addContent(TipoPago).setNamespace(ns));
+                                Iddoc.addContent(new Element("TermPagoCdg").addContent("0").setNamespace(ns));
+                                Iddoc.addContent(new Element("TermPagoGlosa").addContent(TipoPagoGlosa).setNamespace(ns));
+                                
+                            Element Emisor=new Element("Emisor").setNamespace(ns); 
+                                
+                                Emisor.addContent(new Element("RUTEmisor").addContent("76231391-K").setNamespace(ns));
+                                Emisor.addContent(new Element("RznSoc").addContent("EMPRESA COMERCIALIZADORA LUIS VALDES LYON S.P.A.").setNamespace(ns));
+                                Emisor.addContent(new Element("GiroEmis").addContent("COMERCIALIZADORA DE ARTICULOS DE FERRETERIA").setNamespace(ns));
+                                Emisor.addContent(new Element("Telefono").addContent("+56(45)2658390").setNamespace(ns));
+                                Emisor.addContent(new Element("CorreoEmisor").addContent("contacto@luvaly.cl").setNamespace(ns));
+                                Emisor.addContent(new Element("Acteco").addContent("464909").setNamespace(ns));
+                                Emisor.addContent(new Element("Acteco").addContent("466302").setNamespace(ns));
+                                Emisor.addContent(new Element("DirOrigen").addContent("AVENIDA HUERFANOS 01871").setNamespace(ns));
+                                Emisor.addContent(new Element("CmnaOrigen").addContent("TEMUCO").setNamespace(ns));
+                                Emisor.addContent(new Element("CiudadOrigen").addContent("TEMUCO").setNamespace(ns));
+                                
+                                
+                        //**************************************************************** DATOS CLIENTE ******************************************************************//        
+                                
+                                String Query = "select d.rut || '-' || co.dv as rut, co.nombre,c.giro,c.direccion,c.ciudad,c.comuna, d.observacion \n"+
+                                               "from ctactecli d \n"+
+                                               "left join cliente co on co.rut=d.rut \n"+
+                                               "left join clicontacto c on d.rut=c.rut and d.codigo_oc = c.codigo_oc\n"+
+                                               "where d.rut=" + Rut + "\n"+
+                                               "and d.tipdocto='" + Tipo + "'\n"+
+                                               "and d.nrodocto=" + Numero;
+                                //System.out.println(Query);   
+                                Rs2 = Sql2.Select(Query);
+                                Rs2.next();
+
+                                ElRut = Rs2.getString("rut").trim();
+                                ElNombre = Rs2.getString("Nombre").trim();
+                                
+                                if(Rs2.getString("giro").trim().length()>40){
+                                    
+                                     ElGiro = Rs2.getString("giro").substring(0, 40).trim();
+                                    
+                                }else{
+                                    
+                                    ElGiro = Rs2.getString("giro").trim();
+                                
+                                }    
+                                
+                                LaDireccion = Rs2.getString("direccion").trim();
+                                LaComuna= Rs2.getString("comuna").trim();
+                                LaCiudad = Rs2.getString("ciudad").trim();
+                                LaObservacion = Rs2.getString("observacion").trim();
+                                
+                                
+                        //**************************************************************************************************************************************************//    
+                            Element Receptor=new Element("Receptor").setNamespace(ns); 
+                                            
+                                Receptor.addContent(new Element("RUTRecep").addContent(ElRut).setNamespace(ns));
+                                Receptor.addContent(new Element("RznSocRecep").addContent(ElNombre).setNamespace(ns));
+                                Receptor.addContent(new Element("GiroRecep").addContent(ElGiro).setNamespace(ns));    
+                                Receptor.addContent(new Element("DirRecep").addContent(LaDireccion).setNamespace(ns));    
+                                Receptor.addContent(new Element("CmnaRecep").addContent(LaComuna).setNamespace(ns));    
+                                Receptor.addContent(new Element("CiudadRecep").addContent(LaCiudad).setNamespace(ns));    
+                                
+                        //**************************************************************** TOTALES DOCUMENTO ******************************************************************//   
+                                
+                          ElAfecto = Rs.getString("totalafecto");
+                          ElIva = Rs.getString("totaliva");
+                          ElTotal = Rs.getString("totaldocto");
+                                
+                                
+                                
+                            Element Totales=new Element("Totales").setNamespace(ns); 
+                                  
+                                
+                                System.out.println("totalafecto ES  :"+ElAfecto);
+                                
+                                Totales.addContent(new Element("MntNeto").addContent(ElAfecto).setNamespace(ns));
+                                Totales.addContent(new Element("TasaIVA").addContent("19").setNamespace(ns));
+                                Totales.addContent(new Element("IVA").addContent(ElIva).setNamespace(ns));
+                                Totales.addContent(new Element("MntTotal").addContent(ElTotal).setNamespace(ns));
+                                    
+                        encabezado.addContent(Iddoc);
+                        encabezado.addContent(Emisor);
+                        encabezado.addContent(Receptor);
+                        encabezado.addContent(Totales);
+                
+                    documento.addContent(encabezado);    
+             
+                    //************************************************* VERIFICA DIFERENCIA EN LOS SUBTOTALES Y NETO  **************************************************************************************//             
+                    
+                    Verifica_Netos(Tipo, Rut, Numero,ElAfecto );
+                    
+                    int difpaso = 0;
+                    int unidesc = 0;
+                    
+                    
+                    System.out.println("productos ES  :"+productos);
+                    System.out.println("dif ES  :"+dif);
+                    
+                    difpaso = dif;
+                    
+                    
+                    
+                    if (productos >= dif){
+                    
+                        unidesc = 1;
+                    
+                    
+                    }
+                    
+                    
+                    if(dif < 0){
+                        
+                       dif = dif * -1;
+                    }
+                    
+                    
+                    
+                    //**************************************************************** DETALLE PRODUCTOS ******************************************************************//   
+                    
+                     String LaLinea = "";
+                    
+                    
+                    Rs3 = Sql3.Select("select d.sku,d.cantidad,d.valorunitario,d.totallinea\n" +
+                            "from ctacteclidet d\n" +
+                            "where d.tipdocto='"+ Tipo +"'\n" +
+                            "and d.rut="+ Rut +"\n" +
+                            "and d.nrodocto=" + Numero);
+                   
+                    int linea = 1;   //Establece le número de linea de cada producto
+                                     
+                    
+                    while(Rs3.next()){ //Una iteración por producto
+                    
+                        RsLuv = SqlLuv.Select("SELECT p.nombre, u.um FROM producto p \n"+
+                                      "LEFT JOIN par_unidad u ON u.codigo=p.unidad\n "+
+                                      "WHERE p.sku = '"+Rs3.getString("sku").trim()+"'");
+                        RsLuv.next();
+               
+                        String ElSku = Rs3.getString("sku");
+                        String ElProd = RsLuv.getString("nombre").trim();
+                        String LaCantidad = fmMain.FormatoNumero3(Rs3.getDouble("cantidad"));
+                        String LaUnidad = RsLuv.getString("um");
+                        String ElUnitario = fmMain.FormatoNumero4(Rs3.getDouble("valorunitario"));
+                        System.out.println("ElUnitario ES  :"+ElUnitario);
+                        
+                        if (linea > dif){
+                        
+                           unidesc = 0;
+                            
+                        }
+                        
+                        
+                        
+                        if (difpaso > 0){
+                        
+                        
+                            LaLinea = String.valueOf(Math.round(Rs3.getDouble("cantidad")*Rs3.getDouble("valorunitario"))-unidesc);
+                        
+                        
+                        }else if (difpaso < 0) {
+                        
+                            LaLinea = String.valueOf(Math.round(Rs3.getDouble("cantidad")*Rs3.getDouble("valorunitario"))+unidesc);
+                                                
+                        }else if (difpaso == 0){
+                        
+                            LaLinea = String.valueOf(Math.round(Rs3.getDouble("cantidad")*Rs3.getDouble("valorunitario")));
+                        }
+                        
+                        
+                        Element Detalle=new Element("Detalle").setNamespace(ns);
+                        
+                           
+                            String nLinea = String.valueOf(linea);    
+                            
+                            Detalle.addContent(new Element("NroLinDet").addContent(nLinea).setNamespace(ns));
+                            
+                            Element CdgItem=new Element("CdgItem").setNamespace(ns);  //Tipo Codificacion para los items
+                                
+                                CdgItem.addContent(new Element("TpoCodigo").addContent("INT1").setNamespace(ns));
+                                CdgItem.addContent(new Element("VlrCodigo").addContent(ElSku).setNamespace(ns));
+                            
+                            Detalle.addContent(CdgItem);       
+                            
+                            Detalle.addContent(new Element("NmbItem").addContent(ElProd).setNamespace(ns));
+                            Detalle.addContent(new Element("QtyItem").addContent(LaCantidad).setNamespace(ns));
+                            Detalle.addContent(new Element("UnmdItem").addContent(LaUnidad).setNamespace(ns));
+                            Detalle.addContent(new Element("PrcItem").addContent(ElUnitario).setNamespace(ns));
+                            Detalle.addContent(new Element("MontoItem").addContent(LaLinea).setNamespace(ns));
+                            
+                            linea++;
+                            
+                        documento.addContent(Detalle);
+                    }
+                    
+                    
+                    
+                   //******************************************* SE AGREGAN OBSERVACIONES SI CORRESPONDE *************//  
+                    
+                    
+                    if (!LaObservacion.trim().isEmpty()){
+                    
+                        Element DetalleObs=new Element("Detalle").setNamespace(ns);
+                    
+                        String nLineaObs = String.valueOf(linea);
+                    
+                        DetalleObs.addContent(new Element("NroLinDet").addContent(nLineaObs).setNamespace(ns));
+                        DetalleObs.addContent(new Element("NmbItem").addContent("Observación:").setNamespace(ns));
+                        DetalleObs.addContent(new Element("DscItem").addContent(LaObservacion).setNamespace(ns));
+                        DetalleObs.addContent(new Element("MontoItem").addContent("0").setNamespace(ns));
+                    
+                        documento.addContent(DetalleObs); 
+                    
+                    }
+  
+                    
+        //*************************************** AGREGAR REFERENCIA DOCUMENTOS INTERNOS *************************************************//
+                    
+                    int lineaRef = 1;   //Establece le número de linea de cada Referencia  
+                
+                    
+                //********************************************* GUIAS ************************************************//    
+                    int Cont = 0;
+                    
+                    if (parGDC == 1){   //Lleva GUIA de referenca
+                    
+                    
+                        Rs4 = Sql4.Select("select * from ctactecli where tipdocto IN ('GDC') and tipdocrel IN ('FAC') \n"+
+                                          "and nrodocrel =" + Numero);
+        
+                        while (Rs4.next() && Cont < 21) {
+                    
+                            FolioRef = Rs4.getString("nrodocto");
+                            FechaGDC = sdf.format(Rs4.getDate("femision"));
+                    
+                            Element Referencia=new Element("Referencia").setNamespace(ns);
+                    
+                                String nLineaRef = String.valueOf(lineaRef); 
+                        
+                                Referencia.addContent(new Element("NroLinRef").addContent(nLineaRef).setNamespace(ns));
+                                Referencia.addContent(new Element("TpoDocRef").addContent("52").setNamespace(ns));
+                                Referencia.addContent(new Element("FolioRef").addContent(FolioRef).setNamespace(ns));
+                                Referencia.addContent(new Element("FchRef").addContent(FechaGDC).setNamespace(ns));
+                          
+                                lineaRef++;
+                            
+                            documento.addContent(Referencia);
+                    
+                            Cont++;
+                    
+                        }
+                    
+                    }
+                    
+                    //****************************************** OCC ******************************************************//
+                
+                
+                    if (parOCC == 1){    //Lleva OCC de referencia Interna
+                
+                        Rs = Sql.Select("select oc.codigo_oc || '-' || oc.orden as folio, oc.femision \n"
+                                      + "from ctactecli c\n"
+                                      + "left join occh oc on c.rut=oc.rut and c.codigo_oc=oc.codigo_oc and c.occh=oc.orden\n"
+                                      + "where c.tipdocto='" + Tipo + "'\n"
+                                      + "and c.nrodocto=" + Numero);
+                        Rs.next();
+                
+                        if(Rs.getString("folio").trim().length()>18){
+                            FolioRef = Rs.getString("folio").substring(0, 18).trim();
+                        }else{
+                            FolioRef = Rs.getString("folio").trim();
+                        }    
+                           
+                        String FechaOCC = sdf.format(Rs.getDate("femision"));
+                    
+                            
+                        Element Referencia2=new Element("Referencia").setNamespace(ns); 
+                            
+                            
+                                String nLineaRef2 = String.valueOf(lineaRef); 
+                        
+                                Referencia2.addContent(new Element("NroLinRef").addContent(nLineaRef2).setNamespace(ns));
+                                Referencia2.addContent(new Element("TpoDocRef").addContent("801").setNamespace(ns));
+                                Referencia2.addContent(new Element("FolioRef").addContent(FolioRef).setNamespace(ns));
+                                Referencia2.addContent(new Element("FchRef").addContent(FechaOCC).setNamespace(ns));
+                            
+                        documento.addContent(Referencia2);        
+                                        
+                    }
+                    
+        //*************************************** AGREGAR REFERENCIA DOCUMENTOS EXTERNOS *************************************************//     
+                    
+                    lineaRef++;
+                    
+                    Rs = Sql.Select("select cod_ref,doc_ref,fecha\n" +
+                                    "from fac_referencias\n" +
+                                    "where tipdocto='FAC'\n" +
+                                    "and nrodocto=" + Numero);
+                
+                    if(Sql.GetRowCount()>0){
+                
+                        while(Rs.next()){
+                    
+                            String TipoDocumento = Rs.getString("cod_ref").trim();
+                    
+                            switch (TipoDocumento){
+                                case "801"  : TipoDocumento="801"; break;   //Orden de Compra
+                                case "802"  : TipoDocumento="802"; break;   //Nota de Pedido
+                                case "10801": TipoDocumento="HES"; break;   //Hoja Entrada Servicio
+                                case "20801": TipoDocumento="UDP"; break;   //Unidad de Pago (Mop)
+                            }
+                    
+                            
+                            //805 = Proceso ChileCompra
+                            
+                            FolioRef = Rs.getString("doc_ref").trim();
+                            String FechaRef = sdf.format(Rs.getDate("fecha"));
+                            
+                           
+                            
+                            Element Referencia3=new Element("Referencia").setNamespace(ns); 
+                            
+                                String nLineaRef2 = String.valueOf(lineaRef); 
+                        
+                                Referencia3.addContent(new Element("NroLinRef").addContent(nLineaRef2).setNamespace(ns));
+                                Referencia3.addContent(new Element("TpoDocRef").addContent(TipoDocumento).setNamespace(ns));
+                                Referencia3.addContent(new Element("FolioRef").addContent(FolioRef).setNamespace(ns));
+                                Referencia3.addContent(new Element("FchRef").addContent(FechaRef).setNamespace(ns));
+                            
+                                lineaRef++;
+                            
+                            documento.addContent(Referencia3);        
+                            
+                        }
+                    }
+                    
+                    
+                    
+                    
+                    
+                    
+        root.addContent(documento);
+        doc.setRootElement(root);
+
+       
+//Se genera el archivo XML 
+        XMLOutputter outter=new XMLOutputter();
+        outter.setFormat(Format.getPrettyFormat());
+        factura = new File("C:/temp_luvaly/mifactura.xml");
+        outter.output(doc, new FileWriter(factura));   
+		
+		//******** Se traspasa el contenido del archivo XML a una variable de texto (String) *******//      
+		
+		 br = new BufferedReader(new InputStreamReader(new FileInputStream(factura), StandardCharsets.UTF_8));
+		
+		
+		String result = "";
+        String line = "";
+        
+        while( (line = br.readLine()) != null){
+        
+            result = result + line; 
+        }
+		
+		DTE dte = new DTE();
+        DTESoap soap = dte.getDTESoap();
+		
+		 ArrayOfString respuesta = soap.ponerDTE("ws_econa", "5df28bdd52", result, true);       //produccion 
+		
+		
+		
+    

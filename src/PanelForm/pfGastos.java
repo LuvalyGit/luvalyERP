@@ -1,0 +1,4452 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package PanelForm;
+
+import Conexion.ExeSql;
+import Dialogos.*;
+import Dialogos.jdBuscarCliPrv;
+import Formularios.fmMain;
+import static Formularios.fmMain.pnPestanas;
+import Utilidades.Ftp;
+import Utilidades.PanelTab;
+import Utilidades.SubeFTP;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Desktop;
+import java.awt.HeadlessException;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.math.BigInteger;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javamail.Window;
+import static javamail.Window.PassWord;
+import static javamail.Window.Username;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.ListCellRenderer;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
+
+/**
+ *
+ * @author David Alcaman
+ */
+public class pfGastos extends javax.swing.JPanel {
+    int EstadoGeneral;
+    boolean Cargando;
+    boolean Nuevo;
+    String OpenRut;
+    String OpenNroDocto;
+    String OpenTipDocto;
+    boolean PosElectronica;
+    int Autorizado;
+    int Autorizado2;
+    int carga = 0;
+    
+    int indice = 0;
+    String Frendicion = "";
+    String archivo;
+    String NewTipDoc = "";
+    String Dv        = "";
+    
+    
+    //Bloqueo de Combo Box
+    int PosCCosto;
+    int PosTrabajador;
+    int PosCategoria;
+    int PosSubCategoria;
+    int PosTipDocto;
+    int PosPago;
+    int PosPagoTrabajador;
+    int Gasto = 0;
+    int Rinde = 0;
+    int Muestra = 0;
+    int nFolio = 0;
+    int cuenta = 0;
+    
+    double total2 = 0;
+    Date hoy = new Date(); 
+    Date fpago;
+    
+    public static int intNivelUsuario = 0; 
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    DecimalFormat formateador = new DecimalFormat("###,###");
+    Calendar cal = Calendar.getInstance();
+         
+    /**
+     * Creates new form pfGastos
+     */
+    public pfGastos() {
+        
+        initComponents();
+        Cargando=true;
+        CargaTipoPago();
+        CargaPersonal();
+       
+        //--
+        
+        jPanel4.setVisible(false);
+        jPanel6.setVisible(false);
+        jPanel7.setVisible(false);
+        chRetencion.setVisible(false);
+        chRetencion2.setVisible(false);
+        cbCCostoId.setVisible(false);
+        cbTrabajadorId.setVisible(false);
+        cbTrabajadorId1.setVisible(false);
+        cbCategoriaId.setVisible(false);
+        cbSubCategoriaId.setVisible(false);
+        
+        
+        //Limpia Combobox
+        cbCCosto.removeAllItems();
+        cbCCostoId.removeAllItems();
+        cbTrabajador.removeAllItems();
+        cbTrabajadorId.removeAllItems();
+        cbTrabajadorId1.removeAllItems();
+        cbCategoria.removeAllItems();
+        cbCategoriaId.removeAllItems();
+        cbSubCategoria.removeAllItems();
+        cbSubCategoriaId.removeAllItems();
+        
+        cbBuscarRend.removeAllItems();
+        
+        SetEstados(1);
+        cbTipoPagoId.setVisible(false);
+        cbPersonal.setVisible(false);
+        cbPersonalId.setVisible(false);
+        Cargando=false;
+        CargaFolios();
+        jPanel4.setVisible(false);
+        
+        lbFiltro.setVisible(false);
+        txFiltro.setVisible(false);
+        
+        
+        btNCP.setEnabled(false);
+        
+        cbTipDocto.setEnabled(false);
+        dtEmision.setEnabled(false);
+        
+        pnNotas.setVisible(false);
+        
+        txTotalNCP.setVisible(false);
+        
+       
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel2 = new javax.swing.JPanel();
+        cbCategoria = new javax.swing.JComboBox<String>();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        cbSubCategoria = new javax.swing.JComboBox<String>();
+        jLabel12 = new javax.swing.JLabel();
+        cbCCosto = new javax.swing.JComboBox<String>();
+        cbTrabajador = new javax.swing.JComboBox<String>();
+        jLabel13 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        txRut = new javax.swing.JTextField();
+        btIr = new javax.swing.JButton();
+        txNombre = new javax.swing.JTextField();
+        jPanel5 = new javax.swing.JPanel();
+        cbTipDocto = new javax.swing.JComboBox<String>();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        txNroDocto = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        dtEmision = new org.jdesktop.swingx.JXDatePicker();
+        lbNeto = new javax.swing.JLabel();
+        lbIva = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        txNeto = new javax.swing.JTextField();
+        txIva = new javax.swing.JTextField();
+        txTotal = new javax.swing.JTextField();
+        chkElectronica = new javax.swing.JCheckBox();
+        chRetencion = new javax.swing.JCheckBox();
+        chRetencion2 = new javax.swing.JCheckBox();
+        txExento = new javax.swing.JTextField();
+        lbExento = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        txEsp = new javax.swing.JTextField();
+        pnNotas = new javax.swing.JPanel();
+        btVerNotas = new javax.swing.JButton();
+        lbNotas = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        txTotalNCP = new javax.swing.JTextField();
+        pnMenu = new javax.swing.JPanel();
+        btNuevo = new javax.swing.JButton();
+        btGuardar = new javax.swing.JButton();
+        btCancelar = new javax.swing.JButton();
+        btAbrir = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        btEditar = new javax.swing.JButton();
+        btAutorizar = new javax.swing.JButton();
+        bttRendir = new javax.swing.JToggleButton();
+        cbBuscarRend = new javax.swing.JComboBox();
+        jLabel14 = new javax.swing.JLabel();
+        btNCP = new javax.swing.JButton();
+        cbCCostoId = new javax.swing.JComboBox<String>();
+        cbTrabajadorId = new javax.swing.JComboBox<String>();
+        cbSubCategoriaId = new javax.swing.JComboBox<String>();
+        jPanel1 = new javax.swing.JPanel();
+        txCuotas = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        cbTipoPagoId = new javax.swing.JComboBox();
+        txDias = new javax.swing.JTextField();
+        cbTipoPago = new javax.swing.JComboBox();
+        jLabel15 = new javax.swing.JLabel();
+        cbPersonal = new javax.swing.JComboBox<String>();
+        chkPersonal = new javax.swing.JCheckBox();
+        pdfButton = new javax.swing.JButton();
+        cbPersonalId = new javax.swing.JComboBox<String>();
+        cbTrabajadorId1 = new javax.swing.JComboBox<String>();
+        jPanel4 = new javax.swing.JPanel();
+        btGenerar = new javax.swing.JButton();
+        btFiltrar = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
+        cbBanco = new javax.swing.JComboBox();
+        cbPago = new javax.swing.JComboBox();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        btVerDoc = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        Grilla = new javax.swing.JTable();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        Grilla1 = new javax.swing.JTable();
+        lbFiltro = new javax.swing.JLabel();
+        txFiltro = new javax.swing.JTextField();
+        cbCategoriaId = new javax.swing.JComboBox<String>();
+
+        setMaximumSize(new java.awt.Dimension(1475, 32767));
+        setMinimumSize(new java.awt.Dimension(1475, 0));
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Categoria", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        jPanel2.setMinimumSize(new java.awt.Dimension(664, 0));
+        jPanel2.setName(""); // NOI18N
+
+        cbCategoria.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbCategoria.setMinimumSize(new java.awt.Dimension(210, 20));
+        cbCategoria.setName(""); // NOI18N
+        cbCategoria.setOpaque(false);
+        cbCategoria.setPreferredSize(new java.awt.Dimension(210, 20));
+        cbCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCategoriaActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Categoria");
+
+        jLabel4.setText("Sub Categoria");
+
+        cbSubCategoria.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbSubCategoria.setMinimumSize(new java.awt.Dimension(210, 20));
+        cbSubCategoria.setPreferredSize(new java.awt.Dimension(210, 20));
+        cbSubCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbSubCategoriaActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setText("Centro de Costos");
+
+        cbCCosto.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbCCosto.setPreferredSize(new java.awt.Dimension(213, 20));
+        cbCCosto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCCostoActionPerformed(evt);
+            }
+        });
+
+        cbTrabajador.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbTrabajador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbTrabajadorActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText("Trabajador");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cbCCosto, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbTrabajador, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbSubCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(cbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel12)
+                    .addComponent(cbCCosto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(cbTrabajador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel4)
+                    .addComponent(cbSubCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7))
+        );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Proveedor", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        jPanel3.setMinimumSize(new java.awt.Dimension(664, 0));
+        jPanel3.setName(""); // NOI18N
+
+        jLabel5.setText("RUT/Orden");
+
+        jLabel6.setText("Nombre");
+
+        txRut.setMaximumSize(new java.awt.Dimension(100, 2147483647));
+        txRut.setMinimumSize(new java.awt.Dimension(100, 20));
+        txRut.setName(""); // NOI18N
+        txRut.setPreferredSize(new java.awt.Dimension(100, 20));
+        txRut.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txRutKeyPressed(evt);
+            }
+        });
+
+        btIr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos22/Go.png"))); // NOI18N
+        btIr.setToolTipText("");
+        btIr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btIrActionPerformed(evt);
+            }
+        });
+
+        txNombre.setEditable(false);
+        txNombre.setMaximumSize(new java.awt.Dimension(431, 2147483647));
+        txNombre.setMinimumSize(new java.awt.Dimension(431, 20));
+        txNombre.setPreferredSize(new java.awt.Dimension(431, 20));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(18, 18, 18)
+                        .addComponent(txRut, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btIr, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btIr, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5)
+                        .addComponent(txRut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addContainerGap())
+        );
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Documento", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        jPanel5.setPreferredSize(new java.awt.Dimension(664, 123));
+
+        cbTipDocto.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Boleta", "Factura", "Boleta Honorarios", "Multa", "Comprobante", "Factura Proveedor", "Estado de Cuenta" }));
+        cbTipDocto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbTipDoctoActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Documento");
+
+        jLabel8.setText("Número");
+
+        txNroDocto.setPreferredSize(new java.awt.Dimension(115, 20));
+
+        jLabel2.setText("Fecha");
+
+        dtEmision.setPreferredSize(new java.awt.Dimension(115, 22));
+        dtEmision.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dtEmisionActionPerformed(evt);
+            }
+        });
+
+        lbNeto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbNeto.setText("Neto");
+
+        lbIva.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbIva.setText("Iva");
+
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel11.setText("Total");
+
+        txNeto.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txNeto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txNetoActionPerformed(evt);
+            }
+        });
+        txNeto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txNetoKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txNetoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txNetoKeyTyped(evt);
+            }
+        });
+
+        txIva.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txIva.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txIvaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txIvaKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txIvaKeyTyped(evt);
+            }
+        });
+
+        txTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txTotal.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txTotalKeyReleased(evt);
+            }
+        });
+
+        chkElectronica.setSelected(true);
+        chkElectronica.setText("Electrónica");
+        chkElectronica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkElectronicaActionPerformed(evt);
+            }
+        });
+
+        chRetencion.setSelected(true);
+        chRetencion.setText("Retencion 10.75%");
+        chRetencion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chRetencionActionPerformed(evt);
+            }
+        });
+
+        chRetencion2.setText("Retención 14.50%");
+        chRetencion2.setToolTipText("");
+        chRetencion2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chRetencion2ActionPerformed(evt);
+            }
+        });
+
+        txExento.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txExento.setToolTipText("");
+        txExento.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txExentoKeyPressed(evt);
+            }
+        });
+
+        lbExento.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbExento.setText("Exento");
+
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel16.setText("Impuesto Especial");
+        jLabel16.setToolTipText("");
+
+        txEsp.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txEsp.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txEspKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txEspKeyReleased(evt);
+            }
+        });
+
+        pnNotas.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        btVerNotas.setText("Ver");
+        btVerNotas.setToolTipText("");
+        btVerNotas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btVerNotasActionPerformed(evt);
+            }
+        });
+
+        lbNotas.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lbNotas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbNotas.setText("0");
+        lbNotas.setToolTipText("");
+        lbNotas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel19.setText("Notas de Crédito ");
+
+        javax.swing.GroupLayout pnNotasLayout = new javax.swing.GroupLayout(pnNotas);
+        pnNotas.setLayout(pnNotasLayout);
+        pnNotasLayout.setHorizontalGroup(
+            pnNotasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnNotasLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbNotas, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btVerNotas)
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+        pnNotasLayout.setVerticalGroup(
+            pnNotasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnNotasLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnNotasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbNotas)
+                    .addComponent(jLabel19)
+                    .addComponent(btVerNotas))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        txTotalNCP.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txTotalNCP.setText("0");
+        txTotalNCP.setToolTipText("");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cbTipDocto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dtEmision, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txNroDocto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chRetencion, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chRetencion2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chkElectronica)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(318, 318, 318)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel5Layout.createSequentialGroup()
+                                        .addGap(53, 53, 53)
+                                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(lbNeto)
+                                            .addComponent(lbIva)))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                        .addGap(38, 38, 38)
+                                        .addComponent(lbExento, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(pnNotas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txTotalNCP, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txNeto)
+                            .addComponent(txIva)
+                            .addComponent(txExento)
+                            .addComponent(txEsp)
+                            .addComponent(txTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(41, 41, 41))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                                    .addComponent(cbTipDocto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel7)
+                                    .addComponent(chkElectronica))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel8)
+                                    .addComponent(txNroDocto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(chRetencion, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                                .addComponent(jLabel2)
+                                .addComponent(dtEmision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(chRetencion2))
+                        .addGap(11, 11, 11)
+                        .addComponent(pnNotas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txExento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbExento))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(lbNeto)
+                            .addComponent(txNeto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbIva)
+                            .addComponent(txIva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txEsp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel16))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11)
+                            .addComponent(txTotalNCP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(23, 23, 23))
+        );
+
+        pnMenu.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnMenu.setPreferredSize(new java.awt.Dimension(1455, 103));
+
+        btNuevo.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        btNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/add16.png"))); // NOI18N
+        btNuevo.setText("Nuevo");
+        btNuevo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btNuevo.setBorderPainted(false);
+        btNuevo.setFocusPainted(false);
+        btNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btNuevoActionPerformed(evt);
+            }
+        });
+
+        btGuardar.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        btGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/save16.png"))); // NOI18N
+        btGuardar.setText("Guardar");
+        btGuardar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btGuardar.setBorderPainted(false);
+        btGuardar.setEnabled(false);
+        btGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btGuardarActionPerformed(evt);
+            }
+        });
+
+        btCancelar.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        btCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/Cancel16.png"))); // NOI18N
+        btCancelar.setText("Cancelar");
+        btCancelar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btCancelar.setBorderPainted(false);
+        btCancelar.setEnabled(false);
+        btCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCancelarActionPerformed(evt);
+            }
+        });
+
+        btAbrir.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        btAbrir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/open16.png"))); // NOI18N
+        btAbrir.setText("Abrir");
+        btAbrir.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btAbrir.setBorderPainted(false);
+        btAbrir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAbrirActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel1.setText("INGRESO DE GASTOS");
+
+        btEditar.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        btEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/Pencil16.png"))); // NOI18N
+        btEditar.setText("Editar");
+        btEditar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btEditar.setBorderPainted(false);
+        btEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEditarActionPerformed(evt);
+            }
+        });
+
+        btAutorizar.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        btAutorizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/ok_16.png"))); // NOI18N
+        btAutorizar.setText("Autorizar");
+        btAutorizar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btAutorizar.setBorderPainted(false);
+        btAutorizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAutorizarActionPerformed(evt);
+            }
+        });
+
+        bttRendir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/OCProveedor24.png"))); // NOI18N
+        bttRendir.setText("Rendicion");
+        bttRendir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bttRendirActionPerformed(evt);
+            }
+        });
+
+        cbBuscarRend.setToolTipText("");
+        cbBuscarRend.setMinimumSize(new java.awt.Dimension(90, 20));
+        cbBuscarRend.setName(""); // NOI18N
+        cbBuscarRend.setPreferredSize(new java.awt.Dimension(90, 20));
+        cbBuscarRend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbBuscarRendActionPerformed(evt);
+            }
+        });
+
+        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setText("BUSCAR RENDICION");
+
+        btNCP.setText("Nota de Crédito");
+        btNCP.setToolTipText("");
+        btNCP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btNCPActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnMenuLayout = new javax.swing.GroupLayout(pnMenu);
+        pnMenu.setLayout(pnMenuLayout);
+        pnMenuLayout.setHorizontalGroup(
+            pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnMenuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addGroup(pnMenuLayout.createSequentialGroup()
+                        .addComponent(btGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btAbrir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                        .addComponent(btNCP, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(64, 64, 64)
+                        .addComponent(bttRendir, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnMenuLayout.createSequentialGroup()
+                                .addGap(28, 28, 28)
+                                .addComponent(cbBuscarRend, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(74, 74, 74)
+                        .addComponent(btAutorizar, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(50, 50, 50))
+        );
+        pnMenuLayout.setVerticalGroup(
+            pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnMenuLayout.createSequentialGroup()
+                .addGroup(pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnMenuLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btAbrir, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(bttRendir, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btNCP, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnMenuLayout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addGroup(pnMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnMenuLayout.createSequentialGroup()
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbBuscarRend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btAutorizar, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
+        );
+
+        cbCCostoId.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        cbTrabajadorId.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        cbSubCategoriaId.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Pagos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        jPanel1.setMinimumSize(new java.awt.Dimension(664, 0));
+        jPanel1.setName(""); // NOI18N
+
+        txCuotas.setText("1");
+        txCuotas.setEnabled(false);
+        txCuotas.setPreferredSize(new java.awt.Dimension(43, 20));
+        txCuotas.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txCuotasKeyTyped(evt);
+            }
+        });
+
+        jLabel17.setText("Cuotas");
+
+        jLabel18.setText("Días");
+
+        cbTipoPagoId.setPreferredSize(new java.awt.Dimension(55, 20));
+        cbTipoPagoId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbTipoPagoIdActionPerformed(evt);
+            }
+        });
+
+        txDias.setEditable(false);
+        txDias.setText("0");
+        txDias.setPreferredSize(new java.awt.Dimension(56, 20));
+        txDias.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txDiasMouseClicked(evt);
+            }
+        });
+        txDias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txDiasActionPerformed(evt);
+            }
+        });
+
+        cbTipoPago.setPreferredSize(new java.awt.Dimension(247, 20));
+        cbTipoPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbTipoPagoActionPerformed(evt);
+            }
+        });
+
+        jLabel15.setText("Forma de Pago");
+
+        cbPersonal.setPreferredSize(new java.awt.Dimension(230, 20));
+        cbPersonal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbPersonalActionPerformed(evt);
+            }
+        });
+
+        chkPersonal.setText("Pagado por personal");
+        chkPersonal.setEnabled(false);
+        chkPersonal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkPersonalActionPerformed(evt);
+            }
+        });
+
+        pdfButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos16/pdf.png"))); // NOI18N
+        pdfButton.setEnabled(false);
+        pdfButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pdfButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jLabel15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(chkPersonal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37)
+                        .addComponent(pdfButton))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(cbTipoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(11, 11, 11)
+                        .addComponent(jLabel17)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txCuotas, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(16, 16, 16)
+                        .addComponent(jLabel18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txDias, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbTipoPagoId, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(49, 49, 49))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(jLabel18)
+                    .addComponent(txDias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txCuotas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15)
+                    .addComponent(cbTipoPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbTipoPagoId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cbPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(chkPersonal))
+                    .addComponent(pdfButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7))
+        );
+
+        cbTrabajadorId1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel4.setMaximumSize(new java.awt.Dimension(780, 32767));
+        jPanel4.setMinimumSize(new java.awt.Dimension(780, 0));
+        jPanel4.setName(""); // NOI18N
+        jPanel4.setPreferredSize(new java.awt.Dimension(780, 770));
+
+        btGenerar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Order24.png"))); // NOI18N
+        btGenerar.setText("Generar Documento");
+        btGenerar.setEnabled(false);
+        btGenerar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btGenerarActionPerformed(evt);
+            }
+        });
+
+        btFiltrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos22/Filtro.png"))); // NOI18N
+        btFiltrar.setText("Filtrar");
+        btFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btFiltrarActionPerformed(evt);
+            }
+        });
+
+        jPanel7.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        cbBanco.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Elige un Banco", "BCI", "BICE", "ESTADO" }));
+
+        cbPago.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Elige un Pago", "TRANSFERENCIA", "TARJETA DE CREDITO", " " }));
+        cbPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbPagoActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("Banco");
+
+        jLabel10.setText("Tipo de Pago");
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbBanco, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbPago, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(cbBanco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(cbPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        btVerDoc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Order24.png"))); // NOI18N
+        btVerDoc.setText("Ver Documento");
+        btVerDoc.setEnabled(false);
+        btVerDoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btVerDocActionPerformed(evt);
+            }
+        });
+
+        Grilla.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Trabajador", "Gasto", "Fecha", "T. Doc.", "Nro. Doc", "Monto", "Rut Trabajador", "Rendir", "Rut Proveedor"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, true, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(Grilla);
+        if (Grilla.getColumnModel().getColumnCount() > 0) {
+            Grilla.getColumnModel().getColumn(0).setMinWidth(215);
+            Grilla.getColumnModel().getColumn(0).setPreferredWidth(215);
+            Grilla.getColumnModel().getColumn(0).setMaxWidth(215);
+            Grilla.getColumnModel().getColumn(1).setMinWidth(145);
+            Grilla.getColumnModel().getColumn(1).setPreferredWidth(145);
+            Grilla.getColumnModel().getColumn(1).setMaxWidth(145);
+            Grilla.getColumnModel().getColumn(2).setMinWidth(70);
+            Grilla.getColumnModel().getColumn(2).setPreferredWidth(70);
+            Grilla.getColumnModel().getColumn(2).setMaxWidth(70);
+            Grilla.getColumnModel().getColumn(3).setMinWidth(45);
+            Grilla.getColumnModel().getColumn(3).setPreferredWidth(45);
+            Grilla.getColumnModel().getColumn(3).setMaxWidth(45);
+            Grilla.getColumnModel().getColumn(4).setMinWidth(70);
+            Grilla.getColumnModel().getColumn(4).setPreferredWidth(70);
+            Grilla.getColumnModel().getColumn(4).setMaxWidth(70);
+            Grilla.getColumnModel().getColumn(5).setMinWidth(60);
+            Grilla.getColumnModel().getColumn(5).setPreferredWidth(60);
+            Grilla.getColumnModel().getColumn(5).setMaxWidth(60);
+            Grilla.getColumnModel().getColumn(6).setMinWidth(0);
+            Grilla.getColumnModel().getColumn(6).setPreferredWidth(0);
+            Grilla.getColumnModel().getColumn(6).setMaxWidth(0);
+            Grilla.getColumnModel().getColumn(7).setMinWidth(40);
+            Grilla.getColumnModel().getColumn(7).setPreferredWidth(40);
+            Grilla.getColumnModel().getColumn(7).setMaxWidth(40);
+            Grilla.getColumnModel().getColumn(8).setMinWidth(0);
+            Grilla.getColumnModel().getColumn(8).setPreferredWidth(0);
+            Grilla.getColumnModel().getColumn(8).setMaxWidth(0);
+        }
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(btFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btGenerar))
+                            .addComponent(btVerDoc))
+                        .addGap(86, 86, 86)
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btGenerar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btVerDoc, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        jPanel6.setMinimumSize(new java.awt.Dimension(664, 0));
+        jPanel6.setName(""); // NOI18N
+        jPanel6.setPreferredSize(new java.awt.Dimension(664, 88));
+
+        Grilla1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Trabajador", "Gasto", "Fecha", "Tipo Doc.", "Nro. Doc", "Monto", "Rut Trabajador", "Rendir", "Rut Proveedor"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        Grilla1.setPreferredSize(new java.awt.Dimension(520, 0));
+        jScrollPane2.setViewportView(Grilla1);
+        if (Grilla1.getColumnModel().getColumnCount() > 0) {
+            Grilla1.getColumnModel().getColumn(1).setMinWidth(150);
+            Grilla1.getColumnModel().getColumn(1).setPreferredWidth(150);
+            Grilla1.getColumnModel().getColumn(1).setMaxWidth(150);
+            Grilla1.getColumnModel().getColumn(2).setMinWidth(60);
+            Grilla1.getColumnModel().getColumn(2).setPreferredWidth(60);
+            Grilla1.getColumnModel().getColumn(2).setMaxWidth(60);
+            Grilla1.getColumnModel().getColumn(3).setMinWidth(60);
+            Grilla1.getColumnModel().getColumn(3).setPreferredWidth(60);
+            Grilla1.getColumnModel().getColumn(3).setMaxWidth(60);
+            Grilla1.getColumnModel().getColumn(4).setMinWidth(80);
+            Grilla1.getColumnModel().getColumn(4).setPreferredWidth(80);
+            Grilla1.getColumnModel().getColumn(4).setMaxWidth(80);
+            Grilla1.getColumnModel().getColumn(5).setMinWidth(80);
+            Grilla1.getColumnModel().getColumn(5).setPreferredWidth(80);
+            Grilla1.getColumnModel().getColumn(5).setMaxWidth(80);
+            Grilla1.getColumnModel().getColumn(7).setMinWidth(45);
+            Grilla1.getColumnModel().getColumn(7).setPreferredWidth(45);
+            Grilla1.getColumnModel().getColumn(7).setMaxWidth(45);
+        }
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(47, 47, 47))
+        );
+
+        lbFiltro.setText("FILTRO:");
+
+        txFiltro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txFiltroActionPerformed(evt);
+            }
+        });
+        txFiltro.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txFiltroKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txFiltroKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txFiltroKeyTyped(evt);
+            }
+        });
+
+        cbCategoriaId.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbCategoriaId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCategoriaIdActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(pnMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 1363, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 678, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(298, 298, 298)
+                                .addComponent(lbFiltro)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbSubCategoriaId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(68, 68, 68)
+                                .addComponent(cbTrabajadorId, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbTrabajadorId1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbCCostoId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbPersonalId, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbCategoriaId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 673, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(7, 7, 7))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbFiltro))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cbSubCategoriaId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbTrabajadorId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbTrabajadorId1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbCCostoId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbPersonalId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbCategoriaId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(7, 7, 7)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(10, 10, 10))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+    
+    private void SetEstados(int Estado){
+        //Nada
+        if(Estado==1){
+            Limpia();
+            Habilita(false);
+            btCancelar.setEnabled(false);
+            btGuardar.setEnabled(false);
+            btAbrir.setEnabled(true);
+            btNuevo.setEnabled(true);
+            btEditar.setEnabled(false);
+            btAutorizar.setEnabled(false);
+            cbPersonal.setVisible(false);
+            EstadoGeneral=1;
+        }
+        //Nuevo
+        if(Estado==2){
+            EstadoGeneral=2;
+            Limpia();
+            Habilita(true);
+            CargaCCostos();
+            btCancelar.setEnabled(true);
+            btGuardar.setEnabled(true);
+            btAbrir.setEnabled(false);
+            btNuevo.setEnabled(false);
+            Editar(true);
+            EstadoGeneral=2;
+            Nuevo=true;
+        }
+        if(Estado==4){
+            PosCCosto       = cbCCosto.getSelectedIndex();
+            PosTrabajador   = cbTrabajador.getSelectedIndex();
+            PosCategoria    = cbCategoria.getSelectedIndex();
+            PosSubCategoria = cbSubCategoria.getSelectedIndex();
+            PosPago         = cbTipoPago.getSelectedIndex();
+            PosTipDocto     = cbTipDocto.getSelectedIndex();
+            PosPagoTrabajador = cbPersonal.getSelectedIndex();
+            PosElectronica  = chkElectronica.isSelected();
+            EstadoGeneral   = 4;
+            Editar(false);
+            btNuevo.setEnabled(true);
+            btGuardar.setEnabled(false);
+            btCancelar.setEnabled(false);
+            btAbrir.setEnabled(true);
+        }
+        if(Estado==5){
+            btNuevo.setEnabled(false);
+            btGuardar.setEnabled(true);
+            btCancelar.setEnabled(true);
+            btEditar.setEnabled(false);
+            btAbrir.setEnabled(false);
+            btAutorizar.setEnabled(false);
+            
+            cbTipDocto.setEnabled(true);
+            dtEmision.setEnabled(true);
+            
+            Editar(true);
+            EstadoGeneral = 5;
+            Nuevo=false;
+        }
+        
+    }
+    private void Habilita(boolean Estado){
+        cbCCosto.setEnabled(Estado);
+        cbCategoria.setEnabled(Estado);
+        cbSubCategoria.setEnabled(Estado);
+        cbTrabajador.setEnabled(Estado);
+        cbTipDocto.setEnabled(Estado);
+        cbTipoPago.setEnabled(Estado);
+        
+        txRut.setEnabled(Estado);
+        txNombre.setEnabled(Estado);
+        txNroDocto.setEnabled(Estado);
+        txExento.setEnabled(Estado);
+        txNeto.setEnabled(Estado);
+        txIva.setEnabled(Estado);
+        txEsp.setEnabled(Estado);
+        txTotal.setEnabled(Estado);
+        txCuotas.setEnabled(Estado);
+        txDias.setEnabled(Estado);
+        
+        btIr.setEnabled(Estado);
+        
+        dtEmision.setEnabled(Estado);
+        
+        chkElectronica.setEnabled(Estado);
+        chkPersonal.setEnabled(Estado);
+    }
+    
+    private void Limpia(){
+        cbCCosto.setSelectedIndex(-1);
+        cbCategoria.setSelectedIndex(-1);
+        cbTrabajador.setSelectedIndex(-1);
+        cbSubCategoria.setSelectedIndex(-1);
+        
+        txRut.setText("");
+        txNombre.setText("");
+        
+        cbTipDocto.setSelectedIndex(-1);
+        txNroDocto.setText("");
+        dtEmision.setDate(null);
+        txTotal.setText("");
+        txIva.setText("");
+        txEsp.setText("");
+        txNeto.setText("");
+        txExento.setText("");
+    }
+    
+    private void CargaCCostos(){
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        
+        cbCCosto.removeAllItems();
+        cbCCostoId.removeAllItems();
+        
+        try {
+            Rs = Sql.Select("select ID,NOMBRE\n" +
+                            "from pccostos3 order by nombre");
+            while(Rs.next()){
+                cbCCostoId.addItem(Rs.getString("id"));
+                cbCCosto.addItem(Rs.getString("nombre").trim());
+            }
+            
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally{
+            Sql.Close();
+        }
+                
+    }
+    
+    private void CargaTrabajadores(){
+        ExeSql Sql= new ExeSql();
+        ResultSet Rs;
+        
+        cbTrabajador.removeAllItems();
+        cbTrabajadorId.removeAllItems();
+        cbTrabajadorId1.removeAllItems();
+        
+        try {
+            Rs = Sql.Select("select p.rut,p.nombre,p.apellidopaterno,p.apellidomaterno\n" +
+                            "from personal_ccostos2 pc\n" +
+                            "left join personal p on pc.rut=p.rut\n" +
+                            "where pc.ccosto=" + cbCCostoId.getSelectedItem().toString().trim() + " \n"+
+                            "and p.empresa IN ('1','3') ORDER BY p.rut");
+            
+            while(Rs.next()){
+                
+                String nombrecompleto = Rs.getString("nombre")+" "+Rs.getString("apellidopaterno")+" "+Rs.getString("apellidomaterno");
+                
+                cbTrabajadorId.addItem(Rs.getString("Rut"));
+                cbTrabajadorId1.addItem(nombrecompleto);
+                cbTrabajador.addItem(Rs.getString("nombre")+" "+Rs.getString("apellidopaterno"));
+                
+            }
+            
+             
+            if (cbCCosto.getSelectedIndex() == 0){
+        
+                cbTrabajadorId.addItem("1111111");
+                cbTrabajadorId1.addItem("GASTOS BANCARIOS");        
+                cbTrabajador.addItem("GASTOS BANCARIOS");        
+        
+            }
+            
+            
+        
+        }catch (Exception e) {
+        
+        }finally{
+            Sql.Close();
+        }
+    }
+    
+    private void CargaGastosGrales(){
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        
+        cbCategoria.removeAllItems();
+        cbCategoriaId.removeAllItems();
+        
+        try {
+            Rs = Sql.Select("SELECT max(p.codigo) as id,p.nombre\n" +
+                            "FROM gastos_link l\n" +
+                            "left join gastos_det d on l.gastosdet=d.id\n" +
+                            "left join PAR_GENERAL p on p.CODIGO=d.plan and p.tipo='TIPO_GASTOS'\n" +
+                            "where l.ccosto=" + cbCCostoId.getSelectedItem().toString().trim() + "\n" +
+                            "and p.codigo NOT IN ('10','11','12','13','14')\n" +
+                            "group by p.nombre \n" +
+                            "order by p.nombre ");
+            while(Rs.next()){
+                cbCategoriaId.addItem(Rs.getString("id").trim());
+                cbCategoria.addItem(Rs.getString("nombre").trim());
+            }
+            
+            cbTipDocto.setSelectedIndex(0);
+            cbTipDocto.setEnabled(true);
+            txNroDocto.setEnabled(true);
+            
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }finally{
+            Sql.Close();
+        }
+    }
+    
+    
+    private void CargaGastosGrales2(){
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        
+        cbCategoria.removeAllItems();
+        cbCategoriaId.removeAllItems();
+        
+        try {
+            Rs = Sql.Select("SELECT max(p.codigo) as id,p.nombre\n" +
+                            "FROM gastos_link l\n" +
+                            "left join gastos_det d on l.gastosdet=d.id\n" +
+                            "left join PAR_GENERAL p on p.CODIGO=d.plan and p.tipo='TIPO_GASTOS'\n" +
+                            "where l.ccosto=" + cbCCostoId.getSelectedItem().toString().trim() + "\n" +
+                            "and p.codigo IN ('10','11','12','13','14')\n" +
+                            "group by p.nombre \n" +
+                            "order by p.nombre ");
+            while(Rs.next()){
+                cbCategoriaId.addItem(Rs.getString("id").trim());
+                cbCategoria.addItem(Rs.getString("nombre").trim());
+            }
+        
+            
+            cbTipDocto.setSelectedIndex(6);
+            cbTipDocto.setEnabled(false);
+            txNroDocto.setEnabled(false);
+            
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }finally{
+            Sql.Close();
+        }
+    }
+    
+    
+    private void CargaSubCategoria(){
+        ExeSql Sql=new ExeSql();
+        ResultSet Rs;
+        
+        cbSubCategoria.removeAllItems();
+        cbSubCategoriaId.removeAllItems();
+        
+        try {
+            Rs = Sql.Select("SELECT d.id,d.nombre\n" +
+                            "FROM gastos_link l\n" +
+                            "left join gastos_det d on l.gastosdet=d.id\n" +
+                            "where l.ccosto=" + cbCCostoId.getSelectedItem().toString().trim() + "\n" +
+                            "and d.plan=" + cbCategoriaId.getSelectedItem().toString().trim());
+            
+            while(Rs.next()){
+                cbSubCategoriaId.addItem(Rs.getString("id").trim());
+                cbSubCategoria.addItem(Rs.getString("nombre").trim());     
+            }
+            
+            
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+        }finally{
+            Sql.Close();
+        }
+    }
+    
+    
+    private void CargaFolios(){
+        ExeSql Sql= new ExeSql();
+        ResultSet Rs;
+        
+        cbBuscarRend.removeAllItems();
+        
+        try {
+            Rs = Sql.Select("SELECT folio_rinde \n" +
+                            "FROM ctacteprv \n" +
+                            "WHERE folio_rinde > 0 "+
+                            "GROUP by folio_rinde ORDER BY folio_rinde DESC");
+            while(Rs.next()){
+                
+                cbBuscarRend.addItem(Rs.getString("folio_rinde"));
+                
+            }
+        
+        }catch (Exception e) {
+        
+        }finally{
+            Sql.Close();
+        }
+    }
+    
+    
+    private void btCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarActionPerformed
+        SetEstados(1);
+    }//GEN-LAST:event_btCancelarActionPerformed
+
+    private void cbCCostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCCostoActionPerformed
+        
+        carga = 0;
+        
+        if(EstadoGeneral==4)
+            cbCCosto.setSelectedIndex(PosCCosto);
+        
+        else if(!Cargando){
+            cbCCostoId.setSelectedIndex(cbCCosto.getSelectedIndex());
+            
+            System.out.println("EL INDICE ES : "+cbCCosto.getSelectedIndex());
+            
+            CargaTrabajadores();
+            CargaGastosGrales();
+            
+            if(cbCCosto.getSelectedIndex() == 7){
+            
+                cbTipDocto.setSelectedIndex(5);
+                cbTipoPago.setSelectedIndex(4);
+            }
+        }
+        
+    }//GEN-LAST:event_cbCCostoActionPerformed
+
+    private void cbCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoriaActionPerformed
+        if(EstadoGeneral==4){
+            cbCategoria.setSelectedIndex(PosCategoria);
+            
+        }
+        
+        else if(!Cargando){
+            cbCategoriaId.setSelectedIndex(cbCategoria.getSelectedIndex());
+            CargaSubCategoria();
+        }
+        
+    }//GEN-LAST:event_cbCategoriaActionPerformed
+
+    private void btNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNuevoActionPerformed
+        SetEstados(2);
+        carga = 1;
+    }//GEN-LAST:event_btNuevoActionPerformed
+
+    private void btIrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIrActionPerformed
+        if(txRut.getText().isEmpty()){
+            jdBuscarCliPrv BPC = new jdBuscarCliPrv(null, true);
+            BPC.setLocationRelativeTo(null);
+            BPC.setTitle("Buscar Proveedor");
+            BPC.SetTipo(1);
+            BPC.setVisible(true);
+            CargaProveedor(BPC.GetRut());
+        }
+        else{
+//            if(EstadoGeneral !=3) {
+//                Object[] options = {"Buscar RUT", "Extraer RUT de Orden" };
+//                if(JOptionPane.showOptionDialog(null, "", "", 0, JOptionPane.QUESTION_MESSAGE, null, options, null)==0){ 
+//
+//                    CargaProveedor(txRut.getText().trim());
+//                }
+//                else {
+//
+//                    CargaRutOrden(txRut.getText().trim());
+//                }
+//            }
+//            else {
+//                CargaProveedor(txRut.getText().trim());
+//            }
+        
+        
+         CargaProveedor(txRut.getText().trim());
+        }
+    }//GEN-LAST:event_btIrActionPerformed
+    public String getFechaAsString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return( sdf.format( (dtEmision.getDate()).getTime() ) );
+    }
+    
+    public String getFechaString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        return( sdf.format( (dtEmision.getDate()).getTime() ) );
+    }
+    
+  
+     public String getFechaHoyAsString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return( sdf.format( hoy ));
+    }
+     
+    public String getFechaPagoAsString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return( sdf.format( fpago ));
+    }   
+     
+    
+    private int GetElectronica(){
+        if(chkElectronica.isSelected())
+            return 1;
+        else
+            return 0;
+    }   
+    private void SetElectronica(int Electronica){
+        if(Electronica==0)
+            chkElectronica.setSelected(false);
+        else
+            chkElectronica.setSelected(true);
+    }
+    public String SubeMulta() {
+        
+        String nombre_archivo = "";
+        ExeSql Sql = new ExeSql();
+        String NroPago="0";
+        
+        if(JOptionPane.showConfirmDialog(null, "¿Desea subir archivo de multa?")==0){
+        
+            String ruta ="", Query ="";
+            File f = new File("");
+            ExeSql sql = new ExeSql();
+            ResultSet rs = null;
+
+            String sistema = System.getProperty("os.name").toLowerCase();
+            if (sistema.contains("win"))
+            {
+                ruta = "c:/fotos2/multas/";
+                f = new File(ruta.substring(0,ruta.length()-1));
+            }
+            else{
+                ruta = "/fotos2/multas/";
+            }
+
+            if(!f.isDirectory()) {
+                String newFolder = ruta; //cualquierCarpeta es el nombre de la Carpeta que vamos a crear
+
+                File myNewFolder = new File(newFolder);
+                myNewFolder.mkdirs(); //creamos la carpeta
+            }
+            else
+            {
+                System.out.println("La carpeta ya estaba creada");
+            }
+            JFileChooser j=new JFileChooser();
+            j.setFileSelectionMode(JFileChooser.FILES_ONLY);//solo archivos y no carpetas
+            int estado=j.showOpenDialog(null);
+            
+            if(estado== JFileChooser.APPROVE_OPTION){
+
+                String filename=j.getSelectedFile().getName();
+                nombre_archivo = "\\\\192.168.0.130\\Multas\\"+filename;
+                String[] split = filename.split("\\.");
+
+                String ext = split[split.length - 1];;
+
+                System.out.println(filename);
+
+                nombre_archivo = "\\\\\\\\192.168.0.130\\\\Multas\\\\"+filename;
+                String laruta = String.valueOf(j.getSelectedFile());
+                String rutafinal =  fmMain.GetStringDeFinal('\\', laruta);
+                String[] sas = laruta.split("//");
+                String path=j.getSelectedFile().getAbsolutePath();
+
+                if (sistema.contains("win")){}
+                else {
+                    rutafinal = filename;
+                }  
+                
+                try
+                {
+
+                    SubeFTP.SubeArch_imagen_multa(laruta, rutafinal,filename);
+                    JOptionPane.showMessageDialog(null, "Archivo subido con éxito.");
+//                        sql.Commit();
+                }
+                catch (Exception e)
+                {
+                    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                    
+                }
+                finally {
+                   
+                }
+            }
+        }
+
+        
+        return nombre_archivo;
+    }
+    
+    private void btGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGuardarActionPerformed
+    
+        String TipDocto="";
+        String Rut;
+       
+        
+        if (txRut.getText().toString().isEmpty()){
+                
+            JOptionPane.showMessageDialog(null, "Ingrese el Proveedor");
+            return;
+        }
+        
+        
+        if (cbTipDocto.getSelectedItem() == null){
+                
+            JOptionPane.showMessageDialog(null, "Ingrese Tipo de Documento");
+            return;
+        }
+        
+        if (txNroDocto.getText().toString().isEmpty()){
+                
+            JOptionPane.showMessageDialog(null, "Ingrese Número del Documento");
+            return;
+        }
+        
+        if (dtEmision.getDate() == null){
+                
+            JOptionPane.showMessageDialog(null, "Ingrese Fecha del Documento");
+            return;
+        }
+        
+        
+         if (txEsp.getText().toString().equals("")){
+             txEsp.setText("0");
+        }
+        
+        
+        if (txTotal.getText().toString().isEmpty()){
+                
+            JOptionPane.showMessageDialog(null, "Ingrese el Total del Documento");
+            return;
+        }
+        
+        
+        if (cbTipoPagoId.getSelectedIndex() == 0){
+                
+            JOptionPane.showMessageDialog(null, "Ingrese Tipo de Pago");
+            return;
+        }
+        
+        
+        if (getFechaAsString().isEmpty()) {
+             
+            JOptionPane.showMessageDialog(null, "Ingrese Fecha Documento");
+            return;
+        }
+        
+        
+        
+        if(cbTipDocto.getSelectedIndex()==1 || cbTipDocto.getSelectedIndex()==5 ){
+         
+         
+             
+              //******************************************** Revisa Documento en ACEPTA ********************************************//
+            
+           ExeSql Sql6 = new ExeSql();
+           ResultSet Rs6;
+           
+           ExeSql Sql8 = new ExeSql();
+           ResultSet Rs8;
+
+           Rut = txRut.getText().trim();
+           String Numero2 = txNroDocto.getText().trim();
+
+           intNivelUsuario = fmMain.trae_nivel(fmMain.GetUsuario()); 
+
+           try {
+               Rs6 = Sql6.Select("SELECT rut,tipdocto,nrodocto FROM doc_mail \n" +
+                                 "WHERE rut = "+Rut+ "\n"+
+                                 "AND nrodocto=" + Numero2);
+
+
+               if(Sql6.GetRowCount()==0 ){
+                   JOptionPane.showMessageDialog(null,"Documento no Notificado en ACEPTA");
+                   txNroDocto.requestFocus();
+                   return;
+               
+               }else if(Sql6.GetRowCount() > 0 ) {
+               
+                   
+                    Rs8 = Sql8.Select("SELECT rut,tipdocto,nrodocto FROM ctacteprv \n" +
+                                      "WHERE rut = "+Rut+ " AND tipdocto IN ('FAG','FAP') \n"+
+                                      "AND nrodocto=" + Numero2);
+                   
+                    if(Sql8.GetRowCount() > 0 ){
+                   
+                         JOptionPane.showMessageDialog(null,"Documento ya está ingresado");
+                         txNroDocto.requestFocus();
+                        return;
+                    
+                    }    
+               }
+
+           } catch (SQLException ex) {
+               Logger.getLogger(pfNCPProveedor.class.getName()).log(Level.SEVERE, null, ex);
+           }
+
+
+        //***********************************************************************************************************************     
+             
+            try {
+               
+                ExeSql Sql7 = new ExeSql();
+                ResultSet Rs7;
+                
+                
+                Rs7 = Sql7.Select("SELECT rut,tipdocto,nrodocto FROM prv_cuentasxpagar \n" +
+                                 "WHERE rut = "+Rut+ " AND tipdocto IN ('BOG','FAG','FAP')\n"+
+                                 "AND nrodocto=" + Numero2);
+
+
+               if(Sql7.GetRowCount() > 0 ){
+                   JOptionPane.showMessageDialog(null,"Documento ya está ingresado...!");
+                   txNroDocto.requestFocus();
+                   return;
+               }
+
+           } catch (SQLException ex) {
+               Logger.getLogger(pfNCPProveedor.class.getName()).log(Level.SEVERE, null, ex);
+           }
+
+           
+       //**********************************************************************************************************************     
+           
+         
+         
+         }
+        
+        
+        if (txCuotas.getText().isEmpty() || txDias.getText().isEmpty()) {
+             
+            if (cbTipoPago.getSelectedItem().equals("TCREDITO BCI") || cbTipoPago.getSelectedItem().equals("TCREDITO BICE") ){
+            
+                JOptionPane.showMessageDialog(null, "Ingrese Cuotas y Dias");
+                return;
+                
+            }else {
+            
+                txCuotas.setText("1");
+                txDias.setText("0");
+            
+            }
+            
+        }
+         
+         
+        int Cuotas = Integer.parseInt(txCuotas.getText().toString().trim());
+         
+        if (Cuotas > 1 && txDias.getText().equals("0") ){
+        
+            JOptionPane.showMessageDialog(null, "Ingrese los Dias de las Cuotas!");
+            return;
+        
+        } 
+        
+        if (!chkPersonal.isSelected() && cbTipoPagoId.getSelectedItem().equals("1")){
+             
+            JOptionPane.showMessageDialog(null, "Debe Seleccionar Trabajador");
+            return;
+        }
+        
+                
+        double Neto = Double.valueOf(fmMain.SetGuardar(txNeto.getText()));
+        double Iva = Double.valueOf(fmMain.SetGuardar(txIva.getText()));
+        double Total = Double.valueOf(fmMain.SetGuardar(txTotal.getText()));
+        double otroimpuesto = Double.valueOf(fmMain.SetGuardar(txEsp.getText()));;
+        
+
+        
+        if (chRetencion.isSelected() || chRetencion2.isSelected()){
+
+            if(Total != Neto - Iva && cbTipDocto.getSelectedIndex()!=3){
+            
+                if(fmMain.OkCancel("Montos no cuadran \n\n ¿Desea guardar de todas formas?")== JOptionPane.CANCEL_OPTION)
+                
+                    return;
+            }
+            
+        }else {
+        
+            if(Total != Iva + Neto && cbTipDocto.getSelectedIndex()!=3){
+            
+                if(fmMain.OkCancel("Montos no cuadran \n\n ¿Desea guardar de todas formas?")== JOptionPane.CANCEL_OPTION)
+                
+                    return;
+            }
+        }
+        
+        String totalexento = "0"; 
+         
+        if (txExento.getText().equals("")){
+        
+            totalexento = "0";
+        
+        }else{
+        
+            totalexento = fmMain.SetGuardar(txExento.getText()); 
+        } 
+        
+        String totalafecto = fmMain.SetGuardar(txNeto.getText());
+        
+        
+        ExeSql Sql = new ExeSql();
+        ExeSql Sql2 = new ExeSql();
+        
+        if(cbTipDocto.getSelectedIndex()==0)
+            TipDocto="BOG";
+            NewTipDoc = "BOG";
+        if(cbTipDocto.getSelectedIndex()==2)
+            TipDocto="BOH";
+            NewTipDoc = "BOH";
+        
+        if(cbTipDocto.getSelectedIndex()==4)
+            TipDocto="COM";
+            NewTipDoc = "COM";
+            
+        if(cbTipDocto.getSelectedIndex()==5)
+            TipDocto="FAP";
+            NewTipDoc = "FAP";    
+        
+        if(cbTipDocto.getSelectedIndex()==6)
+            TipDocto="ECU";
+            NewTipDoc = "ECU";        
+            
+        
+        if(cbTipDocto.getSelectedIndex()==1){
+            TipDocto="FAG";
+            NewTipDoc = "FAG";
+       
+        }
+        
+        if(cbTipDocto.getSelectedIndex()==3){
+            
+            TipDocto="MUL";
+            NewTipDoc = "MUL";
+            totalafecto = fmMain.SetGuardar(txNeto.getText()) ;
+        }
+        
+        
+        
+        if(chkPersonal.isSelected()){   
+        
+            if(cbTipoPagoId.getSelectedItem().toString().trim().equals("1")){
+        
+                Rut=cbPersonalId.getSelectedItem().toString();
+        
+            }else{
+                Rut="0";
+            }
+        
+        }else {
+        
+          Rut="0";
+        }
+        
+        
+        
+        String NewRut = txRut.getText().trim();
+        String NewNroDocto = txNroDocto.getText().trim();
+        String NewTipDocto = "ERR";
+        
+        if(cbTipDocto.getSelectedIndex()==0)
+            NewTipDocto = "BOG";
+            NewTipDoc = "BOG";
+        if(cbTipDocto.getSelectedIndex()==2)
+            NewTipDocto = "BOH";
+            NewTipDoc = "BOH";
+        if(cbTipDocto.getSelectedIndex()==1)
+            NewTipDocto = "FAG";
+            NewTipDoc = "FAG";
+        if(cbTipDocto.getSelectedIndex()==3){
+            NewTipDocto = "MUL";
+            NewTipDoc = "MUL";
+            totalafecto = fmMain.SetGuardar(txTotal.getText()) ;
+        }
+        if(cbTipDocto.getSelectedIndex()==4){
+            NewTipDocto = "COM";
+            NewTipDoc = "COM";
+        }
+        if(cbTipDocto.getSelectedIndex()==5){
+            NewTipDocto = "FAP";
+            NewTipDoc = "FAP";
+        }
+        if(cbTipDocto.getSelectedIndex()==6){
+            NewTipDocto = "ECU";
+            NewTipDoc = "ECU";
+        }
+        
+        
+        
+        int TrabajadorId = 0;
+        int SubCategoriaId = 0;
+        
+        try {
+            if(cbTipDocto.getSelectedIndex()!=3){
+                
+                
+                 if(cbCCosto.getSelectedIndex() == 7){
+                 
+                   
+                    TrabajadorId = 0;
+                    SubCategoriaId = 1000;
+                                     
+                 }else{
+                 
+                    TrabajadorId = Integer.parseInt(cbTrabajadorId.getSelectedItem().toString().trim());
+                    SubCategoriaId = Integer.parseInt(cbSubCategoriaId.getSelectedItem().toString().trim());
+                 
+                 
+                 }
+                
+                
+                if(Nuevo){
+                    
+                    System.out.println("ENTRA AQUI!!");
+                    
+                    Sql.ExeSql("INSERT INTO public.ctacteprv\n"
+                            + "(rut,tipdocto,nrodocto,femision,frecepcion,totalafecto,totalexento,totaliva,totalotroimp,totaldocto,"
+                            + "electronica,recepcion,cuotas,dias,tipdocorigen,nrodocorigen,ccosto,trabajador,gasto,tipopago,contacto) \n"
+                            + "VALUES ("
+                            + txRut.getText().trim() + ","
+                            + "'"+ TipDocto +"',"
+                            + txNroDocto.getText() + ",'"
+                            + getFechaAsString()+ "','"
+                            + getFechaAsString() + "',"
+                            + totalafecto + ","
+                            + totalexento + ","
+                            + fmMain.SetGuardar(txIva.getText()) + ","
+                            + otroimpuesto + ","
+                            + fmMain.SetGuardar(txTotal.getText()) + ","
+                            + GetElectronica() + ",0," 
+                            + txCuotas.getText().trim() + ",'" + 
+                            txDias.getText().trim() +
+                            "','GAS'," +
+                            "0" + "," +
+                            cbCCostoId.getSelectedItem().toString().trim() +",\n" 
+                            + TrabajadorId + ",\n" 
+                            + SubCategoriaId + ",\n"
+                            + cbTipoPagoId.getSelectedItem().toString().trim() +","
+                            + Rut + ")");
+                    Sql.Commit();
+                    
+                    
+                     if(cbCCosto.getSelectedIndex() == 7){      //REGULARIZACION
+                     
+                         
+                         Sql.ExeSql("INSERT INTO ctacteprvdet\n" +
+                                   "(rut,tipdocto,nrodocto,sku,cantidad, valorunitario,totallinea,unitanterior,difajuste,id_venc) \n" +
+                                   "VALUES (\n" +
+                                    txRut.getText() + ",\n'" +
+                                    TipDocto + "',\n" +
+                                    txNroDocto.getText().trim()  +  ",\n'" +
+                                    "9999" + "'," +
+                                    1 + "," +
+                                    totalafecto + "," +
+                                    totalafecto + "," +
+                                    totalafecto + "," +
+                                    0 + ","+
+                                    0
+                                    + ")");
+                         
+                     }
+                    
+                    fmMain.Mensaje("Nuevo Documento Ingresado");
+                }else{
+                 
+                    
+                    
+                    Sql.ExeSql("update ctacteprv set \n" +
+                                "femision='"+ getFechaAsString() +"',\n" +
+                                "frecepcion='"+ getFechaAsString() +"',\n" +
+                                "totalexento="+ totalexento +",\n" +
+                                "totalafecto="+ totalafecto +",\n" +
+                                "totaliva="+ fmMain.SetGuardar(txIva.getText()) +",\n" +
+                                "totalotroimp="+ fmMain.SetGuardar(txEsp.getText()) +",\n" +
+                                "totaldocto="+ fmMain.SetGuardar(txTotal.getText()) +",\n" +
+                                "electronica="+ GetElectronica() +",\n" +
+                                "cuotas="+ txCuotas.getText().trim() +",\n" +
+                                "dias='" + txDias.getText().trim() + "',\n" +
+                                "ccosto="+ cbCCostoId.getSelectedItem().toString().trim() +",\n" +
+                                "trabajador="+ TrabajadorId + ",\n" +
+                                "tipopago="+ cbTipoPagoId.getSelectedItem().toString().trim() +",\n" +
+                                "gasto="+ cbSubCategoriaId.getSelectedItem().toString().trim() + ",\n" +
+                                "contacto=" + cbPersonalId.getSelectedItem().toString().trim() + "\n" +
+                                "where rut="+ OpenRut +"\n" +
+                                "and tipdocto='"+ OpenTipDocto +"'\n" +
+                                "and nrodocto=" + OpenNroDocto);
+                    Sql.Commit();
+                    
+                    
+                    System.out.println("Autorizado :"+Autorizado);
+                    
+                    
+                    if (Autorizado == 1){
+                         
+                        
+                        int ndias = Integer.parseInt(txDias.getText().trim());
+                        
+                        cal.setTime(dtEmision.getDate());       // Configuramos la fecha que se recibe
+                        cal.add(Calendar.DAY_OF_YEAR, ndias);  // numero de días a añadir, o restar en caso de días<0
+                        
+                        fpago =  cal.getTime();
+                        
+                        System.out.println("ndias :"+ndias); 
+                        
+                        Sql2.ExeSql("UPDATE prv_cuentasxpagar SET \n" +
+                                    "fpago='"+ getFechaPagoAsString() +"',\n" +
+                                    "monto="+ fmMain.SetGuardar(txTotal.getText()) +",\n" +
+                                    "tipopago="+ cbTipoPagoId.getSelectedItem().toString().trim() +"\n" +
+                                    "WHERE rut="+ OpenRut +"\n" +
+                                    "AND tipdocto='"+ OpenTipDocto +"'\n" +
+                                    "AND nrodocto=" + OpenNroDocto);
+                        Sql2.Commit();
+                        
+                        
+                    }
+                    
+                    fmMain.Mensaje("Cambios guardados");
+                }
+            }else {        //Si es Multa
+                String nombre_archivo = "";
+                String NroPago="0";
+                
+                if(JOptionPane.showConfirmDialog(null, "¿Desea subir archivo de multa?")==0){
+                    String ruta ="", Query ="";
+                    File f = new File("");
+                    ExeSql sql = new ExeSql();
+                    ResultSet rs = null;
+
+                    String sistema = System.getProperty("os.name").toLowerCase();
+                    if (sistema.contains("win"))
+                    {
+                        ruta = "c:/fotos2/multas/";
+                        f = new File(ruta.substring(0,ruta.length()-1));
+                    }
+                    else{
+                        ruta = "/fotos2/multas/";
+                    }
+
+                    if(!f.isDirectory()) {
+                        String newFolder = ruta; //cualquierCarpeta es el nombre de la Carpeta que vamos a crear
+
+                        File myNewFolder = new File(newFolder);
+                        myNewFolder.mkdirs(); //creamos la carpeta
+                    }
+                    else
+                    {
+                        System.out.println("La carpeta ya estaba creada");
+                    }
+                    JFileChooser j=new JFileChooser();
+                    j.setFileSelectionMode(JFileChooser.FILES_ONLY);//solo archivos y no carpetas
+                    int estado=j.showOpenDialog(null);
+
+                    if(estado== JFileChooser.APPROVE_OPTION){
+
+                        String filename=j.getSelectedFile().getName();
+                        nombre_archivo = "\\\\192.168.0.130\\Multas\\Transferencia\\"+filename;
+                        String[] split = filename.split("\\.");
+
+                        String ext = split[split.length - 1];;
+
+                        System.out.println(filename);
+
+                        nombre_archivo = "\\\\\\\\192.168.0.130\\\\Multas\\\\Transferencia\\\\"+filename;
+                        String laruta = String.valueOf(j.getSelectedFile());
+                        String rutafinal =  fmMain.GetStringDeFinal('\\', laruta);
+                        String[] sas = laruta.split("//");
+                        String path=j.getSelectedFile().getAbsolutePath();
+
+                        if (sistema.contains("win")){}
+                        else {
+                            rutafinal = filename;
+                        }  
+
+                        try
+                        {
+
+                            SubeFTP.SubeArch_imagen_multa_transferencia(laruta, rutafinal,filename);
+                            JOptionPane.showMessageDialog(null, "Archivo subido con éxito.");
+        //                        sql.Commit();
+                        }
+                        catch (Exception e)
+                        {
+                            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                            JOptionPane.showMessageDialog(null, "No puede crear multa sin subir archivo.");
+                        }
+                        finally {
+                            if(Nuevo){
+                                Sql.ExeSql("INSERT INTO public.ctacteprv\n"
+                                        + "(rut,tipdocto,nrodocto,femision,frecepcion,totalafecto,totalexento,totaliva,totalotroimp,totaldocto,electronica,recepcion,cuotas,dias,tipdocorigen,nrodocorigen,ccosto,trabajador,gasto,tipopago,contacto,archivo) \n"
+                                        + "VALUES ("
+                                        + txRut.getText().trim() + ","
+                                        + "'"+ TipDocto +"',"
+                                        + txNroDocto.getText() + ",'"
+                                        + getFechaAsString()+ "','"
+                                        + getFechaAsString() + "',"
+                                        + totalafecto + ","
+                                        + "0" + ","
+                                        + fmMain.SetGuardar(txIva.getText()) + ","
+                                        + otroimpuesto + ","
+                                        + fmMain.SetGuardar(txTotal.getText()) + ","
+                                        + GetElectronica() + ",0," 
+                                        + txCuotas.getText().trim() + ",'" + txDias.getText().trim() + "','GAS'," + "0" + ","+ cbCCostoId.getSelectedItem().toString().trim() +",\n" 
+                                        + cbTrabajadorId.getSelectedItem().toString().trim() + ",\n" 
+                                        + cbSubCategoriaId.getSelectedItem().toString().trim() + ",\n"
+                                        + cbTipoPagoId.getSelectedItem().toString().trim() +"," + Rut + ",'"+nombre_archivo+"')");
+                                Sql.Commit();
+                                fmMain.Mensaje("Nuevo Documento Ingresado");
+                            }
+                            else{
+                                Sql.ExeSql("update ctacteprv set \n" +
+                                            "femision='"+ getFechaAsString() +"',\n" +
+                                            "frecepcion='"+ getFechaAsString() +"',\n" +
+                                            "totalafecto="+ totalafecto +",\n" +
+                                            "totaliva="+ fmMain.SetGuardar(txIva.getText()) +",\n" +
+                                            "totaldocto="+ fmMain.SetGuardar(txTotal.getText()) +",\n" +
+                                            "electronica="+ GetElectronica() +",\n" +
+                                            "cuotas="+ txCuotas.getText().trim() +",\n" +
+                                            "dias='" + txDias.getText().trim() + "',\n" +
+                                            "ccosto="+ cbCCostoId.getSelectedItem().toString().trim() +",\n" +
+                                            "trabajador="+ cbTrabajadorId.getSelectedItem().toString().trim() + ",\n" +
+                                            "tipopago="+ cbTipoPagoId.getSelectedItem().toString().trim() +",\n" +
+                                            "gasto="+ cbSubCategoriaId.getSelectedItem().toString().trim() + ",\n" +
+                                            "contacto=" + cbPersonalId.getSelectedItem().toString().trim() + "\n" +
+                                            "where rut="+ OpenRut +"\n" +
+                                            "and tipdocto='"+ OpenTipDocto +"'\n" +
+                                            "and nrodocto=" + OpenNroDocto+"\n" +
+                                            "and archivo = '"+nombre_archivo+"'");
+                                Sql.Commit();
+                                fmMain.Mensaje("Cambios guardados");
+                            }
+                        }
+                    }
+                }
+                
+            }
+            
+            if (cbTipDocto.getSelectedIndex()!=4){
+            
+                btAbrir.doClick();
+            
+                txRut.setText(NewRut);
+                AbrirDocumento(NewRut,NewNroDocto, NewTipDocto);
+           
+            }else if (cbTipDocto.getSelectedIndex()==4){
+            
+                    btCancelar.setEnabled(false);
+                    btGuardar.setEnabled(false);
+                    btAbrir.setEnabled(true);
+                    btNuevo.setEnabled(true);
+                    btEditar.setEnabled(false);
+                    btAutorizar.setEnabled(true);
+                    cbPersonal.setVisible(false);
+                  
+                     
+                    OpenRut = txRut.getText().trim();    
+                     
+                    if(cbTipDocto.getSelectedIndex()==0){
+                        NewTipDoc = "BOG";
+                    }    
+                    if(cbTipDocto.getSelectedIndex()==2){
+                        NewTipDoc = "BOH";
+                    }    
+                    if(cbTipDocto.getSelectedIndex()==4){
+                        NewTipDoc = "COM";
+                    }    
+                    if(cbTipDocto.getSelectedIndex()==1){
+                        NewTipDoc = "FAG";
+                    } 
+                    if(cbTipDocto.getSelectedIndex()==5){
+                        NewTipDoc = "FAP";
+                    } 
+                    if(cbTipDocto.getSelectedIndex()==3){
+                        NewTipDoc = "MUL";
+                    } 
+                    
+                    OpenTipDocto =  NewTipDoc;
+                    OpenNroDocto = txNroDocto.getText().trim();
+                     
+                
+            }
+            
+             if (cbTipoPagoId.getSelectedIndex()!=1){
+             
+                   btAutorizar.setEnabled(true);
+                   
+             }else if (cbTipoPagoId.getSelectedIndex() ==1){
+             
+                    btAutorizar.setEnabled(true);
+             }
+            
+             carga = 0;
+        } catch (SQLException e) {
+            fmMain.Mensaje(e.getMessage());
+            System.out.println(e.getMessage());
+            Logger.getLogger(pfGastos.class.getName()).log(Level.SEVERE, null, e);
+        } finally{
+            Sql.Close();
+        }
+    }//GEN-LAST:event_btGuardarActionPerformed
+
+    private void cbSubCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSubCategoriaActionPerformed
+        
+        if(EstadoGeneral==4){
+            cbSubCategoria.setSelectedIndex(PosSubCategoria);
+            return;
+        }
+        cbSubCategoriaId.setSelectedIndex(cbSubCategoria.getSelectedIndex());
+        
+        
+        if(EstadoGeneral==3 || EstadoGeneral==5){
+            return;
+        }
+        
+            ExeSql Sql = new ExeSql();
+            ResultSet Rs;
+            
+            
+            try {
+                Rs = Sql.Select("select sinrut\n" +
+                                "from gastos_det\n" +
+                                "where id=" + cbSubCategoriaId.getSelectedItem().toString().trim());
+                Rs.next();
+                
+                if(Rs.getBoolean("sinrut")==true){
+                    
+                    Gasto = 1;
+                    txRut.setEditable(false);
+
+                }else{
+                    Gasto = 0;
+                    
+                    txRut.setText("");
+                    txNombre.setText("");
+                    txRut.requestFocus();
+                    btIr.setEnabled(true);
+                }
+                
+                
+                if((cbSubCategoriaId.getSelectedItem().equals("101") || cbSubCategoriaId.getSelectedItem().equals("104") || cbSubCategoriaId.getSelectedItem().equals("105") ||
+                    cbSubCategoriaId.getSelectedItem().equals("106") || cbSubCategoriaId.getSelectedItem().equals("109") || cbSubCategoriaId.getSelectedItem().equals("110") ||
+                    cbSubCategoriaId.getSelectedItem().equals("111") || cbSubCategoriaId.getSelectedItem().equals("114") || cbSubCategoriaId.getSelectedItem().equals("115") ||
+                    cbSubCategoriaId.getSelectedItem().equals("116") || cbSubCategoriaId.getSelectedItem().equals("119") || cbSubCategoriaId.getSelectedItem().equals("105") ||
+                    cbSubCategoriaId.getSelectedItem().equals("120") || cbSubCategoriaId.getSelectedItem().equals("121") || cbSubCategoriaId.getSelectedItem().equals("124") ||
+                    cbSubCategoriaId.getSelectedItem().equals("125") || cbSubCategoriaId.getSelectedItem().equals("146") || cbSubCategoriaId.getSelectedItem().equals("147") ||
+                    cbSubCategoriaId.getSelectedItem().equals("148") || cbSubCategoriaId.getSelectedItem().equals("149") || cbSubCategoriaId.getSelectedItem().equals("150"))
+                    || !cbTrabajador.getSelectedItem().equals("GASTOS BANCARIOS")) {   //Pago con Factura
+                
+                    cbTipDocto.setSelectedIndex(0);
+                    cbTipDocto.setEnabled(true);
+                    txNroDocto.setEnabled(true);
+                  
+                    
+                }else {     //Pago con Estado de Cuenta
+                    
+                  cbTipDocto.setSelectedIndex(6);
+                  cbTipDocto.setEnabled(false);
+                  txNroDocto.setEnabled(false);
+                
+                }
+                
+                
+            } catch (Exception e) {
+                System.out.println(e.getMessage());   
+            }finally{
+                Sql.Close();
+            }
+    }//GEN-LAST:event_cbSubCategoriaActionPerformed
+
+    private void txCuotasKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txCuotasKeyTyped
+        if(!Character.isDigit(evt.getKeyChar()))
+        evt.consume();
+    }//GEN-LAST:event_txCuotasKeyTyped
+
+    private void txDiasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txDiasMouseClicked
+        try {
+            jdDiasOCP Dias = new jdDiasOCP(null, true);
+            Dias.setTitle("Dias");
+            Dias.setLocationRelativeTo(txDias);
+            Dias.SetFilas(Integer.valueOf(txCuotas.getText()));
+            Dias.setVisible(true);
+            //        Dias.SetFoco();
+            txDias.setText(Dias.GetFilas());
+        } catch (Exception e) {         
+            System.out.println(e.getMessage());  
+        }
+            
+    }//GEN-LAST:event_txDiasMouseClicked
+
+    private void txDiasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txDiasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txDiasActionPerformed
+
+    private void cbTipoPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoPagoActionPerformed
+        
+        
+        System.out.println("Cargando es  : "+Cargando); 
+        
+        
+        if(!Cargando){
+            
+            if(EstadoGeneral==4){
+                cbTipoPago.setSelectedIndex(PosPago);
+                return;
+            }
+          
+            cbTipoPagoId.setSelectedIndex(cbTipoPago.getSelectedIndex());
+           
+            indice = cbTipoPago.getSelectedIndex();
+            
+            System.out.println(indice);
+            
+            
+            if(chkPersonal.isSelected()){
+            
+                if(cbTipoPagoId.getSelectedItem().toString().trim().equals("1")){
+                    CargaPersonal();
+                    cbPersonal.setVisible(true);
+                }else{
+             
+                    cbPersonal.setVisible(false);
+                }
+            }
+       }
+    }//GEN-LAST:event_cbTipoPagoActionPerformed
+    private void CargaPersonal(){
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        
+        cbPersonalId.removeAllItems();
+        cbPersonal.removeAllItems();
+        
+        try {
+            Rs = Sql.Select("select rut,nombre,apellidopaterno\n" +
+                            "from personal\n" +
+                            "where rut>1000 AND activo = TRUE");
+            while(Rs.next()){
+                
+                String nombre = Rs.getString("nombre").trim() + " "+Rs.getString("apellidopaterno").trim();
+                
+                cbPersonalId.addItem(Rs.getString("rut").trim());
+               
+                cbPersonal.addItem(nombre);
+            }
+            
+           
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }finally{
+            Sql.Close();
+        }
+    }
+    private void txRutKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txRutKeyPressed
+        if(evt.getKeyCode()== KeyEvent.VK_ENTER){
+            btIr.doClick();
+        }
+    }//GEN-LAST:event_txRutKeyPressed
+
+    private void btAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAbrirActionPerformed
+       
+        txRut.setEnabled(true);
+        txRut.setEditable(true);
+        btIr.setEnabled(true);
+        txNombre.setEnabled(true);
+        txRut.requestFocus();
+        btAbrir.setEnabled(false);
+        btNuevo.setEnabled(false);
+        btCancelar.setEnabled(true);
+        EstadoGeneral=3;
+        Rinde = 0;
+        carga = 1;
+        
+        Nuevo=false;
+        
+        Limpia();
+        
+    }//GEN-LAST:event_btAbrirActionPerformed
+
+    private void txNetoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txNetoKeyPressed
+       
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            
+            if (cbTipDocto.getSelectedIndex()==1 || cbTipDocto.getSelectedIndex()==5) {
+             
+                double Neto = Double.parseDouble(txNeto.getText().toString());
+                double iva = Math.round(Neto* 0.19); 
+            
+                txIva.setText(""+Math.round(iva));
+                
+                double Total = Neto + iva;
+             
+                txTotal.setText(""+Math.round(Total));
+                txTotal.requestFocus();
+                
+            }else{
+            
+               txIva.requestFocus();
+            
+            }    
+        }
+    }//GEN-LAST:event_txNetoKeyPressed
+
+    private void txIvaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txIvaKeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            txTotal.requestFocus();
+        }
+    }//GEN-LAST:event_txIvaKeyPressed
+
+    private void txNetoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txNetoKeyTyped
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            txIva.requestFocus();
+        }
+    }//GEN-LAST:event_txNetoKeyTyped
+
+    private void txIvaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txIvaKeyTyped
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            txTotal.requestFocus();
+        }
+    }//GEN-LAST:event_txIvaKeyTyped
+
+    private void txTotalKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txTotalKeyReleased
+        
+        if(!txTotal.getText().isEmpty() && cbTipDocto.getSelectedIndex()==0){
+            double Total = Double.valueOf(txTotal.getText());
+            double Neto = Math.round(Total / 1.19);
+            txNeto.setText(String.valueOf(Math.round(Neto)));
+            txIva.setText(String.valueOf(Math.round(Total-Neto)));
+        }
+        
+        if(!txTotal.getText().isEmpty() && cbTipDocto.getSelectedIndex()==2 && !chRetencion.isSelected()){
+            double Total = Double.valueOf(txTotal.getText());
+            double Neto = Math.round(Total);
+            txNeto.setText(String.valueOf(Math.round(Neto)));
+            txIva.setText(String.valueOf(Math.round(0)));
+        }
+    }//GEN-LAST:event_txTotalKeyReleased
+
+    private void cbPersonalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbPersonalActionPerformed
+        if(!Cargando){
+            cbPersonalId.setSelectedIndex(cbPersonal.getSelectedIndex());
+        }
+    }//GEN-LAST:event_cbPersonalActionPerformed
+
+    private void cbTrabajadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTrabajadorActionPerformed
+        
+        if(EstadoGeneral==4){
+            cbTrabajador.setSelectedIndex(PosTrabajador);
+        }else{
+            cbTrabajadorId.setSelectedIndex(cbTrabajador.getSelectedIndex());
+            cbTrabajadorId1.setSelectedIndex(cbTrabajador.getSelectedIndex());
+        }
+        
+        
+        if (carga == 0){
+        
+//            if (cbTrabajador.getSelectedIndex() == 5){
+//            
+//                CargaGastosGrales2();
+//        
+//            }else {
+//        
+//                CargaGastosGrales();  
+//        
+//            }
+            
+            
+            CargaGastosGrales();  
+            
+        
+        }else {
+        
+            
+            
+            if (cbTrabajador.getSelectedItem().equals("GASTOS BANCARIOS")){
+            
+                CargaGastosGrales2();
+        
+            }else {
+        
+                CargaGastosGrales();  
+        
+            }
+        
+        
+        
+        }
+        
+        
+    }//GEN-LAST:event_cbTrabajadorActionPerformed
+
+    private void btEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditarActionPerformed
+        SetEstados(5);
+        Cargando = false;
+        EstadoGeneral = 10;
+        cbCCosto.setEnabled(true);
+        cbCategoria.setEnabled(true);
+        cbSubCategoria.setEnabled(true);
+        cbTrabajador.setEnabled(true);
+         carga = 1;
+        
+    }//GEN-LAST:event_btEditarActionPerformed
+
+    private void btAutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAutorizarActionPerformed
+
+        if(fmMain.OkCancel("¿Autorizar Gasto?")== JOptionPane.OK_OPTION){
+                ExeSql Sql = new ExeSql();
+                boolean autorizar = false;
+                try {
+                    
+                    if (Rinde == 0){            //Autorizacion Individual
+                    
+                        Sql.ExeSql("update ctacteprv set\n"
+                                + "cuotas=" + txCuotas.getText().trim() + ",\n"
+                                + "tipopago=" + cbTipoPagoId.getSelectedItem().toString() + ",\n"
+                                + "dias='" + txDias.getText().trim() + "',\n"
+                                + "autoriza=1 \n"
+                                + "where rut=" + OpenRut + "\n"
+                                + "and tipdocto='"+ OpenTipDocto +"'\n"
+                                + "and nrodocto=" + OpenNroDocto);
+                       
+                        Sql.Commit();
+                        JOptionPane.showMessageDialog(null,"Gasto Autorizado");
+                    
+                   
+                    }else if (Rinde == 1){              //Autorizacion Colectiva
+                         
+                        if (Autorizado2 == 1){
+                        
+                             JOptionPane.showMessageDialog(null,"El Gasto ya fue Autorizado!!");
+                             return;
+                        
+                        }
+                        
+                        for (int i = 0; i < Grilla.getRowCount();i++){
+                        
+                             autorizar =  Boolean.valueOf(Grilla.getValueAt(i, 7).toString());
+                             
+                             if (autorizar){
+//                                 
+                                  Sql.ExeSql("update ctacteprv set \n"
+                                            + "autoriza=1 \n"
+                                            + "where rut=" + Grilla.getValueAt(i, 8).toString() + "\n"
+                                            + "and tipdocto='"+ Grilla.getValueAt(i, 3).toString() +"'\n"
+                                            + "and nrodocto=" + Grilla.getValueAt(i, 4).toString());
+                       
+                                Sql.Commit();
+                                 
+                                 System.out.println(Grilla.getValueAt(i, 6).toString());
+//                  
+                             }else{
+                             
+                                 autorizar = false;
+                             }
+                        
+                        }
+                    
+                        JOptionPane.showMessageDialog(null,"Gasto Autorizado");
+                    
+                    }
+                    
+                    btAutorizar.setEnabled(false);
+                    btEditar.setEnabled(false);
+                    
+                } catch (SQLException | HeadlessException e) {
+                    fmMain.Mensaje(e.getMessage());
+                    Sql.Rollback();
+                    
+                }finally{
+                    Sql.Close();
+                }
+                
+            }
+    }//GEN-LAST:event_btAutorizarActionPerformed
+
+    private void chkElectronicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkElectronicaActionPerformed
+        if(EstadoGeneral==4)
+            chkElectronica.setSelected(PosElectronica);
+        
+    }//GEN-LAST:event_chkElectronicaActionPerformed
+
+    private void chkPersonalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkPersonalActionPerformed
+        if(chkPersonal.isSelected())
+            cbPersonal.setVisible(true);
+        else
+            cbPersonal.setVisible(false);
+    }//GEN-LAST:event_chkPersonalActionPerformed
+
+    private void cbTipDoctoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipDoctoActionPerformed
+
+        txExento.setText("");
+        txNeto.setText("");
+        txIva.setText("");
+        
+        if(cbTipDocto.getSelectedIndex()==0){
+            txExento.setEnabled(false);
+            txNeto.setEnabled(false);
+            txIva.setEnabled(false);
+            txEsp.setEnabled(false);
+            lbExento.setEnabled(false);
+            lbNeto.setEnabled(false);
+            lbIva.setEnabled(false);
+            chRetencion.setVisible(false);
+            chRetencion.setSelected(false);
+            chRetencion2.setVisible(false);
+            chRetencion2.setSelected(false);
+            
+            lbNeto.setText("Neto");
+            lbIva.setText("Iva");
+            
+            
+        }
+        if(cbTipDocto.getSelectedIndex()==1){
+            txExento.setEnabled(true);
+            txNeto.setEnabled(true);
+            txIva.setEnabled(true);
+            txEsp.setEnabled(true);
+            lbExento.setEnabled(true);
+            lbNeto.setEnabled(true);
+            lbIva.setEnabled(true);
+            chRetencion.setVisible(false);
+            chRetencion.setSelected(false);
+            chRetencion2.setVisible(false);
+            chRetencion2.setSelected(false);
+          
+            lbNeto.setText("Neto");
+            lbIva.setText("Iva");
+            
+           
+        }
+        if(cbTipDocto.getSelectedIndex()==2){
+            txExento.setEnabled(false);
+            txNeto.setEnabled(true);
+            txIva.setEnabled(true);
+            lbExento.setEnabled(false);
+            lbNeto.setEnabled(true);
+            lbIva.setEnabled(true);
+            chRetencion.setVisible(true);
+            chRetencion.setSelected(true);
+            chRetencion2.setVisible(true);
+            chRetencion2.setSelected(false);
+            
+            lbNeto.setText("Total Honorarios");
+            
+            if (chRetencion.isSelected()){
+                
+                chRetencion2.setSelected(false);
+                lbIva.setText("10.75% Retenido");
+                
+            }
+            
+           
+            
+        }
+        if(cbTipDocto.getSelectedIndex()==3){
+            txExento.setEnabled(false);
+            txNeto.setEnabled(false);
+            txIva.setEnabled(false);
+            lbExento.setEnabled(false);
+            lbNeto.setEnabled(false);
+            lbIva.setEnabled(false);
+            chRetencion.setVisible(false);
+            chRetencion.setSelected(false);
+            chRetencion2.setVisible(false);
+            chRetencion2.setSelected(false);
+            txExento.setText("0");
+            txNeto.setText("0");
+            txIva.setText("0");
+            lbNeto.setText("Neto");
+            lbIva.setText("Iva");
+            
+            
+            
+            
+        }if(cbTipDocto.getSelectedIndex()==4){
+            txExento.setEnabled(false);
+            txNeto.setEnabled(false);
+            txIva.setEnabled(false);
+            lbExento.setEnabled(false);
+            lbNeto.setEnabled(false);
+            lbIva.setEnabled(false);
+            chRetencion.setVisible(false);
+            chRetencion.setSelected(false);
+            chRetencion2.setVisible(false);
+            chRetencion2.setSelected(false); 
+            txExento.setText("0");
+            txNeto.setText("0");
+            txIva.setText("0");
+            lbNeto.setText("Neto");
+            lbIva.setText("Iva");
+            
+            
+            
+            
+        }if(cbTipDocto.getSelectedIndex()==5){
+            txExento.setEnabled(true);
+            txNeto.setEnabled(true);
+            txIva.setEnabled(true);
+            lbExento.setEnabled(true);
+            lbNeto.setEnabled(true);
+            lbIva.setEnabled(true);
+            chRetencion.setVisible(false);
+            chRetencion.setSelected(false);
+            chRetencion2.setVisible(false);
+            chRetencion2.setSelected(false);
+          
+            lbNeto.setText("Neto");
+            lbIva.setText("Iva");
+            
+           
+            
+            
+        }if(cbTipDocto.getSelectedIndex()==6){
+            
+            txExento.setText("0");
+            txNeto.setText("0");
+            txIva.setText("0");
+            
+            
+        }    
+        
+        txTotal.setText("");
+        
+        txNroDocto.requestFocus();
+    }//GEN-LAST:event_cbTipDoctoActionPerformed
+
+    private void chRetencionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chRetencionActionPerformed
+        
+        double retencion = 0;
+        
+        if (chRetencion.isSelected()){  //Boleta de Honorarios  retención 10%
+            
+            txExento.setText("");
+            txIva.setText("");
+            txTotal.setText(""); 
+            
+            chRetencion2.setSelected(false);
+            lbIva.setText("10.75% Retenido");
+            
+            txNeto.setEnabled(true);
+            txIva.setEnabled(true);
+            lbNeto.setEnabled(true);
+            lbIva.setEnabled(true);
+            
+            if (cbTipDocto.getSelectedIndex()==2) {     
+            
+                double Neto = Double.parseDouble(txNeto.getText().toString());
+                retencion = Neto* 0.1075; 
+            
+                txIva.setText(""+Math.round(retencion));
+            
+                double Total = Neto - retencion;
+                txTotal.setText(""+Math.round(Total));
+            
+            }
+         
+        }else if (!chRetencion.isSelected() && !chRetencion2.isSelected()){   //Sin Retención
+        
+               txExento.setText("");
+               lbIva.setText("Sin Retención"); 
+               txIva.setText("");
+               txTotal.setText(""); 
+               
+               if (cbTipDocto.getSelectedIndex()==2) {
+            
+                  double Neto = Double.parseDouble(txNeto.getText().toString());
+                
+                  txIva.setText(""+Math.round(retencion));
+            
+                  double Total = Neto - retencion;
+                  txTotal.setText(""+Math.round(Total));
+            
+               } 
+               
+        
+        }else if (!chRetencion.isSelected() && cbTipDocto.getSelectedIndex() != 2){   //Otro tipo de Docuemnto
+            txExento.setEnabled(false);
+            txNeto.setEnabled(false);
+            txIva.setEnabled(false);
+            lbNeto.setEnabled(false);
+            lbIva.setEnabled(false);
+            
+        }
+        
+        
+    }//GEN-LAST:event_chRetencionActionPerformed
+
+    private void txNetoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txNetoKeyReleased
+        double retencion = 0;
+        
+        if (cbTipDocto.getSelectedIndex()==2) {
+            
+            double Neto = Double.parseDouble(txNeto.getText().toString());
+            
+            if (chRetencion.isSelected()) {
+            
+                retencion = Neto* 0.1075; 
+                
+            }else if (chRetencion2.isSelected()){
+            
+               retencion = Neto* 0.1450;
+            
+            }
+            
+            txIva.setText(""+Math.round(retencion));
+            
+            double Total = Neto - retencion;
+            txTotal.setText(""+Math.round(Total));
+            
+        }
+        
+    }//GEN-LAST:event_txNetoKeyReleased
+
+    private void txIvaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txIvaKeyReleased
+        
+        if (chRetencion.isSelected()) {
+            
+            double Neto = Double.parseDouble(txNeto.getText().toString());
+            double retencion = Double.parseDouble(txIva.getText().toString());;           
+            double Total = Neto - retencion;
+            txTotal.setText(""+Math.round(Total));
+            
+        }
+        
+    }//GEN-LAST:event_txIvaKeyReleased
+
+    private void txNetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txNetoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txNetoActionPerformed
+
+    private void chRetencion2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chRetencion2ActionPerformed
+        double retencion = 0;
+        
+        if (chRetencion2.isSelected()){           //Boleta de Honorarios  retención 10,75% 
+           
+            txExento.setText("");
+            txIva.setText("");
+            txTotal.setText(""); 
+            
+            chRetencion.setSelected(false);
+            lbIva.setText("14.50% Retenido");
+            
+            txNeto.setEnabled(true);
+            txIva.setEnabled(true);
+            lbNeto.setEnabled(true);
+            lbIva.setEnabled(true);
+            
+            if (cbTipDocto.getSelectedIndex()==2) {
+            
+                double Neto = Double.parseDouble(txNeto.getText().toString());
+                retencion = Math.round(Neto* 0.1450); 
+            
+                txIva.setText(""+Math.round(retencion));
+            
+                double Total = Neto - retencion;
+                txTotal.setText(""+Math.round(Total));
+            
+            }
+            
+        
+        }else if (!chRetencion.isSelected() && !chRetencion2.isSelected()){
+               
+               txIva.setText("");
+               txTotal.setText(""); 
+            
+               lbIva.setText("Sin Retención"); 
+               
+               if (cbTipDocto.getSelectedIndex()==2) {
+            
+                  double Neto = Double.parseDouble(txNeto.getText().toString());
+                
+                  txIva.setText(""+Math.round(retencion));
+            
+                  double Total = Neto - retencion;
+                  txTotal.setText(""+Math.round(Total));
+            
+               }
+               
+        
+        }else if (!chRetencion.isSelected() && cbTipDocto.getSelectedIndex() != 2){
+            txExento.setEnabled(false);
+            txNeto.setEnabled(false);
+            txIva.setEnabled(false);
+            lbNeto.setEnabled(false);
+            lbIva.setEnabled(false);
+            
+        }
+    }//GEN-LAST:event_chRetencion2ActionPerformed
+    public void CargaPdf(String id, String Voucher){
+        ResultSet Rs;
+        ExeSql Sql = new ExeSql();
+        String server,user,pass,ruta_local="";
+        int puerto =21;
+         String rutaimage="";
+          String rutrans="";
+        try {
+
+//            server= "192.168.0.130";
+//            user="voucher";
+//            pass="V2369";
+            
+            
+           //trae datos ftp
+            server="";
+            puerto=0;
+            user=""; 
+            pass="";
+            
+            	Rs = Sql.Select("SELECT * from conexiones where tipo='multa_tran'");
+                if (Rs.next())
+                {
+                    if(!fmMain.GetInternet()){
+                        server = Rs.getString("serv");
+                        user  = Rs.getString("usu");
+                        puerto  = Rs.getInt("port");
+                        pass = Rs.getString("pass");
+                    }
+                    else {
+                        server = "186.67.157.227";
+                        user  = Rs.getString("usu");
+                        puerto  = 21;
+                        pass = Rs.getString("pass");
+                    }
+                }
+           //trae datos ftp
+            
+            Rs = Sql.Select("SELECT count(*) as hay from ctacteprv where nrodocto='"+id+"' and tipdocto = 'MUL'");
+            Rs.next();
+            if (Rs.getInt("hay")>0)
+            {
+                Rs = Sql.Select("SELECT archivo as pdf from ctacteprv where nrodocto='"+id+"' and tipdocto = 'MUL'");
+                Rs.next();
+                if (Rs.getString("pdf") != null)
+                {
+
+                    //Verifica SO
+                    String sistema = System.getProperty("os.name").toLowerCase();
+                    File folder = new File("");
+                    if (sistema.contains("win"))
+                    {
+                         ruta_local = "c:/fotos2/multa/";
+                         folder = new File(ruta_local);
+                    }
+                    else{
+                          ruta_local = "/fotos2/multa/";
+                          folder = new File(ruta_local);
+                    }
+                    if (!folder.exists())
+                    {
+                        folder.mkdir();
+                    }
+                    String archivo = "";
+
+                    rutaimage = Rs.getString("pdf");
+                    
+                    if (Rs.getString("pdf") != null)
+                    {
+                        
+                        archivo = fmMain.GetStringDeFinal('\\', rutaimage);
+                        rutrans = fmMain.GetStringDeFinal('\\', rutaimage);
+                        System.out.println(rutrans);
+                        System.out.println(archivo);
+                    }
+
+                    Ftp.baja_archivo_ftp(server, puerto,user, pass,"/" + rutrans,ruta_local + archivo);
+                    ImageIcon image = new ImageIcon(ruta_local + archivo);
+                    File file = new File(archivo);
+                    File pathCompleto = new File(ruta_local + file);
+                    Desktop.getDesktop().open(pathCompleto); 
+                                      
+                }
+               
+            }
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+        finally{
+            Sql.Close();
+            
+        }
+    }
+    private void pdfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pdfButtonActionPerformed
+        ExeSql sql = new ExeSql();
+        ResultSet rs = null;
+
+        try {
+            rs=sql.Select("select archivo from ctacteprv where nrodocto = '"+txNroDocto.getText()+"' and tipdocto = 'MUL' and rut = "+txRut.getText()+"");
+            rs.next();
+            if(!rs.getString("archivo").isEmpty()){
+                CargaPdf(txNroDocto.getText(), rs.getString("archivo"));
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "No posee archivo de imagen");
+            }
+        } catch (SQLException ex) {
+            fmMain.Mensaje(ex.getMessage());
+        }
+        finally {
+            sql.Close();
+        }
+    }//GEN-LAST:event_pdfButtonActionPerformed
+
+    private void bttRendirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttRendirActionPerformed
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        String Query="";
+        String tipodoc = "";
+        String nombre = "";
+        String rut = "";
+        String gasto = "";
+        int autorizado = 0;
+        
+        
+        DefaultTableModel TableModel = (DefaultTableModel) Grilla.getModel();
+       
+        
+        if (bttRendir.isSelected()){
+        
+            try {
+                jPanel4.setVisible(true);
+                cbBanco.setEnabled(true);
+                cbPago.setEnabled(true);
+                lbFiltro.setVisible(true);
+                txFiltro.setVisible(true);
+                
+                Rinde = 1;
+                Muestra = 0;
+                
+                while(TableModel.getRowCount()>0)
+                TableModel.removeRow(0);        
+                
+                Query = "SELECT DISTINCT pr.nombre AS proveedor, ctp.tipdocto, ctp.nrodocto, ctp.femision, ctp.totaldocto, gd.nombre As gasto,"+
+                        "ctp.rut AS rut1,ctp.trabajador,p.dvp, p.nombre AS nom,p.apellidopaterno,p.apellidomaterno,ctp.autoriza FROM ctacteprv ctp \n" +
+                        "LEFT JOIN proveedor pr ON ctp.rut = pr.rut \n" +
+                        "LEFT JOIN personal p ON ctp.trabajador = p.rut \n" +
+                        "LEFT JOIN gastos_det gd ON ctp.gasto = gd.id \n" +
+                        "LEFT JOIN prv_cuentasxpagar cxp ON ctp.rut = cxp.rut AND ctp.tipdocto = cxp.tipdocto AND ctp.nrodocto = cxp.nrodocto\n" +
+                        "WHERE ctp.tipdocto IN ('BOG','BOH','COM','FAG','FAP','ECU') \n" +
+                        "AND ctp.folio_rinde = 0 AND (cxp.estado <> 1 OR cxp.estado IS NULL) ";
+                
+                Rs = Sql.Select(Query);
+                
+                while(Rs.next()){
+                    
+                    tipodoc = Rs.getString("tipdocto").trim();
+                    autorizado = Rs.getInt("autoriza");
+                    
+                    if (Rs.getString("gasto") == null){
+                    
+                        gasto = "SIN DESCRIPCION";  
+                        
+                    }else{
+                    
+                        gasto = Rs.getString("gasto").trim();
+                    
+                    }
+                    
+                    
+                    
+                    if (Rs.getString("trabajador") != null){
+                        
+                        rut = Rs.getString("trabajador").trim();
+                        
+                        if (Rs.getString("dvp") != null){
+                         
+                            Dv = Rs.getString("dvp").trim(); 
+                        
+                        }else {
+                            
+                            Dv = "0";
+                        
+                        }
+                        
+                        if (Rs.getString("nom") != null){
+                        
+                             nombre = Rs.getString("nom").trim()+" "+Rs.getString("apellidopaterno").trim()+" "+Rs.getString("apellidomaterno").trim();
+                        
+                        }else{
+                        
+                            nombre = "";
+                        }
+                    }  
+                    
+                    
+                    
+                    if ((tipodoc.equals("BOG") || tipodoc.equals("BOH") || tipodoc.equals("COM") || tipodoc.equals("MUL") ||
+                         tipodoc.equals("FAG")|| tipodoc.equals("ECU")) && autorizado == 0 ){
+                    
+                        TableModel.addRow(new Object[]{
+                                            nombre,
+                                            gasto, 
+                                            Rs.getDate("femision"),
+                                            Rs.getString("tipdocto").trim(),
+                                            Rs.getString("nrodocto").trim(),
+                                            Rs.getString("totaldocto").trim(),
+                                            rut,
+                                            false,
+                                            Rs.getString("rut1").trim(),
+                        });
+                    }else if (tipodoc.equals("FAP")) {
+                    
+                        TableModel.addRow(new Object[]{
+                                            nombre,
+                                            gasto, 
+                                            Rs.getDate("femision"),
+                                            Rs.getString("tipdocto").trim(),
+                                            Rs.getString("nrodocto").trim(),
+                                            Rs.getString("totaldocto").trim(),
+                                            rut,
+                                            false,
+                                            Rs.getString("rut1").trim(),
+                        });
+                    
+                    
+                    }
+                    
+                    
+                }
+                
+                TableRowSorter<TableModel>sorter = new TableRowSorter<TableModel>(Grilla.getModel());
+                Grilla.setRowSorter(sorter);
+                sorter.setRowFilter(null);
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(pfGastos.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            btAutorizar.setEnabled(false);
+            btFiltrar.setEnabled(true);
+            btVerDoc.setEnabled(false);
+            
+        }else{
+        
+           jPanel4.setVisible(false);
+           Rinde = 0;
+           btAutorizar.setEnabled(false);
+           btFiltrar.setEnabled(false);
+           btGenerar.setEnabled(false);
+           lbFiltro.setVisible(false);
+           txFiltro.setVisible(false);
+        
+        }
+        
+        
+    }//GEN-LAST:event_bttRendirActionPerformed
+
+    private void btGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGenerarActionPerformed
+        ExeSql Sql = new ExeSql();
+        ExeSql Sql2 = new ExeSql();
+        ResultSet Rs;
+        String Query="";
+        
+        if(cbBanco.getSelectedIndex() == 0){
+        
+            fmMain.Mensaje("Debe Ingresar un Banco!");
+            return;
+        
+        }
+        
+        if(cbPago.getSelectedIndex() == 0){
+        
+            fmMain.Mensaje("Debe Ingresar un Tipo de Pago!");
+            return;
+        
+        }
+        
+        
+        
+        try {
+          
+            
+            if(fmMain.OkCancel("¿Desea Generar Rendicion?")== JOptionPane.OK_OPTION){
+            
+              int tpago = 0;
+                
+                Rs = Sql.Select("SELECT sp_getcorrelativo FROM sp_getcorrelativo('REND')");   
+                Rs.next();
+            
+                nFolio = Rs.getInt("sp_getcorrelativo");
+            
+                if(cbPago.getSelectedIndex() == 1){
+                    
+                    tpago = 2;
+                
+                }else if(cbPago.getSelectedIndex() == 2) {
+            
+                    
+                    
+                    if(cbBanco.getSelectedIndex() == 1) {
+                    
+                       
+                       tpago = 11; 
+                    
+                    }else if(cbBanco.getSelectedIndex() == 2){
+                    
+                    
+                      tpago = 12; 
+                    
+                    }
+                                        
+                }
+                
+                
+                for (int i = 0; i < Grilla1.getRowCount();i++){
+                    
+                            Sql2.ExeSql("UPDATE ctacteprv SET \n"
+                                      + "folio_rinde=" + nFolio + ",\n"
+                                      + "frendicion='" + hoy + "',\n"
+                                      + "banco=" + cbBanco.getSelectedIndex() + ",\n"
+                                      + "pago=" + tpago + "\n"
+                                      + "WHERE rut=" + Grilla1.getValueAt(i, 8).toString() + "\n"
+                                      + "AND tipdocto='"+ Grilla1.getValueAt(i, 3).toString() +"'\n"
+                                      + "AND nrodocto=" + Grilla1.getValueAt(i, 4).toString());
+                       
+                            Sql2.Commit();
+                            
+                            
+                }            
+                            
+                JOptionPane.showMessageDialog(null,"Rendición Generada Autorizado");
+                
+                Frendicion = dateFormat.format(hoy);
+                
+                
+                Map parametro = new HashMap();
+         
+                parametro.put("LOGO",getClass().getResourceAsStream("/Reportes/Logo.jpg"));                     //Ruta Logo Reporte 
+                parametro.put("FOLIO",String.valueOf(nFolio)); 
+                parametro.put("FECHA",Frendicion); 
+                parametro.put("BANCO",cbBanco.getSelectedItem()); 
+                parametro.put("PAGO",cbPago.getSelectedItem()); 
+                parametro.put("NOMRINDE",Grilla1.getValueAt(0, 0).toString() ); 
+                parametro.put("RUTRINDE",formatearRut(Grilla1.getValueAt(0, 6).toString()+Dv)); 
+                parametro.put("TOTAL","$ "+formateador.format(total2));                     
+            
+                JasperReport jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/Reportes/rpReporteGastos.jasper"));
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametro, new JRTableModelDataSource(Grilla1.getModel()));
+                JasperViewer view = new JasperViewer(jasperPrint,false);
+                view.setVisible(true);
+                
+                CargaFolios();
+                btAutorizar.setEnabled(true);
+        
+        } 
+           
+                     
+        }catch (JRException e) { 
+            e.printStackTrace (); 
+            System.out.println ("informes r" + e.toString ());
+    
+       } catch (SQLException ex) {
+            Logger.getLogger(pfGastos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.out.println("EL FOLIO ES :"+nFolio);
+        
+    }//GEN-LAST:event_btGenerarActionPerformed
+
+    private void btFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFiltrarActionPerformed
+         
+        DefaultTableModel TableModel2 = (DefaultTableModel) Grilla1.getModel();
+        while(TableModel2.getRowCount()>0)
+                TableModel2.removeRow(0);        
+        
+        TableRowSorter<TableModel>sorter = new TableRowSorter<TableModel>(Grilla.getModel());   //Se crea un Modelo para filtrar la Tabla
+        Grilla.setRowSorter(sorter);     //Se filtra la Tabla de acuerdo al Modelo
+         
+         if (Muestra == 0){
+            
+             sorter.setRowFilter(RowFilter.regexFilter("true",7));      //Filtra columna 7 cuando es TRUE
+             
+            if (Grilla.getRowCount() > 25){
+          
+              fmMain.Mensaje("Máximo de Gastos por rendición no puede ser Mayor a 25!");
+              return;
+          
+            }
+            
+         
+         }else if (Muestra == 1) {
+          
+             sorter.setRowFilter(null);         //Se elimina el Filtro y se muestran todos los datos
+             
+         }
+         
+          System.out.println(Grilla.getRowCount());
+         
+         
+          
+         
+           total2 = 0;
+           for (int i = 0; i < Grilla.getRowCount();i++){ 
+           
+                double total =  Double.parseDouble(Grilla.getValueAt(i, 5).toString());
+                total2 = total2 + total;
+                
+                TableModel2.addRow(new Object[]{
+                                   Grilla.getValueAt(i, 0).toString(), 
+                                   Grilla.getValueAt(i, 1).toString(), 
+                                   Grilla.getValueAt(i, 2).toString(),
+                                   Grilla.getValueAt(i, 3).toString(),
+                                   Grilla.getValueAt(i, 4).toString(),
+                                   
+                                    "$ "+formateador.format(total),
+                                   Grilla.getValueAt(i, 6).toString(),
+                                   Grilla.getValueAt(i, 7),
+                                   Grilla.getValueAt(i, 8).toString()
+                                               
+                });
+           
+                
+           }
+         
+          btGenerar.setEnabled(true);
+          jPanel7.setVisible(true);
+         
+
+    }//GEN-LAST:event_btFiltrarActionPerformed
+
+    private void cbPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbPagoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbPagoActionPerformed
+
+    private void cbBuscarRendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbBuscarRendActionPerformed
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        String Query="";
+        String nombre = "";
+        String rut = "";
+        String gasto = "";
+        String apellidop = "";
+        String apellidom = "";
+        int banco = 0;
+        int pago = 0;
+        
+        
+        cuenta++;
+        
+        if (cuenta == 2){
+            
+            cuenta = 1;
+            DefaultTableModel TableModel = (DefaultTableModel) Grilla.getModel();
+        
+            try {
+                jPanel4.setVisible(true);
+                jPanel7.setVisible(true);
+                Rinde = 1;
+                Muestra = 1;
+                
+                while(TableModel.getRowCount()>0)
+                TableModel.removeRow(0);        
+                
+                Query = "SELECT pr.nombre AS proveedor, ctp.tipdocto, ctp.nrodocto, ctp.femision, ctp.totaldocto, gd.nombre As gasto,"+
+                        "ctp.rut AS rut1,ctp.trabajador,p.dvp, p.nombre AS nom,p.apellidopaterno,p.apellidomaterno,ctp.banco,ctp.pago,ctp.autoriza,ctp.frendicion FROM ctacteprv ctp \n" +
+                        "LEFT JOIN proveedor pr ON ctp.rut = pr.rut \n" +
+                        "LEFT JOIN personal p ON ctp.trabajador = p.rut \n" +
+                        "LEFT JOIN gastos_det gd ON ctp.gasto = gd.id \n" +
+                        "WHERE tipdocto IN ('BOG','BOH','COM','FAG','FAP','ECU') \n"+
+                        "AND folio_rinde = "+cbBuscarRend.getSelectedItem();
+                
+                Rs = Sql.Select(Query);
+                
+                while(Rs.next()){
+                    
+                    Autorizado2 = Rs.getInt("autoriza");
+                    Frendicion =  dateFormat.format(Rs.getDate("frendicion"));
+                    
+                    if (Rs.getString("gasto") == null){ 
+                    
+                        gasto = "SIN DESCRIPCION";  
+                        
+                    }else{
+                    
+                        gasto = Rs.getString("gasto").trim();
+                    
+                    }
+
+                    nombre = Rs.getString("nom").trim()+" "+Rs.getString("apellidopaterno").trim()+" "+Rs.getString("apellidomaterno").trim();
+                    rut = Rs.getString("trabajador").trim();
+                    Dv = Rs.getString("dvp").trim();
+                    
+                    TableModel.addRow(new Object[]{
+                                               nombre,
+                                               gasto, 
+                                               dateFormat.format(Rs.getDate("femision")),
+                                               Rs.getString("tipdocto").trim(),
+                                               Rs.getString("nrodocto").trim(),
+                                               Rs.getString("totaldocto").trim(),
+                                               rut,
+                                               true,
+                                               Rs.getString("rut1").trim(),
+                    });
+                    
+                    
+                    
+                    if (Rs.getInt("pago") == 2){
+                    
+                       pago = 1; 
+                        
+                    }else if (Rs.getInt("pago") == 5 || Rs.getInt("pago") == 11 || Rs.getInt("pago") == 12 ){
+                    
+                       pago = 2;
+                    }
+                    
+                    banco = Rs.getInt("banco");
+                    
+                }
+                
+                cbBanco.setSelectedIndex(banco);
+                cbPago.setSelectedIndex(pago);
+                cbBanco.setEnabled(false);
+                cbPago.setEnabled(false);
+                btFiltrar.setEnabled(true);
+                btFiltrar.doClick();
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(pfGastos.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            btAutorizar.setEnabled(true);
+           
+            btFiltrar.setEnabled(false);
+            btVerDoc.setEnabled(true);
+            btGenerar.setEnabled(false);
+        }  
+        
+    }//GEN-LAST:event_cbBuscarRendActionPerformed
+
+    private void btVerDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVerDocActionPerformed
+        
+        if(cbBanco.getSelectedIndex() == 0){
+        
+            fmMain.Mensaje("Debe Ingresar un Banco!");
+            return;
+        
+        }
+        
+        if(cbPago.getSelectedIndex() == 0){
+        
+            fmMain.Mensaje("Debe Ingresar un Tipo de Pago!");
+            return;
+        
+        }
+        
+        try {
+                System.out.println("EL DVP ES : "+Dv );
+                Map parametro = new HashMap();
+         
+                parametro.put("LOGO",getClass().getResourceAsStream("/Reportes/Logo.jpg"));                     //Ruta Logo Reporte 
+                parametro.put("FOLIO",cbBuscarRend.getSelectedItem().toString()); 
+                parametro.put("FECHA",Frendicion); 
+                parametro.put("BANCO",cbBanco.getSelectedItem()); 
+                parametro.put("PAGO",cbPago.getSelectedItem()); 
+                parametro.put("NOMRINDE",Grilla1.getValueAt(0, 0).toString() ); 
+                parametro.put("RUTRINDE",formatearRut(Grilla1.getValueAt(0, 6).toString()+Dv)); 
+                parametro.put("TOTAL","$ "+formateador.format(total2));                     
+            
+                JasperReport jasperReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/Reportes/rpReporteGastos.jasper"));
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametro, new JRTableModelDataSource(Grilla1.getModel()));
+                JasperViewer view = new JasperViewer(jasperPrint,false);
+                view.setVisible(true);
+                
+                btAutorizar.setEnabled(true);
+                     
+        }catch (JRException e) { 
+            e.printStackTrace (); 
+            System.out.println ("informes r" + e.toString ());
+    
+       }
+        
+        System.out.println("EL FOLIO ES :"+nFolio);
+        
+    }//GEN-LAST:event_btVerDocActionPerformed
+
+    private void txFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txFiltroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txFiltroActionPerformed
+
+    private void txFiltroKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txFiltroKeyPressed
+
+    }//GEN-LAST:event_txFiltroKeyPressed
+
+    private void txFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txFiltroKeyReleased
+       
+        TableRowSorter<TableModel>sorter = new TableRowSorter<>(Grilla.getModel());
+        Grilla.setRowSorter(sorter);
+        String filtro = txFiltro.getText().trim();
+       
+        if (filtro.length()==0)
+        {
+            sorter.setRowFilter(null);
+        }else{
+
+            sorter.setRowFilter(RowFilter.regexFilter(filtro));
+        }
+        
+        
+    }//GEN-LAST:event_txFiltroKeyReleased
+
+    private void txFiltroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txFiltroKeyTyped
+        // TODO add your handling code here:
+        if (Character.isLowerCase(evt.getKeyChar()))
+        evt.setKeyChar(Character.toUpperCase(evt.getKeyChar()));
+    }//GEN-LAST:event_txFiltroKeyTyped
+
+    private void cbTipoPagoIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoPagoIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbTipoPagoIdActionPerformed
+
+    private void cbCategoriaIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoriaIdActionPerformed
+       // TODO add your handling code here:
+    }//GEN-LAST:event_cbCategoriaIdActionPerformed
+
+    private void dtEmisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dtEmisionActionPerformed
+        
+        if (cbTipDocto.getSelectedIndex() == 6){             
+        
+           String fecha = getFechaString();
+       
+            String[] partes = fecha.split("-", 3);      //Divide la cadena de texto en 3 partes divididas por el caracter "-"
+       
+            txNroDocto.setText(cbSubCategoriaId.getSelectedItem().toString().trim()+partes[1]+partes[2]);
+        }
+       
+        
+    }//GEN-LAST:event_dtEmisionActionPerformed
+
+    private void txEspKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txEspKeyReleased
+        
+        if (txEsp.getText().toString().equals("")){  
+            
+            txEsp.setText("0");
+        }
+        
+    }//GEN-LAST:event_txEspKeyReleased
+
+    private void txEspKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txEspKeyPressed
+        
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+           
+            double Neto = Double.parseDouble(txNeto.getText().toString());
+            double iva = Math.round(Neto* 0.19); 
+            double esp = Double.parseDouble(txEsp.getText().toString());
+                
+            double Total = Neto + iva + esp;
+             
+            txTotal.setText(""+Math.round(Total));
+            txTotal.requestFocus();
+                
+                
+        }
+        
+        
+    }//GEN-LAST:event_txEspKeyPressed
+
+    private void btNCPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNCPActionPerformed
+       
+        int ncps = Integer.parseInt(lbNotas.getText().trim());
+        
+//        if (ncps > 0){
+//                          
+//            JOptionPane.showMessageDialog(null, "Documento ya tiene Nota de Crédito asociada !!");
+//            return;
+//        
+//        }
+        
+        
+        
+        jdNCPGastos ncp = new jdNCPGastos(null,true);
+                    ncp.setLocationRelativeTo(null);
+                    ncp.setTitle("Nota de Crédito Gastos");
+
+        String TipoDoc = "";            
+                    
+        if(cbTipDocto.getSelectedIndex()==0){
+            
+            
+             TipoDoc = "BOG";
+             
+             
+        }else if(cbTipDocto.getSelectedIndex()==1) {
+            
+            
+            TipoDoc = "FAG";
+            
+        }            
+                    
+         
+        ncp.setAbrir(1);
+        
+        ncp.SetDocumento(txRut.getText().trim(),txNombre.getText().trim(),TipoDoc,txNroDocto.getText().trim(),
+                          txNeto.getText().trim(),txIva.getText().trim(),txTotal.getText().trim(),txTotalNCP.getText().trim());
+         
+        ncp.setVisible(true);
+        
+        
+    }//GEN-LAST:event_btNCPActionPerformed
+
+    private void btVerNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVerNotasActionPerformed
+        
+                     
+           
+            
+            String TipoDoc = "";
+            
+            if(cbTipDocto.getSelectedIndex()==0){
+                
+                
+                TipoDoc = "BOG";
+                
+                
+            }else if(cbTipDocto.getSelectedIndex()==1) {
+                
+                
+                TipoDoc = "FAG";
+                
+            }
+            
+            
+            
+            jdBuscaNCPGastos NCPGastos = new jdBuscaNCPGastos(null, true);
+            
+            NCPGastos.ShowModal(txRut.getText().trim(),TipoDoc.trim(),txNroDocto.getText().trim());
+            
+            
+            if (NCPGastos.GetEstado()){
+           
+                jdNCPGastos NCPG = new jdNCPGastos(null,true);
+                NCPG.setLocationRelativeTo(null);
+                NCPG.setTitle("Nota de Crédito Gastos");
+                NCPG.setAbrir(0);
+             
+                try {    
+         
+            
+                    ExeSql Sql = new ExeSql();
+                    ResultSet Rs;
+            
+            
+                    Rs = Sql.Select("select c.nrodocto, c.femision, c.totalafecto, c.totaliva, c.totaldocto, \n" +
+                                    "case c.totaldocto - c.pagado when 0 then 'Utilizada' when c.totaldocto then 'No Utilizada' else 'Parcial' end as Utilizado\n" +
+                                    "from ctacteprv c\n" +
+                                    "where c.rut = "+txRut.getText().trim()+" and c.tipdocto IN ('NCP') \n" +
+                                    "and c.nrodocto = "+NCPGastos.GetNumero()+" \n"+
+                                    "and c.tipdocorigen IN ('"+TipoDoc+"') and c.nrodocorigen ="+txNroDocto.getText().trim());
+            
+                    if(Sql.GetRowCount()>0){
+                
+                        Rs.next();
+                
+                
+                        String Neto = fmMain.FormatoTotal(Rs.getDouble("totalafecto"));
+                        String Iva = fmMain.FormatoTotal(Rs.getDouble("totaliva"));
+                        String Total = fmMain.FormatoTotal(Rs.getDouble("totaldocto"));
+                        String Estado = Rs.getString("Utilizado");
+                        String NroNcp = Rs.getString("nrodocto");
+                        Date FechaNcp = Rs.getDate("femision");
+                
+                
+                
+                        NCPG.SetNCP(txRut.getText().trim(),txNombre.getText().trim(),TipoDoc,txNroDocto.getText().trim(),
+                                    Neto.trim(),Iva.trim(),Total.trim(),Estado, NroNcp, FechaNcp );
+                
+                        NCPG.setVisible(true);
+                
+                    }
+            
+            
+                } catch (SQLException ex) {
+                    Logger.getLogger(pfGastos.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        
+            }    
+        
+        
+    }//GEN-LAST:event_btVerNotasActionPerformed
+
+    private void txExentoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txExentoKeyPressed
+        
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            
+            if (cbTipDocto.getSelectedIndex()==0 || cbTipDocto.getSelectedIndex()==1 || cbTipDocto.getSelectedIndex()==5) {
+             
+                double Exento = Double.parseDouble(txExento.getText().toString());
+                double Neto = 0;
+                double iva = 0; 
+            
+                txNeto.setText(""+Neto);
+                txIva.setText(""+iva);
+                
+                double Total = Exento+ Neto + iva;
+             
+                txTotal.setText(""+Math.round(Total));
+                txTotal.requestFocus();
+                
+            }
+        }
+        
+        
+    }//GEN-LAST:event_txExentoKeyPressed
+        
+    private void CargaTipoPago(){
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+
+        cbTipoPago.removeAllItems();
+        cbTipoPagoId.removeAllItems();
+
+        try {
+            Rs = Sql.Select("select codigo,nombre\n" +
+                            "from par_general \n" +
+                            "where tipo='TIPOPAGOPRV'\n" +
+                            "and codigo NOT IN ('1','3','5','6','8','10')\n" +
+                            "and vigente=1\n" +
+                            "order by codigo");
+            
+            while(Rs.next()){
+                cbTipoPagoId.addItem(Rs.getString("codigo"));
+                cbTipoPago.addItem(Rs.getString("nombre"));
+                               
+            }
+          
+            
+        } catch (Exception e) {
+            fmMain.Mensaje(e.getMessage());
+        } finally{
+            Sql.Close();
+        }
+    }
+    
+    
+    private void CargaRutOrden(String orden){
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        
+       
+        try {
+            Rs = Sql.Select("select o.rut from occh o where CAST(o.codigo_oc as varchar) || '-' || o.orden in ('"+orden+"')");
+            Rs.next();
+            String Rut = "";
+            Rut = Rs.getString("rut");
+            Rs = Sql.Select("select Rut,Nombre \n" +
+                            "from proveedor\n" +
+                            "where rut=" + Rut);
+            
+            if(Sql.GetRowCount()>0){
+                Rs.next();
+                txRut.setText(Rs.getString("Rut"));
+                txNombre.setText(Rs.getString("Nombre"));
+            
+                if(EstadoGeneral==3){
+                
+                    jdAbrirDocumento ADoc = new jdAbrirDocumento(null, true);
+                    if (ADoc.ShowModal("FAG','FAP','BOG','BOH',MUL", txRut.getText().trim() + " and gasto>0 ") == JOptionPane.YES_OPTION) {
+                        AbrirDocumento(Rut,ADoc.GetNumero(),ADoc.GetTipo());
+                    }
+                    
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Proveedor con RUT: "+Rut+" no existe.");
+                if(JOptionPane.showConfirmDialog(null, "¿Desea crear proveedor?")==0){
+                    pfProveedores Prv = new pfProveedores();
+                    pnPestanas.addTab("Nuevo Proveedor", Prv);
+                    PanelTab btc=new PanelTab(pnPestanas,0);
+                    pnPestanas.setTabComponentAt(pnPestanas.indexOfComponent(Prv), btc);
+                    pnPestanas.setSelectedIndex(pnPestanas.getTabCount()-1);
+                    Prv.btNuevo.doClick();
+                    Prv.txRut.setText(Rut);
+                    Prv.txRut.requestFocus();
+                }
+                
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally{
+            Sql.Close();
+        }
+    }
+    
+    private void CargaProveedor(String Rut){
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        
+        try {
+            Rs = Sql.Select("select Rut,Nombre \n" +
+                            "from proveedor\n" +
+                            "where rut=" + Rut);
+            Rs.next();
+            if(Sql.GetRowCount()>0){
+                
+                txRut.setText(Rs.getString("Rut"));
+                txNombre.setText(Rs.getString("Nombre"));
+                
+                
+               // System.out.println("EL ESTADO GENERAL ES "+EstadoGeneral);
+                
+                
+                if(EstadoGeneral==3){       //Si se edito el registro
+                    
+                    jdAbrirDocumento ADoc = new jdAbrirDocumento(null, true);
+                    if (ADoc.ShowModal("FAG','FAP','BOG','BOH','COM','MUL','ECU", txRut.getText().trim() + " and (gasto>0 or gasto is null)") == JOptionPane.YES_OPTION) {
+                        AbrirDocumento(Rut,ADoc.GetNumero(),ADoc.GetTipo());
+                    }
+                    
+                    cbCCosto.setEnabled(false);
+                    cbCategoria.setEnabled(false);
+                    cbSubCategoria.setEnabled(false);
+                    cbTrabajador.setEnabled(false);
+                    
+                }
+                
+            
+            }else {
+                JOptionPane.showMessageDialog(null, "Proveedor con RUT: "+Rut+" no existe.");
+                if(JOptionPane.showConfirmDialog(null, "¿Desea crear proveedor?")==0){
+                    pfProveedores Prv = new pfProveedores();
+                    pnPestanas.addTab("Nuevo Proveedor", Prv);
+                    PanelTab btc=new PanelTab(pnPestanas,0);
+                    pnPestanas.setTabComponentAt(pnPestanas.indexOfComponent(Prv), btc);
+                    pnPestanas.setSelectedIndex(pnPestanas.getTabCount()-1);
+                    Prv.btNuevo.doClick();
+                    Prv.txRut.setText(Rut);
+                    Prv.txRut.requestFocus();
+                }
+                
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            System.out.println(e.getMessage());
+        } finally{
+            Sql.Close();
+        }
+    }
+    private void Editar(boolean Estado){
+        txNroDocto.setEditable(Estado);
+        dtEmision.setEditable(Estado);
+        txExento.setEditable(Estado);
+        txNeto.setEditable(Estado);
+        txIva.setEditable(Estado);
+        txEsp.setEditable(Estado);
+        txTotal.setEditable(Estado);
+        txCuotas.setEditable(Estado);
+        txDias.setEditable(Estado);
+        txRut.setEditable(Estado);
+    }
+    public void AbrirDocumento(String Rut, String Numero, String Tipo){
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        
+        try {
+            Rs = Sql.Select("select p.ccosto,p.trabajador,g.plan,p.gasto,p.rut,p.tipdocto,p.nrodocto,p.femision,p.totalexento,p.totalafecto,p.totaliva,p.totalotroimp,p.totaldocto,\n" +
+                            "p.tipopago,p.cuotas,p.dias,prv.nombre,p.electronica, p.autoriza,p.contacto, p.archivo\n" +
+                            "from ctacteprv p\n" +
+                            "left join gastos_det g on p.gasto=g.id\n" +
+                            "left join proveedor prv on prv.rut=p.rut\n" +
+                            "where p.tipdocto='"+ Tipo +"'\n" +
+                            "and p.rut="+ Rut +"\n" +
+                            "and p.nrodocto=" + Numero);
+            
+            if(Sql.GetRowCount()>0){
+                OpenRut      = Rut;
+                OpenNroDocto = Numero;
+                OpenTipDocto = Tipo;
+                
+                Rs.next();
+                String afecto = fmMain.FormatoTotal(Rs.getDouble("totalafecto"));
+                String exento = fmMain.FormatoTotal(Rs.getDouble("totalexento"));
+                Habilita(true);
+                CargaCCostos();
+                
+                if (Rs.getString("ccosto") != null){
+                    
+                   cbCCostoId.setSelectedItem(Rs.getString("ccosto").trim());   
+                
+                }
+                
+                cbCCosto.setSelectedIndex(cbCCostoId.getSelectedIndex());
+                
+                
+                if (Rs.getString("trabajador") != null){
+                
+                    cbTrabajadorId.setSelectedItem(Rs.getString("trabajador").trim());  
+                
+                }
+                
+                cbTrabajador.setSelectedIndex(cbTrabajadorId.getSelectedIndex());
+                cbTrabajador.setSelectedIndex(cbTrabajadorId1.getSelectedIndex());
+                
+                
+                if (Rs.getString("plan") != null){
+                
+                    cbCategoriaId.setSelectedItem(Rs.getString("plan").trim());         
+                
+                }
+                
+                cbCategoria.setSelectedIndex(cbCategoriaId.getSelectedIndex());
+                
+                if (Rs.getString("gasto") != null){
+                
+                   cbSubCategoriaId.setSelectedItem(Rs.getString("gasto").trim());     
+                }
+                
+                
+                 cbSubCategoria.setSelectedIndex(cbSubCategoriaId.getSelectedIndex());
+                
+                
+                txRut.setText(Rut);
+                pdfButton.setEnabled(false);
+                txNombre.setText(Rs.getString("nombre").trim());
+                
+                
+                Autorizado = Rs.getInt("Autoriza");
+                
+                 
+                
+                
+                
+                
+                boolean ExisteNCP = false;
+                String BuscaDoc = "";
+                
+                if(Rs.getString("tipdocto").equals("FAG")){
+                
+                    cbTipDocto.setSelectedIndex(1);
+                    pnNotas.setVisible(true);
+                    ExisteNCP = true;
+                    BuscaDoc = "FAG";
+                    
+//                    
+//                    if (Autorizado == 1){
+//                
+                     btNCP.setEnabled(true);
+//                
+//                
+//                    }else {
+//                
+//                     btNCP.setEnabled(false);
+//                
+//                    }
+//                
+                 
+                    
+                
+                }else if(Rs.getString("tipdocto").equals("BOG")){
+                    
+                    cbTipDocto.setSelectedIndex(0);
+                    pnNotas.setVisible(true);
+                    ExisteNCP = true;
+                    BuscaDoc = "BOG";
+                    
+                    
+                    if (Autorizado == 1){
+                
+                        btNCP.setEnabled(true);
+                
+                
+                    }else {
+                
+                        btNCP.setEnabled(false);
+                
+                    }
+                
+                    
+                }else if(Rs.getString("tipdocto").equals("BOH")){
+                    
+                    cbTipDocto.setSelectedIndex(2);
+                    btNCP.setEnabled(false);
+                    pnNotas.setVisible(false);
+                    
+                    ExisteNCP = false;
+                    
+                    
+                }else if(Rs.getString("tipdocto").equals("COM")){
+                    
+                    cbTipDocto.setSelectedIndex(4);
+                    btNCP.setEnabled(false);
+                    pnNotas.setVisible(false);
+                    ExisteNCP = false;
+                    
+                }else if(Rs.getString("tipdocto").equals("FAP")){
+                    
+                    cbTipDocto.setSelectedIndex(5);
+                    btNCP.setEnabled(false);
+                    pnNotas.setVisible(false);
+                    ExisteNCP = false;
+                    
+                }else if(Rs.getString("tipdocto").equals("ECU")){
+                    
+                    cbTipDocto.setSelectedIndex(6);
+                    btNCP.setEnabled(false);
+                    pnNotas.setVisible(false);
+                    ExisteNCP = false;
+                    
+                }else if(Rs.getString("tipdocto").equals("MUL")) {
+                    
+                    cbTipDocto.setSelectedIndex(3);
+                    btNCP.setEnabled(false);
+                    pnNotas.setVisible(false);
+                    ExisteNCP = false;
+                    
+                    if(!Rs.getString("archivo").isEmpty()){ 
+                        pdfButton.setEnabled(true);
+                    }
+                    else {
+                        pdfButton.setEnabled(false);
+                    }
+                    archivo = Rs.getString("archivo");
+                    afecto = "0";
+                }
+                
+                txNroDocto.setText(Numero);
+                dtEmision.setDate(Rs.getDate("femision"));
+                txExento.setText(exento);
+                txNeto.setText(afecto);
+                txIva.setText(fmMain.FormatoTotal(Rs.getDouble("totaliva")));
+                txEsp.setText(fmMain.FormatoTotal(Rs.getDouble("totalotroimp")));
+                txTotal.setText(fmMain.FormatoTotal(Rs.getDouble("totaldocto")));
+                cbTipoPagoId.setSelectedItem(Rs.getString("tipopago"));             cbTipoPago.setSelectedIndex(cbTipoPagoId.getSelectedIndex());
+                cbPersonalId.setSelectedItem(Rs.getString("contacto").trim());     cbPersonal.setSelectedIndex(cbPersonalId.getSelectedIndex());
+                txCuotas.setText(Rs.getString("cuotas").trim());
+                txDias.setText(Rs.getString("Dias"));
+                SetElectronica(Rs.getInt("electronica"));
+                
+               
+               
+                if(Rs.getInt("Autoriza")>0 && !Rs.getString("tipdocto").equals("FAP")){
+                    btAutorizar.setEnabled(false);
+                    btEditar.setEnabled(true);
+                }
+                else if(Rs.getInt("Autoriza") == 0){
+                    btAutorizar.setEnabled(true);
+                    btEditar.setEnabled(true);
+                
+                }else if(Rs.getString("tipdocto").equals("FAP")){
+                   
+                    btEditar.setEnabled(true);
+                }
+                
+                
+               
+                
+                
+                
+                
+                    
+                SetEstados(4);
+                
+                cbTipDocto.setEnabled(false);
+                dtEmision.setEnabled(false);
+                
+                
+                if (ExisteNCP){
+                
+                    BuscaNCP(BuscaDoc,txNroDocto.getText().trim(),txRut.getText().trim() );
+                    
+                
+                }
+                
+                 
+                
+            }
+            else{
+                fmMain.Mensaje("Documento no encontrado");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }finally{
+            Sql.Close();
+        }
+    }
+    
+    
+    
+    private void BuscaNCP(String TipDoc, String NroDoc, String Rut){
+     
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+           
+        
+        try {
+           
+            
+            Rs = Sql.Select("select count(c.nrodocto) as notas, sum(c.totaldocto) as total from ctacteprv c \n" +
+                            "where c.rut = "+Rut.trim()+" and c.tipdocto IN ('NCP') \n"+
+                            "and c.tipdocorigen IN ('"+TipDoc+"') and c.nrodocorigen = "+NroDoc);
+            
+            if(Sql.GetRowCount()>0){
+                
+                Rs.next();
+                
+                lbNotas.setText(Rs.getString("notas").trim());
+                txTotalNCP.setText(Rs.getString("total").trim());
+                
+                if (Rs.getInt("notas") > 0){
+                    
+                    btVerNotas.setEnabled(true);
+                    
+           
+                
+                }else {
+                
+                    btVerNotas.setEnabled(false);
+                
+                }
+                
+                
+            }else {
+            
+                lbNotas.setText("0");
+                txTotalNCP.setText("0");
+                btVerNotas.setEnabled(false);
+            
+            }
+        
+        
+        } catch (SQLException ex) {
+            Logger.getLogger(pfGastos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    }
+    
+    
+    
+    
+    static public String formatearRut(String rut){
+        int cont=0;
+        String format;
+        if(rut.length() == 0){
+            
+          return ""; 
+        
+        }else{
+            
+            rut = rut.replace(".", "");
+            rut = rut.replace("-", "");
+            format = "-"+rut.substring(rut.length()-1);
+            
+            for(int i = rut.length()-2;i>=0;i--){
+                
+                format = rut.substring(i, i+1)+format;
+                cont++;
+                
+                if(cont == 3 && i != 0){
+                    format = "."+format;
+                    cont = 0;
+                }
+            }
+            return format;
+        }
+    }
+    
+    
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable Grilla;
+    private javax.swing.JTable Grilla1;
+    private javax.swing.JButton btAbrir;
+    private javax.swing.JButton btAutorizar;
+    private javax.swing.JButton btCancelar;
+    private javax.swing.JButton btEditar;
+    private javax.swing.JButton btFiltrar;
+    private javax.swing.JButton btGenerar;
+    private javax.swing.JButton btGuardar;
+    private javax.swing.JButton btIr;
+    private javax.swing.JButton btNCP;
+    private javax.swing.JButton btNuevo;
+    private javax.swing.JButton btVerDoc;
+    private javax.swing.JButton btVerNotas;
+    private javax.swing.JToggleButton bttRendir;
+    private javax.swing.JComboBox cbBanco;
+    private javax.swing.JComboBox cbBuscarRend;
+    private javax.swing.JComboBox<String> cbCCosto;
+    private javax.swing.JComboBox<String> cbCCostoId;
+    private javax.swing.JComboBox<String> cbCategoria;
+    private javax.swing.JComboBox<String> cbCategoriaId;
+    private javax.swing.JComboBox cbPago;
+    private javax.swing.JComboBox<String> cbPersonal;
+    private javax.swing.JComboBox<String> cbPersonalId;
+    private javax.swing.JComboBox<String> cbSubCategoria;
+    private javax.swing.JComboBox<String> cbSubCategoriaId;
+    private javax.swing.JComboBox<String> cbTipDocto;
+    private javax.swing.JComboBox cbTipoPago;
+    private javax.swing.JComboBox cbTipoPagoId;
+    private javax.swing.JComboBox<String> cbTrabajador;
+    private javax.swing.JComboBox<String> cbTrabajadorId;
+    private javax.swing.JComboBox<String> cbTrabajadorId1;
+    private javax.swing.JCheckBox chRetencion;
+    private javax.swing.JCheckBox chRetencion2;
+    private javax.swing.JCheckBox chkElectronica;
+    private javax.swing.JCheckBox chkPersonal;
+    private org.jdesktop.swingx.JXDatePicker dtEmision;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lbExento;
+    private javax.swing.JLabel lbFiltro;
+    private javax.swing.JLabel lbIva;
+    private javax.swing.JLabel lbNeto;
+    private javax.swing.JLabel lbNotas;
+    private javax.swing.JButton pdfButton;
+    private javax.swing.JPanel pnMenu;
+    private javax.swing.JPanel pnNotas;
+    private javax.swing.JTextField txCuotas;
+    private javax.swing.JTextField txDias;
+    private javax.swing.JTextField txEsp;
+    private javax.swing.JTextField txExento;
+    private javax.swing.JTextField txFiltro;
+    private javax.swing.JTextField txIva;
+    private javax.swing.JTextField txNeto;
+    private javax.swing.JTextField txNombre;
+    private javax.swing.JTextField txNroDocto;
+    private javax.swing.JTextField txRut;
+    private javax.swing.JTextField txTotal;
+    private javax.swing.JTextField txTotalNCP;
+    // End of variables declaration//GEN-END:variables
+}
