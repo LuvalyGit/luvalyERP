@@ -1444,6 +1444,23 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Menu>
+        <Menu class="javax.swing.JMenu" name="jMenu13">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Nota de Pedido"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem72">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Abrir Nota de Pedido"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem72ActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator19">
+            </MenuItem>
+          </SubComponents>
+        </Menu>
       </SubComponents>
     </Menu>
   </NonVisualComponents>

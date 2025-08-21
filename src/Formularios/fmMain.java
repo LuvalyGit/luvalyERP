@@ -639,6 +639,9 @@ public class fmMain extends javax.swing.JFrame {
         NumeroTicket = new javax.swing.JMenu();
         jMenu10 = new javax.swing.JMenu();
         NumeroTicketGeneral = new javax.swing.JMenu();
+        jMenu13 = new javax.swing.JMenu();
+        jMenuItem72 = new javax.swing.JMenuItem();
+        jSeparator19 = new javax.swing.JPopupMenu.Separator();
 
         jMenuItem8.setText("jMenuItem8");
 
@@ -2216,6 +2219,19 @@ public class fmMain extends javax.swing.JFrame {
         NumeroTicketGeneral.setText("0");
         NumeroTicketGeneral.setEnabled(false);
         jMenuBar1.add(NumeroTicketGeneral);
+
+        jMenu13.setText("Nota de Pedido");
+
+        jMenuItem72.setText("Abrir Nota de Pedido");
+        jMenuItem72.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem72ActionPerformed(evt);
+            }
+        });
+        jMenu13.add(jMenuItem72);
+        jMenu13.add(jSeparator19);
+
+        jMenuBar1.add(jMenu13);
 
         setJMenuBar(jMenuBar1);
 
@@ -5745,23 +5761,6 @@ public class fmMain extends javax.swing.JFrame {
         pnPestanas.setSelectedIndex(pnPestanas.getTabCount() - 1);
     }//GEN-LAST:event_jMenuItem70ActionPerformed
 
-    private void jMenuItem72ActionPerformed(java.awt.event.ActionEvent evt) {
-
-        intNivelMnu = 80;
-        intNivelUsuario = fmMain.trae_nivel(fmMain.GetUsuario());
-
-        if (((intNivelMnu > intNivelUsuario) || (ccosto_usr != 7)) && (intNivelUsuario <= 80)) {
-            fmMain.Mensaje("Usuario: " + fmMain.GetUsuario() + " no esta autorizado");
-            return;
-        }
-        //--------------------------------------------------------------------------------------   
-
-        pfNotaPedido notaPedido = new pfNotaPedido();
-        pnPestanas.addTab("NOTA DE PEDIDO", notaPedido);
-        PanelTab btc = new PanelTab(pnPestanas, 0);
-        pnPestanas.setTabComponentAt(pnPestanas.indexOfComponent(notaPedido), btc);
-        pnPestanas.setSelectedIndex(pnPestanas.getTabCount() - 1);
-    }
 
 
     private void mnAutorizaAjusteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnAutorizaAjusteActionPerformed
@@ -6875,6 +6874,24 @@ public class fmMain extends javax.swing.JFrame {
 
     }//GEN-LAST:event_mnControlAvanceInvSalaActionPerformed
 
+    private void jMenuItem72ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem72ActionPerformed
+        
+        intNivelMnu = 80;
+        intNivelUsuario = fmMain.trae_nivel(fmMain.GetUsuario());
+
+        if (((intNivelMnu > intNivelUsuario) || (ccosto_usr != 7)) && (intNivelUsuario <= 80)) {
+            fmMain.Mensaje("Usuario: " + fmMain.GetUsuario() + " no esta autorizado");
+            return;
+        }
+        //--------------------------------------------------------------------------------------   
+
+        pfNotaPedido notaPedido = new pfNotaPedido();
+        pnPestanas.addTab("NOTA DE PEDIDO", notaPedido);
+        PanelTab btc = new PanelTab(pnPestanas, 0);
+        pnPestanas.setTabComponentAt(pnPestanas.indexOfComponent(notaPedido), btc);
+        pnPestanas.setSelectedIndex(pnPestanas.getTabCount() - 1);
+    }//GEN-LAST:event_jMenuItem72ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -6966,6 +6983,7 @@ public class fmMain extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu10;
     private javax.swing.JMenu jMenu11;
     private javax.swing.JMenu jMenu12;
+    private javax.swing.JMenu jMenu13;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu5;
@@ -7046,6 +7064,7 @@ public class fmMain extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem70;
     private javax.swing.JMenuItem jMenuItem71;
+    private javax.swing.JMenuItem jMenuItem72;
     private javax.swing.JMenuItem jMenuItem73;
     private javax.swing.JMenuItem jMenuItem74;
     private javax.swing.JMenuItem jMenuItem75;
@@ -7088,6 +7107,7 @@ public class fmMain extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator16;
     private javax.swing.JPopupMenu.Separator jSeparator17;
     private javax.swing.JPopupMenu.Separator jSeparator18;
+    private javax.swing.JPopupMenu.Separator jSeparator19;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
