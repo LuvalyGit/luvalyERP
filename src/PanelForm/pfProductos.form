@@ -110,7 +110,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="jPanel5" max="32767" attributes="0"/>
-                                      <Component id="jPanel4" pref="738" max="32767" attributes="0"/>
+                                      <Component id="jPanel4" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -631,7 +631,7 @@
             <Component class="javax.swing.JCheckBox" name="chkIva">
               <Properties>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Default Cursor"/>
+                  <Color id="Cursor Por defecto"/>
                 </Property>
                 <Property name="horizontalTextPosition" type="int" value="4"/>
               </Properties>
@@ -1263,6 +1263,9 @@
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="horizontalAlignment" type="int" value="4"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txStockInvActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JTextField" name="txStockOCP">
                       <Properties>
@@ -2105,7 +2108,7 @@
                                           <Group type="102" alignment="0" attributes="0">
                                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                                   <Component id="jLabel47" max="32767" attributes="0"/>
-                                                  <Component id="jLabel48" pref="98" max="32767" attributes="0"/>
+                                                  <Component id="jLabel48" pref="0" max="32767" attributes="0"/>
                                               </Group>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -4142,9 +4145,6 @@
               </Border>
             </Property>
           </Properties>
-          <AccessibilityProperties>
-            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Limites"/>
-          </AccessibilityProperties>
 
           <Layout>
             <DimensionLayout dim="0">
@@ -4296,9 +4296,6 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="jLabel69">
                   <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="12" style="1"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="Padre las Casas"/>
                   </Properties>
                 </Component>
@@ -4327,9 +4324,6 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel72">
                   <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Dialog" size="12" style="1"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="Huerfano"/>
                   </Properties>
                 </Component>

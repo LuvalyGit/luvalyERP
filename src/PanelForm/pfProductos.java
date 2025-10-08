@@ -738,7 +738,7 @@ public class pfProductos extends javax.swing.JPanel {
         jScrollPane5 = new javax.swing.JScrollPane();
         lsCodbar = new javax.swing.JList();
         jScrollPane6 = new javax.swing.JScrollPane();
-        lsChilecompras = new javax.swing.JList<>();
+        lsChilecompras = new javax.swing.JList<String>();
         btAgregaID = new javax.swing.JButton();
         btEliminaID = new javax.swing.JButton();
         jLabel34 = new javax.swing.JLabel();
@@ -1567,6 +1567,11 @@ public class pfProductos extends javax.swing.JPanel {
 
         txStockInv.setEditable(false);
         txStockInv.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txStockInv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txStockInvActionPerformed(evt);
+            }
+        });
 
         txStockOCP.setEditable(false);
         txStockOCP.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -2264,7 +2269,7 @@ public class pfProductos extends javax.swing.JPanel {
                             .addGroup(pMargenLayout.createSequentialGroup()
                                 .addGroup(pMargenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel47, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel48, javax.swing.GroupLayout.PREFERRED_SIZE, 98, Short.MAX_VALUE))
+                                    .addComponent(jLabel48, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pMargenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(txPropuesta)
@@ -3543,7 +3548,6 @@ public class pfProductos extends javax.swing.JPanel {
                 .addGap(30, 30, 30))
         );
 
-        jLabel69.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel69.setText("Padre las Casas");
 
         txMinPLC.setEditable(false);
@@ -3557,7 +3561,6 @@ public class pfProductos extends javax.swing.JPanel {
 
         jLabel71.setText("Maximo");
 
-        jLabel72.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel72.setText("Huerfano");
 
         javax.swing.GroupLayout jPanel27Layout = new javax.swing.GroupLayout(jPanel27);
@@ -3649,7 +3652,7 @@ public class pfProductos extends javax.swing.JPanel {
                             .addGroup(pnDetalleLayout.createSequentialGroup()
                                 .addGroup(pnDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 738, Short.MAX_VALUE))
+                                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(pnDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jPanel24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -3752,8 +3755,6 @@ public class pfProductos extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-
-        jPanel30.getAccessibleContext().setAccessibleName("Limites");
 
         add(pnDetalle);
     }// </editor-fold>//GEN-END:initComponents
@@ -9078,6 +9079,10 @@ public void CargaProducto(String Codigo) {
     private void txMaxHuerfanoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txMaxHuerfanoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txMaxHuerfanoActionPerformed
+
+    private void txStockInvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txStockInvActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txStockInvActionPerformed
 
     
     private void Verifica_SKU(int convenio,String sku){
