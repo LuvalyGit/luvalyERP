@@ -69,7 +69,6 @@ public class pfFacturasACEPTA extends javax.swing.JPanel {
     
     public pfFacturasACEPTA() {
         initComponents();
-        btIngresar.setEnabled(false);
         TModelo = (DefaultTableModel) Grilla.getModel();
         
     }
