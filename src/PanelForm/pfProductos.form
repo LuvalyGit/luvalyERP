@@ -110,7 +110,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="jPanel5" max="32767" attributes="0"/>
-                                      <Component id="jPanel4" pref="710" max="32767" attributes="0"/>
+                                      <Component id="jPanel4" pref="731" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -544,7 +544,6 @@
           <SubComponents>
             <Component class="javax.swing.JComboBox" name="cbUnidad">
               <Properties>
-                <Property name="maximumRowCount" type="int" value="15"/>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="0"/>
                 </Property>
@@ -571,7 +570,6 @@
                   <StringArray count="0"/>
                 </Property>
                 <Property name="enabled" type="boolean" value="false"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbSubFamiliaActionPerformed"/>
@@ -589,7 +587,6 @@
                   <StringArray count="0"/>
                 </Property>
                 <Property name="enabled" type="boolean" value="false"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbFamiliaActionPerformed"/>
@@ -611,7 +608,6 @@
                   <StringArray count="0"/>
                 </Property>
                 <Property name="enabled" type="boolean" value="false"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbConvenioActionPerformed"/>
@@ -625,7 +621,7 @@
             <Component class="javax.swing.JCheckBox" name="chkIva">
               <Properties>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Cursor Por defecto"/>
+                  <Color id="Default Cursor"/>
                 </Property>
                 <Property name="horizontalTextPosition" type="int" value="4"/>
               </Properties>
@@ -842,7 +838,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jPanel14" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jPanel13" min="-2" pref="123" max="-2" attributes="0"/>
+                                  <Component id="jPanel13" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jPanel12" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -935,7 +931,7 @@
                                               </Group>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                  <Component id="txStockEcona" pref="46" max="32767" attributes="0"/>
+                                                  <Component id="txStockEcona" max="32767" attributes="0"/>
                                                   <Component id="txStockDisosur" max="32767" attributes="0"/>
                                               </Group>
                                           </Group>
@@ -1564,7 +1560,6 @@
                     <Component class="javax.swing.JCheckBox" name="chkPublicado">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Publicado"/>
-                        <Property name="opaque" type="boolean" value="false"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkPublicadoActionPerformed"/>
@@ -1735,7 +1730,6 @@
                     <Component class="javax.swing.JCheckBox" name="chkOferta">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="En Oferta"/>
-                        <Property name="opaque" type="boolean" value="false"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkOfertaActionPerformed"/>
@@ -2099,7 +2093,7 @@
                                           <Group type="102" alignment="0" attributes="0">
                                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                                   <Component id="jLabel47" max="32767" attributes="0"/>
-                                                  <Component id="jLabel48" pref="98" max="32767" attributes="0"/>
+                                                  <Component id="jLabel48" max="32767" attributes="0"/>
                                               </Group>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -3737,7 +3731,7 @@
                           <Component id="txLargo" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txAncho" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txAlto" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbM3" alignment="3" pref="18" max="32767" attributes="0"/>
+                          <Component id="lbM3" alignment="3" max="32767" attributes="0"/>
                           <Component id="jLabel63" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel64" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel62" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
