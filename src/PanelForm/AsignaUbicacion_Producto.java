@@ -37,55 +37,50 @@ import javax.swing.table.DefaultTableModel;
  * @author luvaly
  */
 public class AsignaUbicacion_Producto extends javax.swing.JPanel {
-public boolean booAgregando = false;
-public int habilita = 0;
 
+    public boolean booAgregando = false;
+    public int habilita = 0;
 
+    DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+    public static Color DARK_GREEN = new Color(0, 153, 0);
 
-DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();   
-public static Color DARK_GREEN = new Color(0,153,0);
     /**
      * Creates new form AsignaUbicacion
      */
- 
+
     public AsignaUbicacion_Producto() {
         initComponents();
         //txtUbicacion.setText("TRAN.1001.1");
         //enter_ubicacion();
         btEliminarTodo.setVisible(false);
         btEliminar_linea.setVisible(false);
-       // txtUbicacion.setEditable(false);
-       
-        
-        if(fmMain.GetUsuarioEligeUbicacion()){
+        // txtUbicacion.setEditable(false);
+
+        if (fmMain.GetUsuarioEligeUbicacion()) {
             //btUbica.setEnabled(true);
-            
+
             btUbica.setVisible(true);
             btUbica.setEnabled(true);
-         
-        }else{ 
-        
+
+        } else {
+
             //btUbica.setEnabled(false);
             btUbica.setVisible(false);
             //txtUbicacion.setVisible(false);
-        
+
         }
-        
-        
+
         txtUbicacion.setVisible(true);
         txtUbicacion.setEnabled(true);
-        
+
         txtSku.setEnabled(false);
-        
-        
-        
+
 //        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
 //        Grilla_prod.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
 //        txtUbicacion.setText(fmMain.BodegaTransito());
 //        enter_ubicacion();
-        
-     //panel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtUbicacion, txtSku}));
-     }
+        //panel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtUbicacion, txtSku}));
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -405,344 +400,310 @@ public static Color DARK_GREEN = new Color(0,153,0);
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private String  existe_sku(String Codigo, String ubicacion){
-    ExeSql Sql = new ExeSql();
+    private String existe_sku(String Codigo, String ubicacion) {
+        ExeSql Sql = new ExeSql();
         ResultSet Rs1;
-        String Query2 ="";
+        String Query2 = "";
         String strUbicacion = "";
-        
-         try{
-         
-          Query2 = "select * from mt_productos where sku = '" + Codigo + "' and ubicacion = '" + ubicacion + "';";
+
+        try {
+
+            Query2 = "select * from mt_productos where sku = '" + Codigo + "' and ubicacion = '" + ubicacion + "';";
             Rs1 = Sql.Select(Query2);
-                     if (Rs1.next()){
-                        return(Rs1.getString("sku"));
-                     }   
-         }
-     catch (Exception e) {
+            if (Rs1.next()) {
+                return (Rs1.getString("sku"));
+            }
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-        } finally{
+        } finally {
             Sql.Close();
-        }          
-        return(""); 
+        }
+        return ("");
     }
-    
-     
-     
-     
-     
-    private void agrega_linea()
-    {
-        String codigo="";
+
+    private void agrega_linea() {
+        String codigo = "";
         int pos = -1;
         DefaultTableModel TableModel = (DefaultTableModel) Grilla_prod.getModel();
-         
-                 
+
         //---- Inicio----------------------------
         // Queda seteado para grabar
-        if  (booAgregando == false)
-        {
-        for (int i=0; i<=Grilla_prod.getRowCount()-1; i++ ){
-                   Grilla_prod.setValueAt("0", i, 3);
-                }
-        booAgregando = true;
-        Grilla_prod.changeSelection(0, 0 , false, false);
+        if (booAgregando == false) {
+            for (int i = 0; i <= Grilla_prod.getRowCount() - 1; i++) {
+                Grilla_prod.setValueAt("0", i, 3);
+            }
+            booAgregando = true;
+            Grilla_prod.changeSelection(0, 0, false, false);
         }
         //----------------------------------------
-                 
-          // Busca si el codigo se ha ingresado anteriormente en la grilla
-        for (int i=0; i<=Grilla_prod.getRowCount()-1; i++ ){
-                codigo= Grilla_prod.getValueAt(i, 0).toString().trim();
-                if (codigo.equals(txtSku.getText().trim())){
-                    pos = i;
-                    break;
-                }
-            }
-         // Si existe el codigo en la grilla modificara la cantidad ingresada
-        if (pos>=0){
-                fmMain.Mensaje("Ya existe Codigo en la grilla no se agregara en la lista");
-                txtSku.setText("");
-                txNombre.setText("");
-                txtSku.requestFocus();
-                return;
-         }
-        
-        if (existe_sku(txtSku.getText().trim(), txtUbicacion.getText().trim())!= ""){
-             fmMain.Mensaje("Ya existe Codigo Sku para la Ubicación :" + txNombreUbica.getText().trim());
-                txtSku.setText("");
-                txNombre.setText("");
-                txtSku.requestFocus();
-                return;
-            
-        }
-        
-        // Si no existe el producto se marca como ingresado para que ese solo sea insertado.
 
-        TableModel.addRow(new Object[]{txtSku.getText().trim(), txNombre.getText().trim(),"0","1"});
+        // Busca si el codigo se ha ingresado anteriormente en la grilla
+        for (int i = 0; i <= Grilla_prod.getRowCount() - 1; i++) {
+            codigo = Grilla_prod.getValueAt(i, 0).toString().trim();
+            if (codigo.equals(txtSku.getText().trim())) {
+                pos = i;
+                break;
+            }
+        }
+        // Si existe el codigo en la grilla modificara la cantidad ingresada
+        if (pos >= 0) {
+            fmMain.Mensaje("Ya existe Codigo en la grilla no se agregara en la lista");
+            txtSku.setText("");
+            txNombre.setText("");
+            txtSku.requestFocus();
+            return;
+        }
+
+        if (existe_sku(txtSku.getText().trim(), txtUbicacion.getText().trim()) != "") {
+            fmMain.Mensaje("Ya existe Codigo Sku para la Ubicación :" + txNombreUbica.getText().trim());
+            txtSku.setText("");
+            txNombre.setText("");
+            txtSku.requestFocus();
+            return;
+
+        }
+
+        // Si no existe el producto se marca como ingresado para que ese solo sea insertado.
+        TableModel.addRow(new Object[]{txtSku.getText().trim(), txNombre.getText().trim(), "0", "1"});
         // se cambia a procedimiento para eliminar el boton
-        grabar_linea(); 
+        grabar_linea();
         txtSku.setText("");
         txNombre.setText("");
         txtSku.requestFocus();
     }
-    
+
     private void btEliminarTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEliminarTodoActionPerformed
         // TODO add your handling code here:
-            // TODO add your handling code here:
+        // TODO add your handling code here:
 //        DefaultTableModel TableModel = (DefaultTableModel) Grilla_prod.getModel();
 //        TableModel.removeRow(Grilla_prod.getSelectedRow());
-        
+
         ExeSql Sql = new ExeSql();
         ResultSet Rs, Rs1;
-        String Query2, SKU, qryDel ;
+        String Query2, SKU, qryDel;
         String strUbicacion = txtUbicacion.getText().trim();
-        
-         try{ 
-             
-             Query2= "select * from mt_productos where ubicacion ='" + strUbicacion + "';";
-             Rs1 = Sql.Select(Query2);
-              if (Rs1.next()){
-                        if (Rs1.getInt("cant")>0){
-                            fmMain.Mensaje("No se puede eliminar este producto ya que su cantidad ingresada es:" + Rs1.getInt("cant"));
-                            return;
-                        }
-                        else
-                        {
-                            // Elimina el registro Seleccionado
-                             qryDel = "delete from mt_productos where ubicacion ='" + strUbicacion + "';";
-                             Sql.ExeSql(qryDel);
-                             limpiar_prod();
-                             Carga_Prod_Ubicacion(strUbicacion);
-                             
-                        }   
-               }
-              else
-              {
-                  fmMain.Mensaje("Producto no Existe" );
-              }
-         } 
-        catch (Exception e) {
+
+        try {
+
+            Query2 = "select * from mt_productos where ubicacion ='" + strUbicacion + "';";
+            Rs1 = Sql.Select(Query2);
+            if (Rs1.next()) {
+                if (Rs1.getInt("cant") > 0) {
+                    fmMain.Mensaje("No se puede eliminar este producto ya que su cantidad ingresada es:" + Rs1.getInt("cant"));
+                    return;
+                } else {
+                    // Elimina el registro Seleccionado
+                    qryDel = "delete from mt_productos where ubicacion ='" + strUbicacion + "';";
+                    Sql.ExeSql(qryDel);
+                    limpiar_prod();
+                    Carga_Prod_Ubicacion(strUbicacion);
+
+                }
+            } else {
+                fmMain.Mensaje("Producto no Existe");
+            }
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-        } finally{
+        } finally {
             Sql.Close();
-        }    
- 
+        }
+
     }//GEN-LAST:event_btEliminarTodoActionPerformed
 
-    
-    
-    public void  set_ubicacion(String Ubicacion ){
+    public void set_ubicacion(String Ubicacion) {
         txtUbicacion.setText(Ubicacion);
     }
-    
-    
-    public  void enter_ubicacion(){
-        
+
+    public void enter_ubicacion() {
+
         ExeSql Sql = new ExeSql();
         ResultSet Rs, Rs1;
-        String Query2 ;
+        String Query2;
         String strUbicacion = "";
-        
-        
-        try{ 
-               
+
+        try {
+
             strUbicacion = txtUbicacion.getText().trim();
-            String nombrePalabra =strUbicacion; //+ Character.toString(evt.getKeyChar());    
-                 
+            String nombrePalabra = strUbicacion; //+ Character.toString(evt.getKeyChar());    
+
             String ubicaArray[] = strUbicacion.split("\\.");
-                 
-                 
-            System.out.println("LA LONGUITUD ES :"+ubicaArray.length);
-                 
-            if (ubicaArray.length<3 ){
+
+            System.out.println("LA LONGUITUD ES :" + ubicaArray.length);
+
+            if (ubicaArray.length < 3) {
                 fmMain.Mensaje("Favor revise el codigo, no es de Ubicacion");
                 txtUbicacion.setText("");
                 txNombreUbica.setText("");
                 txtUbicacion.requestFocus();
-                return;   
-            } 
-                 
-               
-            
-            
-              if (nombrePalabra.substring(0,3).trim().equals("LVL") || nombrePalabra.substring(0,4).trim().equals("TRAN") ||
-                  nombrePalabra.substring(0,3).trim().equals("BOD") || nombrePalabra.substring(0,5).trim().equals("TPSAL") ||
-                  nombrePalabra.substring(0,5).trim().equals("THSAL") || nombrePalabra.substring(0,5).trim().equals("TPPAT") || 
-                  nombrePalabra.substring(0,5).trim().equals("THPAT") || nombrePalabra.substring(0,3).trim().equals("INV") || 
-                  nombrePalabra.substring(0,3).trim().equals("SAL")
-              ){
-            
-            
+                return;
+            }
+
+            if (nombrePalabra.substring(0, 3).trim().equals("LVL") || nombrePalabra.substring(0, 4).trim().equals("TRAN")
+                    || nombrePalabra.substring(0, 3).trim().equals("BOD") || nombrePalabra.substring(0, 5).trim().equals("TPSAL")
+                    || nombrePalabra.substring(0, 5).trim().equals("THSAL") || nombrePalabra.substring(0, 5).trim().equals("TPPAT")
+                    || nombrePalabra.substring(0, 5).trim().equals("THPAT") || nombrePalabra.substring(0, 3).trim().equals("INV")
+                    || nombrePalabra.substring(0, 3).trim().equals("SAL")) {
+
 //            if (nombrePalabra.substring(0,3).trim().equals("LVL") || nombrePalabra.substring(0,4).trim().equals("TRAN") || 
 //                nombrePalabra.substring(0,3).trim().equals("INV") || nombrePalabra.substring(0,3).trim().equals("SAL") || nombrePalabra.substring(0,3).trim().equals("BOD")){
-              
-                trae_ubicacion(nombrePalabra);   
-                
-                
-                if (habilita == 0){ 
-               
-                    fmMain.Mensaje("Ubicación Deshabilitada!!"); 
+                trae_ubicacion(nombrePalabra);
+
+                if (habilita == 0) {
+
+                    fmMain.Mensaje("Ubicación Deshabilitada!!");
                     txtUbicacion.setText("");
                     txtUbicacion.requestFocus();
                     txNombreUbica.setText("");
                     return;
-               
+
                 }
-               
-               
-               
-                if (nombrePalabra.trim().contains("LVLB1.1011") || nombrePalabra.trim().contains("BOD.SEP") ){  //UBUCACIONES DE SEPARACION 
-               
-                   fmMain.Mensaje("Ubicación no autorizada para movimientos!!"); 
-                   txtUbicacion.setText("");
-                   txtUbicacion.requestFocus();
-                   txNombreUbica.setText("");
-                   return;
-                   
-               
+
+                if (nombrePalabra.trim().contains("LVLB1.1011") || nombrePalabra.trim().contains("BOD.SEP")) {  //UBUCACIONES DE SEPARACION 
+
+                    fmMain.Mensaje("Ubicación no autorizada para movimientos!!");
+                    txtUbicacion.setText("");
+                    txtUbicacion.requestFocus();
+                    txNombreUbica.setText("");
+                    return;
+
                 }
-                
-                
-                
+
                 System.out.println("Codigo Correcto de Ubicacion");
-                    
-                    
-                    
-            }else{
-                
+
+            } else {
+
                 fmMain.Mensaje("Favor revise el codigo, no es de Ubicacion");
                 txtUbicacion.setText("");
                 txNombreUbica.setText("");
                 txtUbicacion.requestFocus();
-                return;   
+                return;
             }
-                    
-                    
-            Query2 = "SELECT nombre AS ubc FROM mt_codmetro WHERE codmetro = '"+strUbicacion+"'";
-                    
-                    
-                    
+
+            Query2 = "SELECT nombre AS ubc FROM mt_codmetro WHERE codmetro = '" + strUbicacion + "'";
+
             Rs1 = Sql.Select(Query2);
-            
-            if (Rs1.next()){
-                
-                strUbicacion =Rs1.getString("ubc").trim();
+
+            if (Rs1.next()) {
+
+                strUbicacion = Rs1.getString("ubc").trim();
                 txNombreUbica.setText(strUbicacion);
                 Carga_Prod_Ubicacion(txtUbicacion.getText().trim());
                 txtSku.setEnabled(true);
-                
-                    
-            }else{
-                    
+
+            } else {
+
                 fmMain.Mensaje("Ubicacion no encontrada, favor revise la ubicación");
                 limpia_all();
             }
-                      
-                     
-               
-        }catch (Exception e) {
-            
-                System.out.println(e.getMessage());
-            
-        }finally{
-            
-             Sql.Close();
-        }    
+
+        } catch (Exception e) {
+
+            System.out.println(e.getMessage());
+
+        } finally {
+
+            Sql.Close();
+        }
     }
     private void txtUbicacionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUbicacionKeyPressed
-        
-         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-             enter_ubicacion();
+
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            enter_ubicacion();
         }
     }//GEN-LAST:event_txtUbicacionKeyPressed
 
-      private void setea_pivot_grabar(){
+    private void setea_pivot_grabar() {
         //---- Setea Pivot para grabar----------------------------
         // Queda seteado para grabar
-        if  (booAgregando == false)
-        {
-        for (int i=0; i<=Grilla_prod.getRowCount()-1; i++ ){
-                   Grilla_prod.setValueAt("0", i, 3);
-                }
-        booAgregando = true;
-        Grilla_prod.changeSelection(0, 0 , false, false);
+        if (booAgregando == false) {
+            for (int i = 0; i <= Grilla_prod.getRowCount() - 1; i++) {
+                Grilla_prod.setValueAt("0", i, 3);
+            }
+            booAgregando = true;
+            Grilla_prod.changeSelection(0, 0, false, false);
         }
     }
-      
-      
-    private void grabar_linea(){
-    
-    // TODO add your handling code here:
-    DefaultTableModel TableModel = (DefaultTableModel) Grilla_prod.getModel();
-    ExeSql Sql = new ExeSql();
-    ResultSet Rs;
-    String Query, qryIns, qryUpd,Sku,Ubicacion,StUsuario ;
-    Ubicacion ="";
-    
-    try{ 
+
+    private void grabar_linea() {
+
+        // TODO add your handling code here:
+        DefaultTableModel TableModel = (DefaultTableModel) Grilla_prod.getModel();
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs;
+        String Query, qryIns, qryUpd, Sku, Ubicacion, StUsuario;
+        Ubicacion = "";
+
+        try {
 //                qryUpd = "delete from mt_productos where ubicacion ='" + txtUbicacion.getText().trim() + "';";
 //                Sql.ExeSql(qryUpd);
-                for (int i=0; i<=Grilla_prod.getRowCount()-1; i++ ){
-                    
-                    if (Grilla_prod.getValueAt(i, 3).toString().trim().equals("1"))
-                    {   
-                        Sku= Grilla_prod.getValueAt(i, 0).toString().trim();
-                        Ubicacion = txtUbicacion.getText().trim();
-                        StUsuario = fmMain.GetUsuario();
-                        qryIns = "insert into mt_productos (ubicacion,sku,usuario,cant)\n" +
-                        " values ('" + Ubicacion + "','" + Sku + "','" + StUsuario +  "',0);";
-                        Sql.ExeSql(qryIns);
-                    }  
-                       
-                       
+            for (int i = 0; i <= Grilla_prod.getRowCount() - 1; i++) {
+
+                if (Grilla_prod.getValueAt(i, 3).toString().trim().equals("1")) {
+                    Sku = Grilla_prod.getValueAt(i, 0).toString().trim();
+                    Ubicacion = txtUbicacion.getText().trim();
+                    StUsuario = fmMain.GetUsuario();
+                    qryIns = "insert into mt_productos (ubicacion,sku,usuario,cant)\n"
+                            + " values ('" + Ubicacion + "','" + Sku + "','" + StUsuario + "',0);";
+                    Sql.ExeSql(qryIns);
                 }
 
-                //fmMain.LimpiaGrilla(TableModel);
-                Sql.Commit();
-                limpiar_prod();
-                Carga_Prod_Ubicacion(Ubicacion);
-                //fmMain.Mensaje("Ubicacion grabada Correctamente");
-                setea_pivot_grabar();
-          }
-     catch (Exception e) {
-            System.out.println(e.getMessage());
-        } finally{
-            Sql.Close();
-        }    
-                
-    
-      }
-    
-    private void txtSkuKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSkuKeyPressed
+            }
 
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-        
-            carga_producto();
-            ubica_metro();
-        
+            //fmMain.LimpiaGrilla(TableModel);
+            Sql.Commit();
+            limpiar_prod();
+            Carga_Prod_Ubicacion(Ubicacion);
+            //fmMain.Mensaje("Ubicacion grabada Correctamente");
+            setea_pivot_grabar();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            Sql.Close();
         }
 
+    }
+
+    private void txtSkuKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSkuKeyPressed
+
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+
+            // --- NUEVA VALIDACIÓN ---
+            // 1. Obtener el texto del campo ANTES de hacer nada
+            // (El campo en esta clase se llama 'txtSku')
+            String skuIngresado = txtSku.getText().trim();
+
+            // 2. Si el "Enter" se presionó en un campo vacío, simplemente ignorarlo.
+            if (skuIngresado.isEmpty()) {
+                // No hacer nada. No mostrar error. Solo esperar el siguiente evento.
+                return;
+            }
+            // --- FIN NUEVA VALIDACIÓN ---
+
+            // Si el campo NO estaba vacío, proceder con la lógica normal
+            carga_producto();
+            ubica_metro();
+
+        }
     }//GEN-LAST:event_txtSkuKeyPressed
 
-   
-    public  void limpia_all(){
-   // TODO add your handling code here:
+    public void limpia_all() {
+        // TODO add your handling code here:
         limpiar_prod();
         txtUbicacion.setText("");
         txNombreUbica.setText("");
         txtUbicacion.requestFocus();
     }
-    
-    private void limpiar_prod(){
-         DefaultTableModel dfTm = (DefaultTableModel) Grilla_prod.getModel();
+
+    private void limpiar_prod() {
+        DefaultTableModel dfTm = (DefaultTableModel) Grilla_prod.getModel();
         txNombre.setText("");
         txtSku.setText("");
         fmMain.LimpiaGrilla(dfTm);
         txtUbicacion.requestFocus();
-        
+
     }
-       
-    
+
+
     private void btLimpiaTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLimpiaTodoActionPerformed
         // TODO add your handling code here:
         limpia_all();
@@ -752,7 +713,7 @@ public static Color DARK_GREEN = new Color(0,153,0);
 
     private void txtUbicacionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUbicacionKeyReleased
         // TODO add your handling code here:
-      txtUbicacion.setText( txtUbicacion.getText().toUpperCase());
+        txtUbicacion.setText(txtUbicacion.getText().toUpperCase());
     }//GEN-LAST:event_txtUbicacionKeyReleased
 
     private void txtSkuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSkuActionPerformed
@@ -760,8 +721,8 @@ public static Color DARK_GREEN = new Color(0,153,0);
     }//GEN-LAST:event_txtSkuActionPerformed
 
     private void txtSkuKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSkuKeyReleased
-              
-        txtSku.setText( txtSku.getText().toUpperCase());
+
+        txtSku.setText(txtSku.getText().toUpperCase());
     }//GEN-LAST:event_txtSkuKeyReleased
 
     private void Grilla_prodMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Grilla_prodMouseClicked
@@ -778,97 +739,91 @@ public static Color DARK_GREEN = new Color(0,153,0);
     private void btEliminar_lineaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEliminar_lineaActionPerformed
         ExeSql Sql = new ExeSql();
         ResultSet Rs, Rs1;
-        String Query2, SKU, qryDel ;
+        String Query2, SKU, qryDel;
         String strUbicacion = txtUbicacion.getText().trim();
-        
-         try{ 
-             SKU=Grilla_prod.getValueAt(Grilla_prod.getSelectedRow(), 0).toString().trim();
-             Query2= "select * from mt_productos where ubicacion ='" + strUbicacion + "' and sku = '" + SKU + "'";
-             Rs1 = Sql.Select(Query2);
-              if (Rs1.next()){
-                        if (Rs1.getInt("cant")>0){
-                            fmMain.Mensaje("No se puede eliminar este producto ya que su cantidad ingresada es:" + Rs1.getInt("cant"));
-                            return;
-                        }
-                        else
-                        {
-                            // Elimina el registro Seleccionado
-                             qryDel = "delete from mt_productos where ubicacion ='" + strUbicacion + "' and sku = '" + SKU + "'";
-                             Sql.ExeSql(qryDel);
-                             limpiar_prod();
-                             Carga_Prod_Ubicacion(strUbicacion);
-                             
-                        }   
-               }
-              else
-              {
-                  fmMain.Mensaje("Producto no Existe" );
-              }
-         } 
-        catch (Exception e) {
+
+        try {
+            SKU = Grilla_prod.getValueAt(Grilla_prod.getSelectedRow(), 0).toString().trim();
+            Query2 = "select * from mt_productos where ubicacion ='" + strUbicacion + "' and sku = '" + SKU + "'";
+            Rs1 = Sql.Select(Query2);
+            if (Rs1.next()) {
+                if (Rs1.getInt("cant") > 0) {
+                    fmMain.Mensaje("No se puede eliminar este producto ya que su cantidad ingresada es:" + Rs1.getInt("cant"));
+                    return;
+                } else {
+                    // Elimina el registro Seleccionado
+                    qryDel = "delete from mt_productos where ubicacion ='" + strUbicacion + "' and sku = '" + SKU + "'";
+                    Sql.ExeSql(qryDel);
+                    limpiar_prod();
+                    Carga_Prod_Ubicacion(strUbicacion);
+
+                }
+            } else {
+                fmMain.Mensaje("Producto no Existe");
+            }
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-        } finally{
+        } finally {
             Sql.Close();
-        }    
-        
+        }
+
     }//GEN-LAST:event_btEliminar_lineaActionPerformed
 
-    
-    private void ubica_metro(){
-        
-        String UbicacionSel="", NombreSel ="", cant="",codigo="";
-        int pos =-1;
-        
+    private void ubica_metro() {
+
+        String UbicacionSel = "", NombreSel = "", cant = "", codigo = "";
+        int pos = -1;
+
         Carga_Prod_Ubicacion(txtUbicacion.getText().trim());
-        
-        for (int i=0; i<=Grilla_prod.getRowCount()-1; i++ ){
-            
-            codigo= Grilla_prod.getValueAt(i, 0).toString().trim();
-            
-            if (codigo.equals(txtSku.getText().trim())){
-            
+
+        for (int i = 0; i <= Grilla_prod.getRowCount() - 1; i++) {
+
+            codigo = Grilla_prod.getValueAt(i, 0).toString().trim();
+
+            if (codigo.equals(txtSku.getText().trim())) {
+
                 pos = i;
                 break;
             }
         }
-        
-        if (pos ==-1){
-        
+
+        if (pos == -1) {
+
             fmMain.Mensaje("No se encuentra el producto en Ubicacion" + txNombreUbica.getText().trim());
             txtSku.setText("");
             txNombre.setText("");
-            return ;
-        
-        }else{
-          
-            cant =   Grilla_prod.getValueAt(pos, 2).toString().trim();
+            return;
+
+        } else {
+
+            cant = Grilla_prod.getValueAt(pos, 2).toString().trim();
         }
-        
+
         jd_UbicacionProductos Ubicacion = new jd_UbicacionProductos(null, true);
-        Ubicacion.CargaMetroDestino(txtSku.getText().trim(),txNombre.getText().trim(),   Double.valueOf(cant),txtUbicacion.getText().trim());
+        Ubicacion.CargaMetroDestino(txtSku.getText().trim(), txNombre.getText().trim(), Double.valueOf(cant), txtUbicacion.getText().trim());
         Ubicacion.selecciona_reg();
-        Ubicacion.ubica_cursor_inicio();      
+        Ubicacion.ubica_cursor_inicio();
         Ubicacion.setVisible(true);
         UbicacionSel = Ubicacion.GetUbicacionCod();
         NombreSel = Ubicacion.GetUbicacion();
-           
+
         Carga_Prod_Ubicacion(txtUbicacion.getText().trim());
         txtSku.setText("");
         txNombre.setText("");
         txtSku.requestFocus();
     }
-    
+
     private void btUbicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUbicaActionPerformed
-           // TODO add your handling code here:
-           // TODO add your handling code here:
-           jdBuscaUbicacion Ubicacion= new jdBuscaUbicacion(null, true);
-           Ubicacion.CargaBodegaOR(1);
-           Ubicacion.setVisible(true);
-           txtUbicacion.setText(Ubicacion.GetUbicacion());
-           txNombreUbica.setText(Ubicacion.GetNombreUbicacion());
-           Carga_Prod_Ubicacion(txtUbicacion.getText().trim());
-           txtSku.setEnabled(true);
-           txtSku.requestFocus();
+        // TODO add your handling code here:
+        // TODO add your handling code here:
+        jdBuscaUbicacion Ubicacion = new jdBuscaUbicacion(null, true);
+        Ubicacion.CargaBodegaOR(1);
+        Ubicacion.setVisible(true);
+        txtUbicacion.setText(Ubicacion.GetUbicacion());
+        txNombreUbica.setText(Ubicacion.GetNombreUbicacion());
+        Carga_Prod_Ubicacion(txtUbicacion.getText().trim());
+        txtSku.setEnabled(true);
+        txtSku.requestFocus();
     }//GEN-LAST:event_btUbicaActionPerformed
 
     private void btActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btActualizarActionPerformed
@@ -879,7 +834,7 @@ public static Color DARK_GREEN = new Color(0,153,0);
 
     private void MnuProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnuProdActionPerformed
         // TODO add your handling code here:
-        System.out.println( Grilla_prod.getValueAt(Grilla_prod.getSelectedRow(), 2).toString().trim());
+        System.out.println(Grilla_prod.getValueAt(Grilla_prod.getSelectedRow(), 2).toString().trim());
         pfProductos Pro = new pfProductos();
         Pro.setOpaque(false);
         pnPestanas.addTab("Producto", Pro);
@@ -889,7 +844,7 @@ public static Color DARK_GREEN = new Color(0,153,0);
         Pro.txSku.requestFocus();
         Pro.txSku.setText(Grilla_prod.getValueAt(Grilla_prod.getSelectedRow(), 0).toString().trim());
         Pro.btIr.doClick();
-        
+
         //Pro.CargaProducto(Grilla_prod.getValueAt(Grilla_prod.getSelectedRow(), 0).toString().trim());   
     }//GEN-LAST:event_MnuProdActionPerformed
 
@@ -908,241 +863,214 @@ public static Color DARK_GREEN = new Color(0,153,0);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        
-        if(txtUbicacion.getText().equals("TRAN.1003.1") || txtUbicacion.getText().equals("TRAN.1007.1")){
-        
+
+        if (txtUbicacion.getText().equals("TRAN.1003.1") || txtUbicacion.getText().equals("TRAN.1007.1")) {
+
             String sku = Grilla_prod.getValueAt(Grilla_prod.getSelectedRow(), 0).toString().trim();
             String cantidad = Grilla_prod.getValueAt(Grilla_prod.getSelectedRow(), 2).toString().trim();
             String ubicacion = txtUbicacion.getText().trim();
             System.out.println(sku);
             jdSeparacionesUbicacion BP = new jdSeparacionesUbicacion(null, true);
-            BP.CargaSeparaciones(sku,cantidad,ubicacion);
+            BP.CargaSeparaciones(sku, cantidad, ubicacion);
             BP.setLocationRelativeTo(null);
             BP.setTitle("Separaciones");
             BP.setVisible(true);
-            
-            
+
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    
-    private void trae_ubicacion (String Ubica){
-       
+    private void trae_ubicacion(String Ubica) {
+
         ExeSql Sql = new ExeSql();
         ResultSet Rs, Rs1;
-        String Query2 ;
+        String Query2;
         String strUbicacion = "";
-        
-        System.out.println("La UBICACION ES : "+Ubica);
-                
-         try{         
-              strUbicacion = Ubica;
-              String ubicaArray[] = strUbicacion.split("\\.");
-              
-              Query2 = "SELECT nombre AS ubc, habilita FROM mt_codmetro WHERE codmetro = '"+strUbicacion.trim()+"'";
-              
-              
-              Rs1 = Sql.Select(Query2);
-              if (Rs1.next()){
-                  
-                    if(Rs1.getInt("habilita") == 0){
-                        
-                            habilita = 0;
-                            
-                        
-                   }else{
-                  
-                        habilita = 1;
-                        strUbicacion =Rs1.getString("ubc").trim();
-                        txNombreUbica.setText(strUbicacion);
-                        Carga_Prod_Ubicacion(Ubica);
-                    }
-              }   
-              else
-              {
-                  fmMain.Mensaje("Ubicacion no encontrada, favor revise la ubicación");
-                  limpia_all();
-              }
-        }
-     catch (Exception e) {
+
+        System.out.println("La UBICACION ES : " + Ubica);
+
+        try {
+            strUbicacion = Ubica;
+            String ubicaArray[] = strUbicacion.split("\\.");
+
+            Query2 = "SELECT nombre AS ubc, habilita FROM mt_codmetro WHERE codmetro = '" + strUbicacion.trim() + "'";
+
+            Rs1 = Sql.Select(Query2);
+            if (Rs1.next()) {
+
+                if (Rs1.getInt("habilita") == 0) {
+
+                    habilita = 0;
+
+                } else {
+
+                    habilita = 1;
+                    strUbicacion = Rs1.getString("ubc").trim();
+                    txNombreUbica.setText(strUbicacion);
+                    Carga_Prod_Ubicacion(Ubica);
+                }
+            } else {
+                fmMain.Mensaje("Ubicacion no encontrada, favor revise la ubicación");
+                limpia_all();
+            }
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-        } finally{
+        } finally {
             Sql.Close();
-        }               
+        }
     }
-    
-    
-    private void Carga_Prod_Ubicacion(String ubicacion){
+
+    private void Carga_Prod_Ubicacion(String ubicacion) {
         ExeSql Sql = new ExeSql();
         ExeSql Sql2 = new ExeSql();
-        ResultSet Rs,Rs2;
+        ResultSet Rs, Rs2;
         DefaultTableModel dfTm = (DefaultTableModel) Grilla_prod.getModel();
-        double peso=0;
-        String Query ="";
+        double peso = 0;
+        String Query = "";
         String SkuAnt = "";
-        int registros =0;
+        int registros = 0;
         fmMain.LimpiaGrilla(dfTm);
-        
-        
+
         try {
 
-            
-            Query=" select DISTINCT p.nombre Nombre, p.sku Sku, mp.cant," +
-                    " case when mp.fecha_mod is null then mp.fecha else mp.fecha_mod END as fechita, \n" +
-                    "case when mp.fecha_mod is null then EXTRACT(day from current_date-mp.fecha) else EXTRACT(day from current_date-mp.fecha_mod) END as Dias, " +
-                    "cc.sku cchile, tr.sku as skut,tr.skurel \n"+
-                    "FROM mt_productos mp \n" +
-                    "LEFT JOIN producto p on p.sku = mp.sku \n" +
-                    "LEFT JOIN codchile cc on mp.sku = cc.sku \n"+
-                    "LEFT JOIN transformacion tr on mp.sku = tr.skurel \n" +
-                    "WHERE ubicacion = '" + ubicacion  + "' and mp.cant <>0 and p.sku is not null " +
-                    "order by case when mp.fecha_mod is null then EXTRACT(day from current_date-mp.fecha) else EXTRACT(day from current_date-mp.fecha_mod) END DESC"; 
-            
-            
+            Query = " select DISTINCT p.nombre Nombre, p.sku Sku, mp.cant,"
+                    + " case when mp.fecha_mod is null then mp.fecha else mp.fecha_mod END as fechita, \n"
+                    + "case when mp.fecha_mod is null then EXTRACT(day from current_date-mp.fecha) else EXTRACT(day from current_date-mp.fecha_mod) END as Dias, "
+                    + "cc.sku cchile, tr.sku as skut,tr.skurel \n"
+                    + "FROM mt_productos mp \n"
+                    + "LEFT JOIN producto p on p.sku = mp.sku \n"
+                    + "LEFT JOIN codchile cc on mp.sku = cc.sku \n"
+                    + "LEFT JOIN transformacion tr on mp.sku = tr.skurel \n"
+                    + "WHERE ubicacion = '" + ubicacion + "' and mp.cant <>0 and p.sku is not null "
+                    + "order by case when mp.fecha_mod is null then EXTRACT(day from current_date-mp.fecha) else EXTRACT(day from current_date-mp.fecha_mod) END DESC";
+
             Rs = Sql.Select(Query);
 
-            
-            while(Rs.next()){
-                
-                if(Rs.getString("cchile") != null){                     //Si está en codchile
+            while (Rs.next()) {
+
+                if (Rs.getString("cchile") != null) {                     //Si está en codchile
 //                
 //                    System.out.println("Sku ANTERIOR ES :"+SkuAnt);
 //                    System.out.println("Sku ES :"+Rs.getString("Sku"));
 //                   
-                     if (!Rs.getString("Sku").equals(SkuAnt)){        //Que no se repita el SKU
-                          
-                         SkuAnt = Rs.getString("sku").trim();
-                          
-                         
-                     
-                         dfTm.addRow(new Object[]{Rs.getString("Sku"),Rs.getString("Nombre"),Rs.getDouble("cant"),"0",Rs.getString("fechita"),Rs.getInt("dias"),true});
-                         registros++;
-                      
-                      }
-                
-                }else if(Rs.getString("cchile") == null){                       //Si no está en codchile
-                    
-                     if(Rs.getString("skurel") != null){                        //Si el sku hijo no es nulo
-                     
-                            if (!Rs.getString("skurel").equals(SkuAnt)){        //Que no se repita el SKU
-                                  
-                                 SkuAnt = Rs.getString("skurel").trim();
-                                
-                                String skut = Rs.getString("skut");
-                                                               
-                                String Query2 = "SELECT sku FROM codchile WHERE sku ='"+skut+"'";
-                                Rs2 = Sql2.Select(Query2);
-                                
-                                if (Sql2.GetRowCount() > 0){            //Si está en codchile
-                                
-                                    dfTm.addRow(new Object[]{Rs.getString("Sku"),Rs.getString("Nombre"),Rs.getDouble("cant"),"0",Rs.getString("fechita"),Rs.getInt("dias"),true});
-                                    registros++;
-                                
-                                }else if (Sql2.GetRowCount() == 0){         //Si no está en codchile
-                                                                    
-                                    dfTm.addRow(new Object[]{Rs.getString("Sku"),Rs.getString("Nombre"),Rs.getDouble("cant"),"0",Rs.getString("fechita"),Rs.getInt("dias"),false});
-                                    registros++;
-                                
-                                }
-                            }   
-                                  
-                     }else{                 //Si el sku hijo es nulo
-                     
-                            dfTm.addRow(new Object[]{Rs.getString("Sku"),Rs.getString("Nombre"),Rs.getDouble("cant"),"0",Rs.getString("fechita"),Rs.getInt("dias"),false});
-                            registros++;
-                     
-                     }   
-                
-                
+                    if (!Rs.getString("Sku").equals(SkuAnt)) {        //Que no se repita el SKU
+
+                        SkuAnt = Rs.getString("sku").trim();
+
+                        dfTm.addRow(new Object[]{Rs.getString("Sku"), Rs.getString("Nombre"), Rs.getDouble("cant"), "0", Rs.getString("fechita"), Rs.getInt("dias"), true});
+                        registros++;
+
+                    }
+
+                } else if (Rs.getString("cchile") == null) {                       //Si no está en codchile
+
+                    if (Rs.getString("skurel") != null) {                        //Si el sku hijo no es nulo
+
+                        if (!Rs.getString("skurel").equals(SkuAnt)) {        //Que no se repita el SKU
+
+                            SkuAnt = Rs.getString("skurel").trim();
+
+                            String skut = Rs.getString("skut");
+
+                            String Query2 = "SELECT sku FROM codchile WHERE sku ='" + skut + "'";
+                            Rs2 = Sql2.Select(Query2);
+
+                            if (Sql2.GetRowCount() > 0) {            //Si está en codchile
+
+                                dfTm.addRow(new Object[]{Rs.getString("Sku"), Rs.getString("Nombre"), Rs.getDouble("cant"), "0", Rs.getString("fechita"), Rs.getInt("dias"), true});
+                                registros++;
+
+                            } else if (Sql2.GetRowCount() == 0) {         //Si no está en codchile
+
+                                dfTm.addRow(new Object[]{Rs.getString("Sku"), Rs.getString("Nombre"), Rs.getDouble("cant"), "0", Rs.getString("fechita"), Rs.getInt("dias"), false});
+                                registros++;
+
+                            }
+                        }
+
+                    } else {                 //Si el sku hijo es nulo
+
+                        dfTm.addRow(new Object[]{Rs.getString("Sku"), Rs.getString("Nombre"), Rs.getDouble("cant"), "0", Rs.getString("fechita"), Rs.getInt("dias"), false});
+                        registros++;
+
+                    }
+
                 }
-                
+
             }
-            
-            Grilla_prod.setDefaultRenderer(Object.class, new Elrender()); 
-            
-            lbReg.setText( String.valueOf(registros));
+
+            Grilla_prod.setDefaultRenderer(Object.class, new Elrender());
+
+            lbReg.setText(String.valueOf(registros));
             txtSku.requestFocus();
-             }
-     catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-        } finally{
+        } finally {
             Sql.Close();
-        }    
-        
+        }
+
     }
-        
-    
-    
-    
-    private void carga_producto(){
-         String codbarfinal = txtSku.getText().replace("'", "-");
+
+    private void carga_producto() {
+        String codbarfinal = txtSku.getText().replace("'", "-");
         txtSku.setText(codbarfinal.trim());
-        if(!txtSku.getText().isEmpty())
-             CargaProducto(txtSku.getText());
-        else{
+        if (!txtSku.getText().isEmpty()) {
+            CargaProducto(txtSku.getText());
+        } else {
             jdBuscarProductos BP = new jdBuscarProductos(null, true);
             BP.setLocationRelativeTo(null);
             BP.setTitle("Buscar Producto");
             BP.setVisible(true);
-            if(!"".equals(BP.GetCodigo()))
+            if (!"".equals(BP.GetCodigo())) {
                 CargaProducto(BP.GetCodigo());
+            }
         }
-            
+
     }
-    
-    
-    
-    
+
     public void CargaProducto(String Codigo) {
         ExeSql Sql = new ExeSql();
         ResultSet Rs = null;
         double Margen;
-        int revisa_codbar =0;
-        int revisa_codchile =0;
-        
-   
+        int revisa_codbar = 0;
+        int revisa_codchile = 0;
+
         try {
             String Query;
             //Limpia la Lista
 
-            Rs = Sql.Select("select codbar, sku from codbar where sku='" + Codigo + "' or codbar='"+ Codigo + "'" );        
-                    if (Rs.next())
-                        {
-                        Codigo = Rs.getString("sku").trim();
-                        revisa_codbar++;
-                        }
-            Rs = Sql.Select("select idch, sku from codchile where sku='" + Codigo +"' or idch='"+ Codigo + "'" );
-                    if (Rs.next())
-                        {
-                        Codigo = Rs.getString("sku").trim();
-                        revisa_codchile++;
-                        }
-            Rs = Sql.Select("select codbar, sku from codbar where sku='" + Codigo + "' or codbar='"+ Codigo + "'" );        
-                    if (Rs.next())
-                        {
-                        Codigo = Rs.getString("sku").trim();
-                        revisa_codbar++;
-                        }
-             
-                    
-            Query ="select p.sku,p.nombre " 
+            Rs = Sql.Select("select codbar, sku from codbar where sku='" + Codigo + "' or codbar='" + Codigo + "'");
+            if (Rs.next()) {
+                Codigo = Rs.getString("sku").trim();
+                revisa_codbar++;
+            }
+            Rs = Sql.Select("select idch, sku from codchile where sku='" + Codigo + "' or idch='" + Codigo + "'");
+            if (Rs.next()) {
+                Codigo = Rs.getString("sku").trim();
+                revisa_codchile++;
+            }
+            Rs = Sql.Select("select codbar, sku from codbar where sku='" + Codigo + "' or codbar='" + Codigo + "'");
+            if (Rs.next()) {
+                Codigo = Rs.getString("sku").trim();
+                revisa_codbar++;
+            }
+
+            Query = "select p.sku,p.nombre "
                     + " from producto p \n"
                     + " left join inventario i\n"
                     + " on p.sku=i.Sku\n"
                     + " where p.sku='" + Codigo + "' or p.sku in (select sku from codbar where codbar='" + Codigo + "')";
-              Rs = Sql.Select(Query);
+            Rs = Sql.Select(Query);
 
-      if(Sql.GetRowCount()==0){  
-                 fmMain.Mensaje("SKU: " + txtSku.getText().trim() + " no esta en Nuestra Bases de Datos. Comuniquese con Informática");
-                 txtSku.setText("");
-                 txtSku.requestFocus();
-                 return;
-      }      
+            if (Sql.GetRowCount() == 0) {
+                fmMain.Mensaje("SKU: " + txtSku.getText().trim() + " no esta en Nuestra Bases de Datos. Comuniquese con Informática");
+                txtSku.setText("");
+                txtSku.requestFocus();
+                return;
+            }
             Rs.next();
             Codigo = Rs.getString("sku").trim();
             String Nombre = Rs.getString("nombre");
-       
-            
+
             if (Nombre.length() > 20) {
                 Nombre.substring(0, 20);
             }
@@ -1156,53 +1084,44 @@ public static Color DARK_GREEN = new Color(0,153,0);
             Sql.Close();
         }
     }
-    
-    
+
     class Elrender extends DefaultTableCellRenderer {
-         
+
         @Override
         public Component getTableCellRendererComponent(JTable tabla, Object valor, boolean isSelected, boolean hasFocus, int fila, int columna) {
-        super.getTableCellRendererComponent(tabla,valor,isSelected, hasFocus, fila, columna);
-         
-            if( (Boolean)tabla.getValueAt(fila,6) == true)
-            {
-                if(isSelected==true){
+            super.getTableCellRendererComponent(tabla, valor, isSelected, hasFocus, fila, columna);
+
+            if ((Boolean) tabla.getValueAt(fila, 6) == true) {
+                if (isSelected == true) {
                     this.setBackground(DARK_GREEN);
-                    this.setForeground(Color.white);    
-                }else{
-                
+                    this.setForeground(Color.white);
+                } else {
+
                     this.setForeground(DARK_GREEN);
                     this.setBackground(Color.white);
-                
+
                 }
-            }
-            else if((Boolean)tabla.getValueAt(fila,6) == false){
-            
-                
-                if(isSelected==true){
-                
+            } else if ((Boolean) tabla.getValueAt(fila, 6) == false) {
+
+                if (isSelected == true) {
+
                     this.setBackground(Color.red);
-                    this.setForeground(Color.white);    
-                
-                }else{
-                
+                    this.setForeground(Color.white);
+
+                } else {
+
                     this.setForeground(Color.red);
                     this.setBackground(Color.white);
-                
+
                 }
-           
-            
-            }     
-            else {
-                 this.setForeground(Color.black);  
-            } 
+
+            } else {
+                this.setForeground(Color.black);
+            }
             return this;
         }
-    } 
-    
-    
-    
-    
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable Grilla_prod;

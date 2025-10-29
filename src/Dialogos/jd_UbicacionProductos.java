@@ -23,18 +23,17 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-
-
 /**
  *
  * @author DavidAlcaman
  */
 public class jd_UbicacionProductos extends javax.swing.JDialog {
-   DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+
+    DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
     private Object GrillaOCS;
-     public boolean Ingresa =false;
-    
-    public static int pano; 
+    public boolean Ingresa = false;
+
+    public static int pano;
     public static int pmes;
     public static int pmes_oc;
     public static int convenio = 0;
@@ -42,55 +41,68 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
     public static String Fecha = "";
     public static int esFecha = 0;
     public static int pistoleados = 0;
-    public static int NoEncontrado=0;
-    
+    public static int NoEncontrado = 0;
+
     Date hoy = new Date();
-    
-    int id_trans=-1;
-    String Ubicacion_sel="", UbicaCodigo_Sel="";
+
+    int id_trans = -1;
+    String Ubicacion_sel = "", UbicaCodigo_Sel = "";
     private Object btIngresar;
-    
+
     int ExisteNCP = 0;   //Si hay Facturas o Guias de Proveedor sin Autorizar de un determinado SKU
+
     /**
      * Creates new form jdTrasnporte
      */
     public jd_UbicacionProductos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-         //Setea fecha inicial Desde y Hasta
+        txCant.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                // Sincroniza el contador 'pistoleados' con lo que esté en 'txCant'
+                try {
+                    String currentText = txCant.getText().trim();
+                    if (currentText.isEmpty()) {
+                        pistoleados = 0; // Si lo borra, el contador se resetea a 0
+                    } else {
+                        // Si escribe un número, el contador se actualiza a ese número
+                        pistoleados = Integer.parseInt(currentText);
+                    }
+                } catch (NumberFormatException e) {
+                    // Si escribe "abc" o algo inválido (aunque keyTyped lo previene)
+                    pistoleados = 0;
+                }
+            }
+        });
+        //Setea fecha inicial Desde y Hasta
         Date date = new Date();
-  
+
         rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
         Grilla.getColumnModel().getColumn(0).setCellRenderer(rightRenderer);
         Grilla.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
         Grilla.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
-        
-           
-        if(fmMain.GetUsuarioEligeUbicacion()){
-         
+
+        if (fmMain.GetUsuarioEligeUbicacion()) {
+
             btUbc.setEnabled(true);
-         
-         
-        }else{
-        
+
+        } else {
+
             btUbc.setEnabled(false);
-        
-        
+
         }
-        
+
         lblCodOrigen.setVisible(false);
-        
+
         pnAnticipada.setVisible(false);
-        
-        
+
         jLabel4.setVisible(false);
         lbStock.setVisible(false);
-        
-        
+
         jLabel8.setVisible(false);
         lbTotal.setVisible(false);
-        
-               
+
     }
 
     /**
@@ -716,15 +728,13 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    private String Get_Ubicacion(String Ubica)
-    {
+    private String Get_Ubicacion(String Ubica) {
         ExeSql Sql = new ExeSql();
         ResultSet Rs, Rs1;
-        String Query2 ;
+        String Query2;
         String strUbicacion = "";
 
-        try{
+        try {
             //lblCodOrigen.setVisible(true);
             strUbicacion = Ubica.trim();
             String ubicaArray[] = strUbicacion.split("\\.");
@@ -732,185 +742,167 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
 //            Query2 = "SELECT (b.bodega ||' - '|| r.rack ||' - '|| m.metro) as ubc\n" +
 //            " from mt_bodega b, mt_rack r, mt_metro m\n" +
 //            " where b.codigo='" + ubicaArray[0] + "' and r.codigo= " + ubicaArray[1] +  " and m.codigo= " + ubicaArray[2] + "  and m.rack=" + ubicaArray[1];
-            
-            Query2 = "SELECT nombre AS ubc FROM mt_codmetro WHERE codmetro = '"+strUbicacion+"'";
-            
-            
+            Query2 = "SELECT nombre AS ubc FROM mt_codmetro WHERE codmetro = '" + strUbicacion + "'";
+
             Rs1 = Sql.Select(Query2);
-            if (Rs1.next()){
-                strUbicacion =Rs1.getString("ubc").trim();
+            if (Rs1.next()) {
+                strUbicacion = Rs1.getString("ubc").trim();
                 return strUbicacion;
-            }
-            else
-            {
+            } else {
                 return null;
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-        } finally{
+        } finally {
             Sql.Close();
         }
-        return null; 
+        return null;
     }
-    
-    
-    public void CargaMetroDestino(String sku, String nomSku ,double cant, String StOrigen){
-        
+
+    public void CargaMetroDestino(String sku, String nomSku, double cant, String StOrigen) {
+
         ExeSql Sql = new ExeSql();
         ExeSql Sql_1 = new ExeSql();
-        ResultSet Rs,Rs1;
+        ResultSet Rs, Rs1;
         DefaultTableModel TableModel = (DefaultTableModel) Grilla.getModel();
-        double SumaDespachos = 0, SumaPendiente = 0, totAnticipada=0, totAnticipada_Sala=0;
+        double SumaDespachos = 0, SumaPendiente = 0, totAnticipada = 0, totAnticipada_Sala = 0;
         double SumaBultos = 0;
-        
-        
-        String Query="",QryPend = "", QryUnid = "";
-        double total=0;
-       // lblCodOrigen.setVisible(true);
+
+        String Query = "", QryPend = "", QryUnid = "";
+        double total = 0;
+        // lblCodOrigen.setVisible(true);
         lblTotalDesp.setText(fmMain.FormatoTotal(SumaDespachos));
         lbStock.setText(fmMain.FormatoTotal(cant));
         //txCant.setText(lbStock.getText().trim());
         lblCodOrigen.setText(StOrigen);
-                
-                
+
         //lblDescOrigen.setText(Get_Ubicacion(StOrigen));
-                
-        if (StOrigen.equals(fmMain.BodegaTransito())){
-            
+        if (StOrigen.equals(fmMain.BodegaTransito())) {
+
             lblDescOrigen.setText("TRANSITO");
-            
-        }else{
-                
+
+        } else {
+
             lblDescOrigen.setText(Get_Ubicacion(StOrigen));
-        
+
         }
-                
-                
+
         lbSkuDesc.setText(nomSku);
-        total = SumaDespachos +cant;
+        total = SumaDespachos + cant;
         lbTotal.setText(fmMain.FormatoTotal(total));
-        
-        int ContReg=0;
+
+        int ContReg = 0;
         lbSku.setText(sku);
-        while(TableModel.getRowCount()>0)
-             TableModel.removeRow(0);
-         
+        while (TableModel.getRowCount() > 0) {
+            TableModel.removeRow(0);
+        }
+
         try {
-            Query = "select mp.sku, p.nombre,mp.ubicacion,u.unidad,sum(mp.cant) cantidad, p.convenio \n" +
-                    "from mt_productos mp\n" +
-                    "left join  producto p\n" +
-                    "on mp.sku = p.sku\n" +
-                    "left join par_unidad u on  u.codigo = p.unidad\n" +
-                    //"where  mp.ubicacion <> '" + StOrigen.trim() + "' \n" +
-//                    "where  mp.ubicacion <> '" + fmMain.BodegaTransito() + "' \n" +
-                    "group by mp.sku, p.nombre,mp.ubicacion,u.unidad, p.convenio\n" +
-                    "having sum(mp.cant) >0 and mp.sku = '" + sku + "'";
-            
+            Query = "select mp.sku, p.nombre,mp.ubicacion,u.unidad,sum(mp.cant) cantidad, p.convenio \n"
+                    + "from mt_productos mp\n"
+                    + "left join  producto p\n"
+                    + "on mp.sku = p.sku\n"
+                    + "left join par_unidad u on  u.codigo = p.unidad\n"
+                    + "where mp.ubicacion = '" + StOrigen.trim() + "' \n"
+                    + // ------------------------------------
+                    "group by mp.sku, p.nombre,mp.ubicacion,u.unidad, p.convenio\n"
+                    + "having sum(mp.cant) >0 and mp.sku = '" + sku + "'";
+
             Rs = Sql.Select(Query);
-            
-            while (Rs.next()){
-                
+
+            while (Rs.next()) {
+
                 ContReg++;
-                
+
                 TableModel.addRow(new Object[]{
-                                        Rs.getString("sku").trim(),  
-                                        Rs.getString("nombre").trim(), 
-                                        Rs.getString("unidad"),
-                                        Rs.getString("ubicacion"),
-                                        Get_Ubicacion (Rs.getString("ubicacion")),
-                                        Rs.getInt("cantidad")
+                    Rs.getString("sku").trim(),
+                    Rs.getString("nombre").trim(),
+                    Rs.getString("unidad"),
+                    Rs.getString("ubicacion"),
+                    Get_Ubicacion(Rs.getString("ubicacion")),
+                    Rs.getInt("cantidad")
                 });
-                
+
                 SumaDespachos = SumaDespachos + Rs.getInt("cantidad");
                 convenio = Rs.getInt("convenio");
                 lblTotalDesp.setText(fmMain.FormatoTotal(SumaDespachos));
-                total = cant+SumaDespachos;
+                total = cant + SumaDespachos;
                 lbTotal.setText(fmMain.FormatoTotal(total));
-                txtUbicacion.requestFocus(); 
+                txtUbicacion.requestFocus();
             }
 
-                // Trae lo pendiente
-            QryPend = "select \n" +
-                      "p.sku,p.nombre,p.unidad,i.stock,i.ocp,i.occ,i.gdc, (select sum(separado) from occhdet where sku=p.sku) as separado\n" +
-                      "from producto p\n" +
-                      "left join inventario i\n" +
-                      "on p.sku=i.sku\n" +
-                      "where p.sku = '" + sku + "'";
-                    
+            // Trae lo pendiente
+            QryPend = "select \n"
+                    + "p.sku,p.nombre,p.unidad,i.stock,i.ocp,i.occ,i.gdc, (select sum(separado) from occhdet where sku=p.sku) as separado\n"
+                    + "from producto p\n"
+                    + "left join inventario i\n"
+                    + "on p.sku=i.sku\n"
+                    + "where p.sku = '" + sku + "'";
+
             Rs1 = Sql_1.Select(QryPend);
-            
-            if (Rs1.next()){
-                    
-                SumaPendiente = SumaPendiente + Math.abs(Rs1.getInt("occ") + Rs1.getInt("separado")) ;
+
+            if (Rs1.next()) {
+
+                SumaPendiente = SumaPendiente + Math.abs(Rs1.getInt("occ") + Rs1.getInt("separado"));
             }
-                
+
             ExeSql exe = new ExeSql();
-            ResultSet rss = exe.Select("select distinct on (o.codigo_oc, o.orden) CAST(o.codigo_oc as varchar) || '-' || o.orden as orden,\n" +
-                                       "case when o.separado >= 0 \n" +
-                                       "then (o.cantidad - (o.separado+o.despachado))\n" +
-                                       "else o.separado\n" +
-                                       "end as diferencia\n" +
-                                       "from occhdet o\n" +
-                                       "left join mt_productos mt on  mt.sku = o.sku\n" +
-                                       "where o.sku = '"+sku+"'\n" +
-                                       "and (o.separado + o.despachado) < o.cantidad");
+            ResultSet rss = exe.Select("select distinct on (o.codigo_oc, o.orden) CAST(o.codigo_oc as varchar) || '-' || o.orden as orden,\n"
+                    + "case when o.separado >= 0 \n"
+                    + "then (o.cantidad - (o.separado+o.despachado))\n"
+                    + "else o.separado\n"
+                    + "end as diferencia\n"
+                    + "from occhdet o\n"
+                    + "left join mt_productos mt on  mt.sku = o.sku\n"
+                    + "where o.sku = '" + sku + "'\n"
+                    + "and (o.separado + o.despachado) < o.cantidad");
 
-                int sumados = 0;
-                for(int u = 0; rss.next();u++){   
-                    sumados = sumados + rss.getInt("diferencia");
-                }
-                rss.beforeFirst();
-                DefaultTableModel model = (DefaultTableModel) Grilla_detalle.getModel();
-                while(model.getRowCount()>0){
-                    model.removeRow(0);
-                }
-                for(int o = 0; rss.next();o++){
-                    model.addRow(new Object[]{
-                        rss.getString("orden"),
-                        rss.getString("diferencia")
-                    });
-                }
-                
-                
-                
+            int sumados = 0;
+            for (int u = 0; rss.next(); u++) {
+                sumados = sumados + rss.getInt("diferencia");
+            }
+            rss.beforeFirst();
+            DefaultTableModel model = (DefaultTableModel) Grilla_detalle.getModel();
+            while (model.getRowCount() > 0) {
+                model.removeRow(0);
+            }
+            for (int o = 0; rss.next(); o++) {
+                model.addRow(new Object[]{
+                    rss.getString("orden"),
+                    rss.getString("diferencia")
+                });
+            }
+
 //                
-                lblPendiente.setText( fmMain.FormatoTotal(sumados));
+            lblPendiente.setText(fmMain.FormatoTotal(sumados));
 
+            // Trae lo anticipado
+            QryPend = "select sku,cant from mt_productos mt \n"
+                    + "where mt.sku = '" + sku + "' and mt.ubicacion = '" + fmMain.BodegaAnticipada() + "';";
 
-                // Trae lo anticipado
-                QryPend = "select sku,cant from mt_productos mt \n" +
-                          "where mt.sku = '" + sku + "' and mt.ubicacion = '" + fmMain.BodegaAnticipada() + "';";
-                
-                Rs1 = Sql_1.Select(QryPend);
-                
-                if (Rs1.next()){
-                
-                    totAnticipada= Rs1.getDouble("cant");
-                }
-                
-                lblAnticipada.setText( fmMain.FormatoTotal(totAnticipada));
-                
-                
-                
-                
-                 // Trae lo anticipado Sala PLC
-                QryPend = "select sku,cant from mt_productos mt \n" +
-                          "where mt.sku = '" + sku + "' and mt.ubicacion = 'TRAN.1007.2';";
-                
-                Rs1 = Sql_1.Select(QryPend);
-                
-                if (Rs1.next()){
-                
-                    totAnticipada_Sala= Rs1.getDouble("cant");
-                }
-                
-                lblAnticipada_Sala_H.setText( fmMain.FormatoTotal(totAnticipada_Sala));
-                
-                
-                
-                
-                  // Trae lo anticipado Sala HUERFANOS
+            Rs1 = Sql_1.Select(QryPend);
+
+            if (Rs1.next()) {
+
+                totAnticipada = Rs1.getDouble("cant");
+            }
+
+            lblAnticipada.setText(fmMain.FormatoTotal(totAnticipada));
+
+            // Trae lo anticipado Sala PLC
+            QryPend = "select sku,cant from mt_productos mt \n"
+                    + "where mt.sku = '" + sku + "' and mt.ubicacion = 'TRAN.1007.2';";
+
+            Rs1 = Sql_1.Select(QryPend);
+
+            if (Rs1.next()) {
+
+                totAnticipada_Sala = Rs1.getDouble("cant");
+            }
+
+            lblAnticipada_Sala_H.setText(fmMain.FormatoTotal(totAnticipada_Sala));
+
+            // Trae lo anticipado Sala HUERFANOS
 //                QryPend = "select sku,cant from mt_productos mt \n" +
 //                          "where mt.sku = '" + sku + "' and mt.ubicacion = 'TRAN.1007.3';";
 //                
@@ -922,330 +914,277 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
 //                }
 //                
 //                lblAnticipada_Sala_H.setText( fmMain.FormatoTotal(totAnticipada_Sala_H));
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                // Trae la unidad
-                QryUnid = "select p.sku, p.nombre,u.unidad\n" +
-                         "from producto p\n" +
-                         "left join par_unidad u on  u.codigo = p.unidad\n" +
-                         "where p.sku = '" + sku + "'";
-                
-                Rs1 = Sql_1.Select(QryUnid);
-                
-                if (Rs1.next()){
-                
-                    lblUnidad.setText(Rs1.getString("unidad").trim());
-                
-                }else{
-                
-                    lblUnidad.setText("S/U");
-                    
-                }
-                
-            
+            // Trae la unidad
+            QryUnid = "select p.sku, p.nombre,u.unidad\n"
+                    + "from producto p\n"
+                    + "left join par_unidad u on  u.codigo = p.unidad\n"
+                    + "where p.sku = '" + sku + "'";
+
+            Rs1 = Sql_1.Select(QryUnid);
+
+            if (Rs1.next()) {
+
+                lblUnidad.setText(Rs1.getString("unidad").trim());
+
+            } else {
+
+                lblUnidad.setText("S/U");
+
+            }
+
         } catch (Exception e) {
-          
-        } finally{
+
+        } finally {
             Sql.Close();
-            
-          }
-    }   
-    
-    
-    public void abrir(String file ){
-        
-       try {
-           String url = file;
-           ProcessBuilder p = new ProcessBuilder();
-           p.command("cmd.exe", "/c",url);
-           p.start();
-       } catch (IOException ex) {
-           Logger.getLogger(jd_UbicacionProductos.class.getName()).log(Level.SEVERE, null, ex);
-       }
-        
+
+        }
     }
-    
-    
-    
+
+    public void abrir(String file) {
+
+        try {
+            String url = file;
+            ProcessBuilder p = new ProcessBuilder();
+            p.command("cmd.exe", "/c", url);
+            p.start();
+        } catch (IOException ex) {
+            Logger.getLogger(jd_UbicacionProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+
     private void btAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAceptarActionPerformed
         dispose();
     }//GEN-LAST:event_btAceptarActionPerformed
 
-    
-    public String GetUbicacion(){
-        
-        if (Ubicacion_sel .equals("")){
-        
-            Ubicacion_sel= Grilla.getValueAt(Grilla.getSelectedRow(),4).toString();
-            UbicaCodigo_Sel = Grilla.getValueAt(Grilla.getSelectedRow(),3).toString();
-        
+    public String GetUbicacion() {
+
+        if (Ubicacion_sel.equals("")) {
+
+            Ubicacion_sel = Grilla.getValueAt(Grilla.getSelectedRow(), 4).toString();
+            UbicaCodigo_Sel = Grilla.getValueAt(Grilla.getSelectedRow(), 3).toString();
+
         }
-        
+
         return Ubicacion_sel;
     }
-    
-    public String GetUbicacionCod(){
-        
-        if (UbicaCodigo_Sel.equals("")){
-        
-            Ubicacion_sel= Grilla.getValueAt(Grilla.getSelectedRow(),4).toString();
-            UbicaCodigo_Sel = Grilla.getValueAt(Grilla.getSelectedRow(),3).toString();
+
+    public String GetUbicacionCod() {
+
+        if (UbicaCodigo_Sel.equals("")) {
+
+            Ubicacion_sel = Grilla.getValueAt(Grilla.getSelectedRow(), 4).toString();
+            UbicaCodigo_Sel = Grilla.getValueAt(Grilla.getSelectedRow(), 3).toString();
         }
-        
+
         return UbicaCodigo_Sel;
     }
-    
-    
-    public void ubica_cursor_inicio(){
+
+    public void ubica_cursor_inicio() {
         txtUbicacion.requestFocus();
     }
-    
-    
-    private  boolean valida_ubicacion(String Ubica){
-        
+
+    private boolean valida_ubicacion(String Ubica) {
+
         ExeSql Sql = new ExeSql();
-        ResultSet Rs,Rs1;
-        String  Query2;
+        ResultSet Rs, Rs1;
+        String Query2;
         boolean esta = false;
-        
-        try
-        {
+
+        try {
             Query2 = "select *  from mt_codmetro where codmetro = '" + Ubica + "';";
             Rs1 = Sql.Select(Query2);
-        
-            if (Rs1.next()){
-            
-                esta =  true;
-            
-            }else{
-            
-                esta =  false;
+
+            if (Rs1.next()) {
+
+                esta = true;
+
+            } else {
+
+                esta = false;
             }
-        
-        }catch (Exception e) {
-         
+
+        } catch (Exception e) {
+
             System.out.println(e.getMessage());
             Sql.Rollback();
-        
-        } finally{
-                
+
+        } finally {
+
             Sql.Close();
-        }          
-        
+        }
+
         return esta;
     }
-    
-     public void graba(){
-          
+
+    public void graba() {
+
         ExeSql Sql2 = new ExeSql();
         ResultSet Rs1, Rs2;
-        
-       //********************************* 
+
+        //********************************* 
         ExeSql Sql = new ExeSql();
         ExeSql Sql4 = new ExeSql();
         ExeSql Sql5 = new ExeSql();
-      
+
         ResultSet Rs3 = null;
-        ResultSet Rs4 = null; 
-        ResultSet Rs5 = null; 
-     //********************************   
-        
-        
-        String Sku,Ubicacion,StUsuario,QryIns, qryUpd, Query2;
-        String inv_positivo ="INV.1011.1", inv_negativo ="INV.1011.2";
-       
-        
-        
+        ResultSet Rs4 = null;
+        ResultSet Rs5 = null;
+        //********************************   
+
+        String Sku, Ubicacion, StUsuario, QryIns, qryUpd, Query2;
+        String inv_positivo = "INV.1011.1", inv_negativo = "INV.1011.2";
+
         double cantidad_insertada;
         int Stock = 0;
-        
-        Ubicacion_sel= "";
+
+        Ubicacion_sel = "";
         UbicaCodigo_Sel = "";
-        
-        
-        try{
-                Sku=lbSku.getText().trim();
-                Ubicacion = txtUbicacion.getText().trim();
-                StUsuario = fmMain.GetUsuario();
-                         
-                if ( (Ubicacion.equals("TRAN.1009.1") || Ubicacion.equals("TRAN.1009.2") || Ubicacion.equals("TRAN.10009.1")  )  && 
-                   (!StUsuario.equals("LRUBILAR") && !StUsuario.equals("LEORUBILAR")) ){    //Si es Merma
-          
-                    fmMain.Mensaje("El "+StUsuario+" No está Autorizado!!");
-                    return;
-                    
-                }else if ((Ubicacion.equals("TRAN.1009.1") || Ubicacion.equals("TRAN.1009.2") || Ubicacion.equals("TRAN.10009.1") ) &&
-                         (StUsuario.equals("LRUBILAR") || StUsuario.equals("LEORUBILAR") )){
-         
-                    System.out.println("El "+StUsuario+" Está Autorizado!!");
-        
-                }    
-                
-                 
-                if (Ubicacion.contains("TRAN.1002.") ){    //NOTA CREDITO PROVEEDOR
-                  
-                    fmMain.Mensaje("No se pueden mover productos a esta Ubicacion...!");
-                    return;
-                   
+
+        try {
+            Sku = lbSku.getText().trim();
+            Ubicacion = txtUbicacion.getText().trim();
+            StUsuario = fmMain.GetUsuario();
+
+            if ((Ubicacion.equals("TRAN.1009.1") || Ubicacion.equals("TRAN.1009.2") || Ubicacion.equals("TRAN.10009.1"))
+                    && (!StUsuario.equals("LRUBILAR") && !StUsuario.equals("LEORUBILAR"))) {    //Si es Merma
+
+                fmMain.Mensaje("El " + StUsuario + " No está Autorizado!!");
+                return;
+
+            } else if ((Ubicacion.equals("TRAN.1009.1") || Ubicacion.equals("TRAN.1009.2") || Ubicacion.equals("TRAN.10009.1"))
+                    && (StUsuario.equals("LRUBILAR") || StUsuario.equals("LEORUBILAR"))) {
+
+                System.out.println("El " + StUsuario + " Está Autorizado!!");
+
+            }
+
+            if (Ubicacion.contains("TRAN.1002.")) {    //NOTA CREDITO PROVEEDOR
+
+                fmMain.Mensaje("No se pueden mover productos a esta Ubicacion...!");
+                return;
+
+            }
+
+            if (Ubicacion.contains("TRAN.1004.")) {    //NOTA CREDITO CLIENTE
+
+                fmMain.Mensaje("No se puden mover productos a Nota Crédito Cliente en forma manual..!");
+                return;
+
+            }
+
+            if (Ubicacion.contains("LVLB1.1011.") || Ubicacion.contains("BOD.SEP")) {     //UBICACIONES DE SEPARACION
+
+                fmMain.Mensaje("No se pueden mover productos a esta Ubicacion...!");
+                return;
+
+            }
+
+            if (Ubicacion.contains("TRAN.1001.")) {     //TRANSITO INGRESO
+
+                fmMain.Mensaje("No se pueden mover productos a Tránsito Ingreso...!");
+                return;
+
+            }
+
+            cantidad_insertada = Double.valueOf(fmMain.SetGuardar(txCant.getText().trim()));
+
+            System.out.println("Stock :" + Double.valueOf(fmMain.SetGuardar(lbStock.getText().trim())));
+            System.out.println("Cantidad Ingresada :" + cantidad_insertada);
+
+            if (Double.valueOf(fmMain.SetGuardar(lbStock.getText().trim())) < cantidad_insertada) {
+                fmMain.Mensaje("Cantidad ingresada: " + txCant.getText().trim() + " es mayor a la que existe en el metro " + lblDescOrigen.getText().trim() + " que es :" + fmMain.SetGuardar(lbStock.getText().trim()));
+                return;
+            }
+
+            if (txtUbicacion.getText().trim().equals("")) {
+                fmMain.Mensaje("Debe ingresar la Ubicacion del Metro.");
+                txtUbicacion.requestFocus();
+                return;
+            }
+
+            if (txCant.getText().trim().equals("")) {
+                fmMain.Mensaje("Debe ingresar cantidad en la Ubicación.");
+                txCant.requestFocus();
+                return;
+            } else if (Double.valueOf(txCant.getText().trim()) == 0) {
+                fmMain.Mensaje("La cantidad debe ser mayor que 0." + " y no mayor a " + fmMain.SetGuardar(lbStock.getText().trim()));
+                txCant.requestFocus();
+                return;
+            }
+
+            //if (Ubicacion.trim().equals("TRAN.1007.1") || Ubicacion.trim().equals("TRAN.1003.1")  ){    //Si es Venta Anticipada Metro 1 o Directa
+            if (Ubicacion.trim().equals("TRAN.1007.1")) {    //Si es Venta Anticipada Metro 1 o Directa    
+
+                double anticipada = 0;
+                String v_anticipada = "0";
+
+                try {
+
+                    anticipada = Double.parseDouble(Grilla_Ant.getValueAt(Grilla_Ant.getSelectedRow(), 4).toString().trim());
+
+                } catch (Exception e) {
+
+                    anticipada = 0;
+
                 }
-                
-                
-                if (Ubicacion.contains("TRAN.1004.") ){    //NOTA CREDITO CLIENTE
-                  
-                    fmMain.Mensaje("No se puden mover productos a Nota Crédito Cliente en forma manual..!");
-                    return;
-                    
-                }
-                
-                
-                
-                if (Ubicacion.contains("LVLB1.1011.") || Ubicacion.contains("BOD.SEP") ){     //UBICACIONES DE SEPARACION
-                  
-                    fmMain.Mensaje("No se pueden mover productos a esta Ubicacion...!");
-                    return;
-                    
-                }
-                
-                
-                if (Ubicacion.contains("TRAN.1001.") ){     //TRANSITO INGRESO
-                  
-                    fmMain.Mensaje("No se pueden mover productos a Tránsito Ingreso...!");
-                    return;
-                    
-                }
-                
-                
-                 
-                
-                cantidad_insertada=Double.valueOf(fmMain.SetGuardar(txCant.getText().trim()));
-               
-                System.out.println("Stock :"+Double.valueOf(fmMain.SetGuardar(lbStock.getText().trim())));
-                System.out.println("Cantidad Ingresada :"+cantidad_insertada);
-                
-                if (Double.valueOf(fmMain.SetGuardar(lbStock.getText().trim())) < cantidad_insertada){
-                    fmMain.Mensaje("Cantidad ingresada: " + txCant.getText().trim() + " es mayor a la que existe en el metro " + lblDescOrigen.getText().trim() + " que es :" + fmMain.SetGuardar(lbStock.getText().trim()));
-                    return;
-                }
-                
-                if (txtUbicacion.getText().trim().equals("")){
-                    fmMain.Mensaje("Debe ingresar la Ubicacion del Metro.");
-                    txtUbicacion.requestFocus();
-                    return;
-                }
-                
-                
-                if (txCant.getText().trim().equals("")){
-                    fmMain.Mensaje("Debe ingresar cantidad en la Ubicación.");
-                    txCant.requestFocus();
-                    return;}
-                else if (Double.valueOf(txCant.getText().trim())== 0){
-                    fmMain.Mensaje("La cantidad debe ser mayor que 0." + " y no mayor a " + fmMain.SetGuardar(lbStock.getText().trim()));
-                    txCant.requestFocus();
-                    return;    
-                }     
-                
-                
-                
-                
-                
-               //if (Ubicacion.trim().equals("TRAN.1007.1") || Ubicacion.trim().equals("TRAN.1003.1")  ){    //Si es Venta Anticipada Metro 1 o Directa
-               if (Ubicacion.trim().equals("TRAN.1007.1") ){    //Si es Venta Anticipada Metro 1 o Directa    
-                                   
-                    double anticipada = 0;
-                    String v_anticipada = "0";
-                    
-                    try {  
-                      
-                        anticipada = Double.parseDouble(Grilla_Ant.getValueAt(Grilla_Ant.getSelectedRow(), 4).toString().trim());
-                      
-                    }catch (Exception e){
-                      
-                        anticipada = 0;
-                      
-                    }
-                    
-                      
-                    if (anticipada == 0 && (fmMain.GetUsuario().toLowerCase().trim().equals("admin1") || fmMain.GetUsuario().toLowerCase().trim().equals("lrubilar") || 
-                                            fmMain.GetUsuario().toLowerCase().trim().equals("leorubilar") || fmMain.GetUsuario().toLowerCase().trim().equals("alopez") )){
-                    
+
+                if (anticipada == 0 && (fmMain.GetUsuario().toLowerCase().trim().equals("admin1") || fmMain.GetUsuario().toLowerCase().trim().equals("lrubilar")
+                        || fmMain.GetUsuario().toLowerCase().trim().equals("leorubilar") || fmMain.GetUsuario().toLowerCase().trim().equals("alopez"))) {
+
+                    v_anticipada = lblAnticipada.getText().replaceAll("\\,", "");
+                    anticipada = (Double.parseDouble(v_anticipada.trim()) * -1);
+
+                } else if (anticipada != 0 && (fmMain.GetUsuario().toLowerCase().trim().equals("admin1") || fmMain.GetUsuario().toLowerCase().trim().equals("lrubilar")
+                        || fmMain.GetUsuario().toLowerCase().trim().equals("leorubilar") || fmMain.GetUsuario().toLowerCase().trim().equals("alopez"))) {
+
+                    if (chkAnticipada_ant.isSelected()) {
+
                         v_anticipada = lblAnticipada.getText().replaceAll("\\,", "");
-                        anticipada = (Double.parseDouble(v_anticipada.trim())*-1);
-                    
-                        
-                    }else if (anticipada != 0 && (fmMain.GetUsuario().toLowerCase().trim().equals("admin1") || fmMain.GetUsuario().toLowerCase().trim().equals("lrubilar") || 
-                                                  fmMain.GetUsuario().toLowerCase().trim().equals("leorubilar") || fmMain.GetUsuario().toLowerCase().trim().equals("alopez") )) {
-                    
-                        
-                        if (chkAnticipada_ant.isSelected()){
-                        
-                            v_anticipada = lblAnticipada.getText().replaceAll("\\,", "");
-                            anticipada = (Double.parseDouble(v_anticipada.trim())*-1);
-                        
-                        
-                        }
-                    
-                    
+                        anticipada = (Double.parseDouble(v_anticipada.trim()) * -1);
+
                     }
-                    
-                    
-                    
-                    
-                     
-                    if (anticipada < cantidad_insertada){
-                        
-                        fmMain.Mensaje("Cantidad ingresada: " + txCant.getText().trim() + " es mayor a la que existe en el metro VENTA ANTICIPADA METRO 1 que es :" + anticipada);
-                        return;
-                    }
-                    
-                    
+
                 }
-                
-                
-                if (Ubicacion.trim().equals("TRAN.1007.2") ){    //Si es Venta Anticipada Sala PLC
-                   
-                    double anticipada_sala = 0; 
-                    String v_anticipada_sala = "0";
-                   
-                   
-                    try {  
-                    
-                        anticipada_sala = Double.parseDouble(Grilla_Ant.getValueAt(Grilla_Ant.getSelectedRow(), 4).toString().trim());
-                        
-                    }catch (Exception e){
-                    
-                        anticipada_sala = 0; 
-                    }    
-                      
-                    
-                    
-                    if (anticipada_sala == 0 && (fmMain.GetUsuario().toLowerCase().trim().equals("leorubilar") || fmMain.GetUsuario().toLowerCase().trim().equals("alopez")) ){  
-                    
-                        v_anticipada_sala = lblAnticipada_Sala_H.getText().replaceAll("\\,", "");
-                        anticipada_sala = (Double.parseDouble(v_anticipada_sala.trim())*-1);
-                    
-                        
-                    }  
-                    
-                    
-                    if (anticipada_sala < cantidad_insertada){
-                        
-                        fmMain.Mensaje("Cantidad ingresada: " + txCant.getText().trim() + " es mayor a la que existe en el metro VENTA ANTICIPADA SALA PLC que es :" + anticipada_sala);
-                        return;
-                    }
-                    
-                    
-               } 
-                
-                
-                
+
+                if (anticipada < cantidad_insertada) {
+
+                    fmMain.Mensaje("Cantidad ingresada: " + txCant.getText().trim() + " es mayor a la que existe en el metro VENTA ANTICIPADA METRO 1 que es :" + anticipada);
+                    return;
+                }
+
+            }
+
+            if (Ubicacion.trim().equals("TRAN.1007.2")) {    //Si es Venta Anticipada Sala PLC
+
+                double anticipada_sala = 0;
+                String v_anticipada_sala = "0";
+
+                try {
+
+                    anticipada_sala = Double.parseDouble(Grilla_Ant.getValueAt(Grilla_Ant.getSelectedRow(), 4).toString().trim());
+
+                } catch (Exception e) {
+
+                    anticipada_sala = 0;
+                }
+
+                if (anticipada_sala == 0 && (fmMain.GetUsuario().toLowerCase().trim().equals("leorubilar") || fmMain.GetUsuario().toLowerCase().trim().equals("alopez"))) {
+
+                    v_anticipada_sala = lblAnticipada_Sala_H.getText().replaceAll("\\,", "");
+                    anticipada_sala = (Double.parseDouble(v_anticipada_sala.trim()) * -1);
+
+                }
+
+                if (anticipada_sala < cantidad_insertada) {
+
+                    fmMain.Mensaje("Cantidad ingresada: " + txCant.getText().trim() + " es mayor a la que existe en el metro VENTA ANTICIPADA SALA PLC que es :" + anticipada_sala);
+                    return;
+                }
+
+            }
+
 //               if (Ubicacion.trim().equals("TRAN.1007.3") ){    //Si es Venta Anticipada Sala HUERFANOS
 //                   
 //                    double anticipada_sala_H = 0; 
@@ -1280,300 +1219,256 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
 //                    
 //                    
 //               }  
-                
-                
-                
-                
+            //********************************************************************************************************************************************************************//            
+            //---------------------------------------------------------------------------------------           
+            // UBICA PRODUCTOS EN METRO DESTINO 
+            Query2 = "select *  from mt_productos where ubicacion = '" + Ubicacion + "' and sku = '" + Sku + "';";
+            Rs1 = Sql.Select(Query2);
 
-    //********************************************************************************************************************************************************************//            
-                    //---------------------------------------------------------------------------------------           
-                // UBICA PRODUCTOS EN METRO DESTINO 
-                Query2 = "select *  from mt_productos where ubicacion = '" + Ubicacion + "' and sku = '" + Sku + "';";
-                Rs1 = Sql.Select(Query2);
-                    
-                if (Rs1.next()){
-                            // Realiza un Update
-                    
-                    System.out.println("ENTRA A UPDATE!!!");
-                    
-                    String QryUpd = "  update  mt_productos set cant = cant + " +  cantidad_insertada + ",\n" +
-                                    "  usuario_mod ='" +fmMain.GetUsuario() + "', fecha_mod = now(), ubica_origen = '" + lblCodOrigen.getText().trim() + "',\n"+
-                                    "  ubica_origen2 = '" + lblCodOrigen.getText().trim() + "'\n"+
-                                    "  where ubicacion = '" + Ubicacion + "' and sku = '" + Sku + "' ";
-                    Sql.ExeSql(QryUpd);
-                
-                }else{
-                         // Inserta el producto
-                    QryIns = "insert into mt_productos (ubicacion,ubica_origen2,sku,usuario,cant, rut, tipdocto, nrodocto)\n" +
-                             " values ('" + Ubicacion + "','"+ lblCodOrigen.getText().trim()+ "','" + Sku + "','" + fmMain.GetUsuario()  + "', " + cantidad_insertada + 
-                             "," + "null" + ",'" + "" + "'," + "null" + ");";
-                    Sql.ExeSql(QryIns);
-                }
+            if (Rs1.next()) {
+                // Realiza un Update
+
+                System.out.println("ENTRA A UPDATE!!!");
+
+                String QryUpd = "  update  mt_productos set cant = cant + " + cantidad_insertada + ",\n"
+                        + "  usuario_mod ='" + fmMain.GetUsuario() + "', fecha_mod = now(), ubica_origen = '" + lblCodOrigen.getText().trim() + "',\n"
+                        + "  ubica_origen2 = '" + lblCodOrigen.getText().trim() + "'\n"
+                        + "  where ubicacion = '" + Ubicacion + "' and sku = '" + Sku + "' ";
+                Sql.ExeSql(QryUpd);
+
+            } else {
+                // Inserta el producto
+                QryIns = "insert into mt_productos (ubicacion,ubica_origen2,sku,usuario,cant, rut, tipdocto, nrodocto)\n"
+                        + " values ('" + Ubicacion + "','" + lblCodOrigen.getText().trim() + "','" + Sku + "','" + fmMain.GetUsuario() + "', " + cantidad_insertada
+                        + "," + "null" + ",'" + "" + "'," + "null" + ");";
+                Sql.ExeSql(QryIns);
+            }
             //-------------------------------------------------------------------------------------
-             
-                     
-              //  SI UBICACION ORIGEN ES POSITIVO       
-              if (lblCodOrigen.getText().trim().equals(inv_positivo)){
-                  
-                  
-                   System.out.println("ENTRA A POSITIVO!!!");
-                  
-                  // Saca los productos del metro de origen 
-                    qryUpd = "update mt_productos set cant = cant -" +  cantidad_insertada +  ", ubica_origen2 = '" + lblCodOrigen.getText().trim() + "'\n"+
-                             " where ubicacion = '" + lblCodOrigen.getText().trim() + "' and sku = '" + Sku + "' ";
-                    Sql.ExeSql(qryUpd);
-                    Sql.Commit();
-                    fmMain.Mensaje("Grabacion realizada con Exito.");
-                  
-              //---------------------------------------------------------------------------------------------------------------------              
-                    // Ahora descontare del metro negativo los productos ya que se ubicaran EN UN METRO
-                    double canti =0;
-                    Query2 = "select *  from mt_productos where ubicacion = '" + inv_negativo + "' and sku = '" + Sku + "';";
-                    Rs2 = Sql2.Select(Query2);
-                    
-                    if (Rs2.next()){
-                        
-                        canti = canti + Rs2.getDouble("cant")+ cantidad_insertada;
-                    }  
-                    
-                    if(canti >0){
-              
-                        canti =0;
-                    }
-                    
-                    qryUpd = "update mt_productos set cant = " + canti +
-                             " where ubicacion = '" +inv_negativo + "' and sku = '" + Sku + "' ";
-                    Sql2.ExeSql(qryUpd);
-                    Sql2.Commit();
-                    Sql2.Close();
-                      fmMain.Mensaje("Grabacion realizada con Exito.");    
 
-              }else{
-                   
-                    System.out.println("ENTRA A NEGATIVO!!!");
-                  
-                    qryUpd = "update mt_productos set cant = cant -" +  cantidad_insertada + ", ubica_origen2 = '" + lblCodOrigen.getText().trim() + "'\n"+
-                            " where ubicacion = '" + lblCodOrigen.getText().trim() + "' and sku = '" + Sku + "' ";
-                    Sql.ExeSql(qryUpd);
-                    Sql.Commit();
-                    fmMain.Mensaje("Grabacion realizada con Exito.");
-                  
-              }
-               
-               
-               if (Ubicacion.trim().contains("TRAN.1007") || Ubicacion.trim().contains("TRAN.1003") ){    //Si es Venta Anticipada Metro 1 y SalaPLC o Huerfanos o Directa
-                
-                  ActualizaAnticipadas();
-                
-               }
-               
-               
-               
-    //*******************************************************************************************************************************************************************//          
-         
-        }catch (Exception e) {
-        
+            //  SI UBICACION ORIGEN ES POSITIVO       
+            if (lblCodOrigen.getText().trim().equals(inv_positivo)) {
+
+                System.out.println("ENTRA A POSITIVO!!!");
+
+                // Saca los productos del metro de origen 
+                qryUpd = "update mt_productos set cant = cant -" + cantidad_insertada + ", ubica_origen2 = '" + lblCodOrigen.getText().trim() + "'\n"
+                        + " where ubicacion = '" + lblCodOrigen.getText().trim() + "' and sku = '" + Sku + "' ";
+                Sql.ExeSql(qryUpd);
+                Sql.Commit();
+                fmMain.Mensaje("Grabacion realizada con Exito.");
+
+                //---------------------------------------------------------------------------------------------------------------------              
+                // Ahora descontare del metro negativo los productos ya que se ubicaran EN UN METRO
+                double canti = 0;
+                Query2 = "select *  from mt_productos where ubicacion = '" + inv_negativo + "' and sku = '" + Sku + "';";
+                Rs2 = Sql2.Select(Query2);
+
+                if (Rs2.next()) {
+
+                    canti = canti + Rs2.getDouble("cant") + cantidad_insertada;
+                }
+
+                if (canti > 0) {
+
+                    canti = 0;
+                }
+
+                qryUpd = "update mt_productos set cant = " + canti
+                        + " where ubicacion = '" + inv_negativo + "' and sku = '" + Sku + "' ";
+                Sql2.ExeSql(qryUpd);
+                Sql2.Commit();
+                Sql2.Close();
+                fmMain.Mensaje("Grabacion realizada con Exito.");
+
+            } else {
+
+                System.out.println("ENTRA A NEGATIVO!!!");
+
+                qryUpd = "update mt_productos set cant = cant -" + cantidad_insertada + ", ubica_origen2 = '" + lblCodOrigen.getText().trim() + "'\n"
+                        + " where ubicacion = '" + lblCodOrigen.getText().trim() + "' and sku = '" + Sku + "' ";
+                Sql.ExeSql(qryUpd);
+                Sql.Commit();
+                fmMain.Mensaje("Grabacion realizada con Exito.");
+
+            }
+
+            if (Ubicacion.trim().contains("TRAN.1007") || Ubicacion.trim().contains("TRAN.1003")) {    //Si es Venta Anticipada Metro 1 y SalaPLC o Huerfanos o Directa
+
+                ActualizaAnticipadas();
+
+            }
+
+            //*******************************************************************************************************************************************************************//          
+        } catch (Exception e) {
+
             System.out.println(e.getMessage());
             Logger.getLogger(jd_UbicacionProductos.class.getName()).log(Level.SEVERE, null, e);
             Sql.Rollback();
-        
-        } finally{
-            
-            Sql.Close();  
-        }          
-        
-        dispose();  
-        
+
+        } finally {
+
+            Sql.Close();
+        }
+
+        dispose();
+
     }
-    
-    
+
+
     private void btOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOkActionPerformed
-        
-        
-        if (txNombreUbica.getText().trim().isEmpty()){
-        
+
+        if (txNombreUbica.getText().trim().isEmpty()) {
+
             fmMain.Mensaje("Debe cargar Ubicación!!");
             return;
-        
+
         }
-        
-        
-        if (txCant.getText().trim().isEmpty() || Integer.parseInt(txCant.getText().trim()) <= 0 ){
-        
+
+        if (txCant.getText().trim().isEmpty() || Integer.parseInt(txCant.getText().trim()) <= 0) {
+
             fmMain.Mensaje("Cantidad no válida!!");
             return;
-        
+
         }
-        
-        
-        
-        
+
         graba();
         //Verifica_NCP(lbSku.getText().trim());
-        
-        
+
+
     }//GEN-LAST:event_btOkActionPerformed
-    
-    
-    private void Verifica_NCP(String Sku){
-    
+
+    private void Verifica_NCP(String Sku) {
+
         ExeSql Sql = new ExeSql();
         ResultSet Rs = null;
-       
-        
+
         try {
-        
-            Rs = Sql.Select("SELECT cd.tipdocto, cd.nrodocto, cd.cantidad,c.femision FROM ctacteprvdet cd \n" +
-                            "LEFT JOIN ctacteprv c ON cd.rut = c.rut AND cd.tipdocto IN ('GDP','FAP') and cd.nrodocto = c.nrodocto\n" +
-                            "WHERE cd.sku IN ('"+Sku.trim()+"') AND c.autoriza = 0 AND (c.tipdocorigen IN ('OCP') OR c.tipdocorigen is NULL)\n" +
-                            "GROUP BY cd.tipdocto, cd.nrodocto,cd.cantidad, c.femision");
-           
-           
-            if(Sql.GetRowCount() > 0){//010304035
-               
+
+            Rs = Sql.Select("SELECT cd.tipdocto, cd.nrodocto, cd.cantidad,c.femision FROM ctacteprvdet cd \n"
+                    + "LEFT JOIN ctacteprv c ON cd.rut = c.rut AND cd.tipdocto IN ('GDP','FAP') and cd.nrodocto = c.nrodocto\n"
+                    + "WHERE cd.sku IN ('" + Sku.trim() + "') AND c.autoriza = 0 AND (c.tipdocorigen IN ('OCP') OR c.tipdocorigen is NULL)\n"
+                    + "GROUP BY cd.tipdocto, cd.nrodocto,cd.cantidad, c.femision");
+
+            if (Sql.GetRowCount() > 0) {//010304035
+
                 ExisteNCP = 1;
-               
-           
-            }else {
-           
+
+            } else {
+
                 ExisteNCP = 0;
-           
+
             }
-          
-       
-       } catch (SQLException ex) {
-           Logger.getLogger(jd_UbicacionProductos.class.getName()).log(Level.SEVERE, null, ex);
-       }
-        
-    
+
+        } catch (SQLException ex) {
+            Logger.getLogger(jd_UbicacionProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
-    
-    
-    
-    
+
+
     private void txtUbicacionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUbicacionKeyPressed
         // TODO add your handling code here:
         // TODO add your handling code here:
         ExeSql Sql = new ExeSql();
         ResultSet Rs, Rs1;
-        String Query2 ;
+        String Query2;
         String strUbicacion = txtUbicacion.getText().trim().toUpperCase();
 
         //Ubicacion = txtUbicacion.getText().trim();
         String StUsuario = fmMain.GetUsuario();
-        
-        
-        
-        
-        try{
-            if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-                
-    //*************************************************************************************************************************************************************//
-                if ( (strUbicacion.equals("TRAN.1009.1") || strUbicacion.equals("TRAN.1009.2") || strUbicacion.equals("TRAN.10009.1")  )  && 
-                   (!StUsuario.equals("LRUBILAR") && !StUsuario.equals("LEORUBILAR")) ){    //Si es Merma
-          
-                    fmMain.Mensaje("El "+StUsuario+" No está Autorizado!!");
-                    
-                    txNombreUbica.setText("");
-                    txtUbicacion.setText("");
-                    
-                    return;
-                    
-                }else if ((strUbicacion.equals("TRAN.1009.1") || strUbicacion.equals("TRAN.1009.2") || strUbicacion.equals("TRAN.10009.1") ) &&
-                         (StUsuario.equals("LRUBILAR") || StUsuario.equals("LEORUBILAR") )){
-         
-                    System.out.println("El "+StUsuario+" Está Autorizado!!");
-        
-                }    
-                
 
-                 
-                if (strUbicacion.contains("TRAN.1002.") ){    //NOTA CREDITO PROVEEDOR
-                  
-                    fmMain.Mensaje("No se pueden mover productos a esta Ubicacion...!");
-                    
+        try {
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                if (strUbicacion.isEmpty()) {
+                    return; // No hacer nada, es un Enter fantasma
+                }
+
+                //*************************************************************************************************************************************************************//
+                if ((strUbicacion.equals("TRAN.1009.1") || strUbicacion.equals("TRAN.1009.2") || strUbicacion.equals("TRAN.10009.1"))
+                        && (!StUsuario.equals("LRUBILAR") && !StUsuario.equals("LEORUBILAR"))) {    //Si es Merma
+
+                    fmMain.Mensaje("El " + StUsuario + " No está Autorizado!!");
+
                     txNombreUbica.setText("");
                     txtUbicacion.setText("");
-                    
-                    
+
                     return;
-                   
+
+                } else if ((strUbicacion.equals("TRAN.1009.1") || strUbicacion.equals("TRAN.1009.2") || strUbicacion.equals("TRAN.10009.1"))
+                        && (StUsuario.equals("LRUBILAR") || StUsuario.equals("LEORUBILAR"))) {
+
+                    System.out.println("El " + StUsuario + " Está Autorizado!!");
+
                 }
-                
-                
-                if (strUbicacion.contains("TRAN.1004.") ){    //NOTA CREDITO CLIENTE
-                  
+
+                if (strUbicacion.contains("TRAN.1002.")) {    //NOTA CREDITO PROVEEDOR
+
+                    fmMain.Mensaje("No se pueden mover productos a esta Ubicacion...!");
+
+                    txNombreUbica.setText("");
+                    txtUbicacion.setText("");
+
+                    return;
+
+                }
+
+                if (strUbicacion.contains("TRAN.1004.")) {    //NOTA CREDITO CLIENTE
+
                     fmMain.Mensaje("No se puden mover productos a Nota Crédito Cliente en forma manual..!");
-                    
+
                     txNombreUbica.setText("");
                     txtUbicacion.setText("");
-                    
+
                     return;
-                    
+
                 }
-                
-                
-                
-                
-                if (strUbicacion.contains("LVLB1.1011.")  || strUbicacion.contains("BOD.SEP") ){     //UBICACIONES DE SEPARACION
-                  
+
+                if (strUbicacion.contains("LVLB1.1011.") || strUbicacion.contains("BOD.SEP")) {     //UBICACIONES DE SEPARACION
+
                     fmMain.Mensaje("No se pueden mover productos a esta Ubicacion...!");
-                    
+
                     txNombreUbica.setText("");
                     txtUbicacion.setText("");
-                    
-                    
+
                     return;
-                    
+
                 }
-                
-                
-                if (strUbicacion.contains("TRAN.1001.") ){     //TRANSITO INGRESO
-                  
+
+                if (strUbicacion.contains("TRAN.1001.")) {     //TRANSITO INGRESO
+
                     fmMain.Mensaje("No se pueden mover productos a Tránsito Ingreso...!");
-                    
+
                     txNombreUbica.setText("");
                     txtUbicacion.setText("");
-                    
-                    
+
                     return;
-                    
+
                 }
-                
-    //*************************************************************************************************************************************************************//            
-                
-                
-                
-                
-                
-                
-            
-                Query2 = "SELECT nombre AS ubc FROM mt_codmetro WHERE codmetro = '"+strUbicacion+"'";                   
-                
-                
+
+                //*************************************************************************************************************************************************************//            
+                Query2 = "SELECT nombre AS ubc FROM mt_codmetro WHERE codmetro = '" + strUbicacion + "'";
+
                 Rs1 = Sql.Select(Query2);
-                if (Rs1.next()){
-                    strUbicacion =Rs1.getString("ubc").trim();
+                if (Rs1.next()) {
+                    strUbicacion = Rs1.getString("ubc").trim();
                     txNombreUbica.setText(strUbicacion);
                     txtUbicacion.requestFocus();
                     txCant.setText("");
                     //txCant.requestFocus();
                     pistoleados = 0;
                     txCodigo.requestFocus();
-                    
-                    if (txtUbicacion.getText().trim().contains("TRAN.1007.") || txtUbicacion.getText().trim().contains("TRAN.1003.") ){     //TRANSITO ANTICIPADA o DIRECTA
-                    
+
+                    if (txtUbicacion.getText().trim().contains("TRAN.1007.") || txtUbicacion.getText().trim().contains("TRAN.1003.")) {     //TRANSITO ANTICIPADA o DIRECTA
+
                         CargaAnticipadas();
-                    
-                    }else{
-                    
+
+                    } else {
+
                         pnAnticipada.setVisible(false);
-                    
+
                     }
-                    
-                }
-                else
-                {
+
+                } else {
                     fmMain.Mensaje("Ubicacion no encontrada o no disponible, favor revise la ubicación");
                     //limpia_all();
                     txNombreUbica.setText("");
@@ -1581,186 +1476,160 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
                     pistoleados = 0;
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-        } finally{
+        } finally {
             Sql.Close();
         }
     }//GEN-LAST:event_txtUbicacionKeyPressed
 
-    
-    private void CargaAnticipadas(){
-    
-         DefaultTableModel tbMd = (DefaultTableModel) Grilla_Ant.getModel();
-        
+    private void CargaAnticipadas() {
+
+        DefaultTableModel tbMd = (DefaultTableModel) Grilla_Ant.getModel();
+
         while (tbMd.getRowCount() > 0) {
             tbMd.removeRow(0);
         }
-        
+
         ExeSql Sql = new ExeSql();
         ResultSet Rs;
-        
+
         try {
-            
-            Rs = Sql.Select("select case when va.tipdocto is null then ' ' else va.tipdocto end as tipdocto, \n"+
-                            "va.nrodocto, va.codigo_oc, va.orden, va.cant, va.sku, va.ubicacion, va.rut \n" +
-                            "from venta_anticipada va \n"+
-                            "where va.sku IN ('"+lbSku.getText().trim()+"') and va.ubicacion IN ('"+txNombreUbica.getText().trim()+"') and va.estado = 0");
-            
-            if (Sql.GetRowCount() > 0){
-            
+
+            Rs = Sql.Select("select case when va.tipdocto is null then ' ' else va.tipdocto end as tipdocto, \n"
+                    + "va.nrodocto, va.codigo_oc, va.orden, va.cant, va.sku, va.ubicacion, va.rut \n"
+                    + "from venta_anticipada va \n"
+                    + "where va.sku IN ('" + lbSku.getText().trim() + "') and va.ubicacion IN ('" + txNombreUbica.getText().trim() + "') and va.estado = 0");
+
+            if (Sql.GetRowCount() > 0) {
+
                 pnAnticipada.setVisible(true);
-                
-                while (Rs.next()){
-                
+
+                while (Rs.next()) {
+
                     tbMd.addRow(new Object[]{
-                            Rs.getString("tipdocto").trim(), 
-                            Rs.getString("nrodocto").trim(),
-                            Rs.getString("codigo_oc").trim(),
-                            Rs.getString("orden").trim(),
-                            fmMain.FormatoNumeroSinDecimalSinMiles(Rs.getDouble("cant")),
-                            Rs.getString("sku").trim(),
-                            Rs.getString("ubicacion").trim(),
-                            Rs.getString("rut").trim(),
-                            
-                    });
-            
+                        Rs.getString("tipdocto").trim(),
+                        Rs.getString("nrodocto").trim(),
+                        Rs.getString("codigo_oc").trim(),
+                        Rs.getString("orden").trim(),
+                        fmMain.FormatoNumeroSinDecimalSinMiles(Rs.getDouble("cant")),
+                        Rs.getString("sku").trim(),
+                        Rs.getString("ubicacion").trim(),
+                        Rs.getString("rut").trim(),});
+
                 }
-            
-            }else {
-            
+
+            } else {
+
                 pnAnticipada.setVisible(false);
-                
-            
+
             }
-            
-            
-            
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(jd_UbicacionProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-    
-    
+
     }
-    
-    
-    
-    
-    private void ActualizaAnticipadas(){
-        
+
+    private void ActualizaAnticipadas() {
+
         ExeSql Sql = new ExeSql();
         ResultSet Rs;
-        
+
         SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-        
-        
+
         try {
-            
-            
+
             String Tipdoc = Grilla_Ant.getValueAt(Grilla_Ant.getSelectedRow(), 0).toString().trim();
             String Nrodoc = Grilla_Ant.getValueAt(Grilla_Ant.getSelectedRow(), 1).toString().trim();
-            
-            
+
             String Codigo_OC = Grilla_Ant.getValueAt(Grilla_Ant.getSelectedRow(), 2).toString().trim();
             String Orden = Grilla_Ant.getValueAt(Grilla_Ant.getSelectedRow(), 3).toString().trim();
-            
+
             String Rut = Grilla_Ant.getValueAt(Grilla_Ant.getSelectedRow(), 7).toString().trim();
-             
-            
-            if (txNombreUbica.getText().trim().equals("TRANSITO-V_ANTICIPADA-METRO 1") || txNombreUbica.getText().trim().equals("TRANSITO-VDIRECTA-METRO 1") ){
-            
-                Sql.ExeSql("UPDATE venta_anticipada SET \n"+
-                           "estado = 1, \n"+
-                           "ffinalizacion = '"+dateFormat2.format(hoy)+"', \n"+
-                           "usuario_mod = '"+fmMain.GetUsuario().trim().toLowerCase()+"' \n"+
-                           "where sku IN ('"+lbSku.getText().trim()+"') \n"+
-                           "and codigo_oc = "+Codigo_OC.trim()+" \n"+
-                           "and orden IN ('"+Orden.trim()+"') \n"+
-                           "and ubicacion IN ('"+txNombreUbica.getText().trim()+"') \n"+
-                           "and rut ="+Rut.trim()+ " \n"+
-                           "and estado = 0");
-            
-            
-            }else if (txNombreUbica.getText().trim().equals("TRANSITO-V_ANTICIPADA-SALATP") || txNombreUbica.getText().trim().equals("TRANSITO-V_ANTICIPADA-SALATH") ||
-                      txNombreUbica.getText().trim().equals("TRANSITO-V_ANTICIPADA-SALA")){    
+
+            if (txNombreUbica.getText().trim().equals("TRANSITO-V_ANTICIPADA-METRO 1") || txNombreUbica.getText().trim().equals("TRANSITO-VDIRECTA-METRO 1")) {
+
+                Sql.ExeSql("UPDATE venta_anticipada SET \n"
+                        + "estado = 1, \n"
+                        + "ffinalizacion = '" + dateFormat2.format(hoy) + "', \n"
+                        + "usuario_mod = '" + fmMain.GetUsuario().trim().toLowerCase() + "' \n"
+                        + "where sku IN ('" + lbSku.getText().trim() + "') \n"
+                        + "and codigo_oc = " + Codigo_OC.trim() + " \n"
+                        + "and orden IN ('" + Orden.trim() + "') \n"
+                        + "and ubicacion IN ('" + txNombreUbica.getText().trim() + "') \n"
+                        + "and rut =" + Rut.trim() + " \n"
+                        + "and estado = 0");
+
+            } else if (txNombreUbica.getText().trim().equals("TRANSITO-V_ANTICIPADA-SALATP") || txNombreUbica.getText().trim().equals("TRANSITO-V_ANTICIPADA-SALATH")
+                    || txNombreUbica.getText().trim().equals("TRANSITO-V_ANTICIPADA-SALA")) {
 //            }else if (txNombreUbica.getText().trim().equals("TRANSITO-V_ANTICIPADA-SALA") ){
-                    
-                    Sql.ExeSql("UPDATE venta_anticipada SET \n"+
-                               "estado = 1, \n"+
-                               "ffinalizacion = '"+dateFormat2.format(hoy)+"', \n"+
-                               "usuario_mod = '"+fmMain.GetUsuario().trim().toLowerCase()+"' \n"+
-                               "where sku IN ('"+lbSku.getText().trim()+"') \n"+
-                               "and tipdocto IN ('"+Tipdoc.trim()+"') \n"+
-                               "and nrodocto ="+Nrodoc.trim()+" \n"+
-                               "and ubicacion IN ('"+txNombreUbica.getText().trim()+"') \n"+
-                               "and rut ="+Rut.trim()+ " \n"+
-                               "and estado = 0");
-                    
+
+                Sql.ExeSql("UPDATE venta_anticipada SET \n"
+                        + "estado = 1, \n"
+                        + "ffinalizacion = '" + dateFormat2.format(hoy) + "', \n"
+                        + "usuario_mod = '" + fmMain.GetUsuario().trim().toLowerCase() + "' \n"
+                        + "where sku IN ('" + lbSku.getText().trim() + "') \n"
+                        + "and tipdocto IN ('" + Tipdoc.trim() + "') \n"
+                        + "and nrodocto =" + Nrodoc.trim() + " \n"
+                        + "and ubicacion IN ('" + txNombreUbica.getText().trim() + "') \n"
+                        + "and rut =" + Rut.trim() + " \n"
+                        + "and estado = 0");
+
             }
-            
+
             Sql.Commit();
-             
+
         } catch (SQLException ex) {
-            
+
             Sql.Rollback();
             Logger.getLogger(jd_UbicacionProductos.class.getName()).log(Level.SEVERE, null, ex);
-        
-        }finally{
-            
+
+        } finally {
+
             Sql.Close();
-                
+
         }
-        
-        
-    
-    
+
     }
-    
-    
-    
-    
-    
+
+
     private void GrillaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_GrillaMouseClicked
         // TODO add your handling code here:
-            if(evt.getClickCount()==2 ){
-                    txtUbicacion.setText(Grilla.getValueAt(Grilla.getSelectedRow(), 3).toString().trim());
-                    txNombreUbica.setText(Grilla.getValueAt(Grilla.getSelectedRow(), 4).toString().trim());
-            }
+        if (evt.getClickCount() == 2) {
+            txtUbicacion.setText(Grilla.getValueAt(Grilla.getSelectedRow(), 3).toString().trim());
+            txNombreUbica.setText(Grilla.getValueAt(Grilla.getSelectedRow(), 4).toString().trim());
+        }
     }//GEN-LAST:event_GrillaMouseClicked
 
     private void btUbcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUbcActionPerformed
-        
-        jdBuscaUbicacion Ubicacion= new jdBuscaUbicacion(null, true);
+
+        jdBuscaUbicacion Ubicacion = new jdBuscaUbicacion(null, true);
         Ubicacion.CargaBodegaOR(0);
         Ubicacion.setVisible(true);
         txtUbicacion.setText(Ubicacion.GetUbicacion());
         txNombreUbica.setText(Ubicacion.GetNombreUbicacion());
-        txCant.requestFocus();
+        txCodigo.requestFocus();
         txCant.setText("");
+        pistoleados = 0; // <--- AÑADIDO: Para reiniciar el contador por si acaso
 
-        if (txtUbicacion.getText().trim().contains("TRAN.1007.") || txtUbicacion.getText().trim().contains("TRAN.1003.") ){     //TRANSITO ANTICIPADA o DIRECTA
-                    
+        if (txtUbicacion.getText().trim().contains("TRAN.1007.") || txtUbicacion.getText().trim().contains("TRAN.1003.")) {     //TRANSITO ANTICIPADA o DIRECTA
+
             CargaAnticipadas();
-                    
-        }else{
-                    
+
+        } else {
+
             pnAnticipada.setVisible(false);
-                    
+
         }
-        
-        
-           
+
+
     }//GEN-LAST:event_btUbcActionPerformed
 
     private void txCantKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txCantKeyPressed
-             
+
     }//GEN-LAST:event_txCantKeyPressed
 
-    
 //    private void BuscarCodigo(String Codigo){
 //        ExeSql luv = new ExeSql();
 //        ExeSql luv2 = new ExeSql();
@@ -1837,32 +1706,29 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
 //        }
 //        
 //    }
-    
-    
-    
-    
+
     private void lblAnticipadaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblAnticipadaMouseClicked
         ExeSql SqlAnt = new ExeSql();
         ResultSet RsAnt;
-        String qry = "select det.nrodocto, det.cantidad, EXTRACT(day from current_date-o.fcreacion) as dias from ctacteclidet det\n" +
-                    "left join ctactecli cli on\n" +
-                    "cli.rut=det.rut and cli.tipdocto=det.tipdocto \n" +
-                    "and cli.nrodocto=det.nrodocto and cli.anticipado=1 and cli.transporte=false\n" +
-                    "left join occh o on cli.rut=o.rut and cli.nrodocorigen=o.codigo_oc and cli.occh=o.orden\n" +
-                    "where det.sku='"+lbSku.getText().trim()+"' \n" +
-                    "and det.tipdocto='GDC' and cli.anticipado=1 and cli.transporte=false";
+        String qry = "select det.nrodocto, det.cantidad, EXTRACT(day from current_date-o.fcreacion) as dias from ctacteclidet det\n"
+                + "left join ctactecli cli on\n"
+                + "cli.rut=det.rut and cli.tipdocto=det.tipdocto \n"
+                + "and cli.nrodocto=det.nrodocto and cli.anticipado=1 and cli.transporte=false\n"
+                + "left join occh o on cli.rut=o.rut and cli.nrodocorigen=o.codigo_oc and cli.occh=o.orden\n"
+                + "where det.sku='" + lbSku.getText().trim() + "' \n"
+                + "and det.tipdocto='GDC' and cli.anticipado=1 and cli.transporte=false";
         Double db = Double.valueOf(lblAnticipada.getText().trim());
         if (db < 0) {
             try {
-                String muestra="<br>";
+                String muestra = "<br>";
                 RsAnt = SqlAnt.Select(qry);
                 while (RsAnt.next()) {
-                    muestra =  muestra+"Guia: "+RsAnt.getString("nrodocto").trim()+
-                            " || Cantidad: "+RsAnt.getString("cantidad").trim()+
-                            " || Dias: "+RsAnt.getString("dias")+"<br>"; 
+                    muestra = muestra + "Guia: " + RsAnt.getString("nrodocto").trim()
+                            + " || Cantidad: " + RsAnt.getString("cantidad").trim()
+                            + " || Dias: " + RsAnt.getString("dias") + "<br>";
                 }
-                JOptionPane.showMessageDialog(null, String.format("<html><body>"+muestra+"</body></html>", 150, 150));
-              
+                JOptionPane.showMessageDialog(null, String.format("<html><body>" + muestra + "</body></html>", 150, 150));
+
             } catch (Exception e) {
                 fmMain.Mensaje("Error al cargar Anticipadas " + e);
             } finally {
@@ -1875,7 +1741,7 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
 
     private void mnuCopiarOrdenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCopiarOrdenActionPerformed
         //Copiar Ordenes
-        if(!Grilla.getValueAt(Grilla_detalle.getSelectedRow(), 1).toString().trim().isEmpty()){
+        if (!Grilla.getValueAt(Grilla_detalle.getSelectedRow(), 1).toString().trim().isEmpty()) {
             StringSelection Voucher = new StringSelection(Grilla_detalle.getValueAt(Grilla_detalle.getSelectedRow(), 1).toString().trim());
             Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
             cb.setContents(Voucher, null);
@@ -1883,44 +1749,44 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
     }//GEN-LAST:event_mnuCopiarOrdenActionPerformed
 
     private void Grilla_detalleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Grilla_detalleMouseClicked
-        if(lblCodOrigen.getText().equals("TRAN.1001.1")){
-                    ExeSql consulta = new ExeSql();
-                    ResultSet rs = null;
-                    String query = "select \n" +
-                                    "CAST(o.codigo_oc as varchar) || '-' || o.orden,\n" +
-                                    "o.sku,\n" +
-                                    "p.nombre,\n"+
-                                    "o.cantidad,\n" +
-                                    "o.separado,\n" +
-                                    "o.despachado\n" +
-                                    "from occhdet o\n" +
-                                    "left join producto p on p.sku = o.sku\n"+
-                                    "where CAST(o.codigo_oc as varchar) || '-' || o.orden in ('"+Grilla_detalle.getValueAt(Grilla_detalle.getSelectedRow(), 0).toString()+"')";
-                    
-                    try {
-                        rs=consulta.Select(query);
-                        DefaultTableModel modelo = (DefaultTableModel) Grilla_detalle_posibles.getModel();
-                        while(modelo.getRowCount()>0){
-                            modelo.removeRow(0);
-                        }
-                        for(int i = 0; rs.next();i++){
-                            modelo.addRow(new Object[]{
-                                rs.getString("sku"),
-                                rs.getString("nombre"),
-                                rs.getString("cantidad"),
-                                rs.getString("separado"),
-                                rs.getString("despachado")
-                            });
-                        }
-                    } catch (SQLException ex) {
-                        Logger.getLogger(jd_UbicacionProductos.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    
+        if (lblCodOrigen.getText().equals("TRAN.1001.1")) {
+            ExeSql consulta = new ExeSql();
+            ResultSet rs = null;
+            String query = "select \n"
+                    + "CAST(o.codigo_oc as varchar) || '-' || o.orden,\n"
+                    + "o.sku,\n"
+                    + "p.nombre,\n"
+                    + "o.cantidad,\n"
+                    + "o.separado,\n"
+                    + "o.despachado\n"
+                    + "from occhdet o\n"
+                    + "left join producto p on p.sku = o.sku\n"
+                    + "where CAST(o.codigo_oc as varchar) || '-' || o.orden in ('" + Grilla_detalle.getValueAt(Grilla_detalle.getSelectedRow(), 0).toString() + "')";
+
+            try {
+                rs = consulta.Select(query);
+                DefaultTableModel modelo = (DefaultTableModel) Grilla_detalle_posibles.getModel();
+                while (modelo.getRowCount() > 0) {
+                    modelo.removeRow(0);
                 }
+                for (int i = 0; rs.next(); i++) {
+                    modelo.addRow(new Object[]{
+                        rs.getString("sku"),
+                        rs.getString("nombre"),
+                        rs.getString("cantidad"),
+                        rs.getString("separado"),
+                        rs.getString("despachado")
+                    });
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(jd_UbicacionProductos.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
     }//GEN-LAST:event_Grilla_detalleMouseClicked
 
     private void txtUbicacionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUbicacionKeyTyped
-        txtUbicacion.setText( txtUbicacion.getText().toUpperCase());
+        txtUbicacion.setText(txtUbicacion.getText().toUpperCase());
     }//GEN-LAST:event_txtUbicacionKeyTyped
 
     private void txCantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txCantActionPerformed
@@ -1928,29 +1794,47 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
     }//GEN-LAST:event_txCantActionPerformed
 
     private void txCodigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txCodigoKeyPressed
-        
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-            
-            
-            CargaSku(txCodigo.getText().trim());
-            //txCodigo.setText("");
-            
-            if (NoEncontrado == 0){
-            
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+
+            // --- NUEVA VALIDACIÓN ---
+            // 1. Obtener el texto del campo ANTES de hacer nada
+            String codigoIngresado = txCodigo.getText().trim();
+
+            // 2. Si el "Enter" se presionó en un campo vacío, simplemente ignorarlo.
+            if (codigoIngresado.isEmpty()) {
+                // No hacer nada. No mostrar error. Solo esperar el siguiente evento.
+                return;
+            }
+            // --- FIN NUEVA VALIDACIÓN ---
+
+            // Si el campo NO estaba vacío, proceder con la lógica normal
+            String skuEscaneado = CargaSku(codigoIngresado);
+
+            // Si CargaSku falló (NoEncontrado=0) o devolvió null, salimos.
+            if (skuEscaneado == null || NoEncontrado == 0) {
                 txCodigo.setText("");
                 return;
-            
             }
-            
+
+            // --- ¡VALIDACIÓN IMPORTANTE! ---
+            // Compara el SKU que se espera (arriba) con el SKU que se escaneó.
+            String skuEsperado = lbSku.getText().trim();
+
+            if (!skuEscaneado.equals(skuEsperado)) {
+                fmMain.Mensaje("Producto incorrecto.\nSe esperaba: [" + skuEsperado + "]\nSe escaneó: [" + skuEscaneado + "]");
+                txCodigo.setText(""); // Limpia para el próximo intento
+                return; // No incrementa el contador
+            }
+            // --- FIN DE LA VALIDACIÓN ---
+
+            // Si pasó la validación, incrementa el contador
             pistoleados++;
-            txCant.setText(""+pistoleados);
-            
-            //graba();
-            txCodigo.setText("");
-              
+            txCant.setText("" + pistoleados);
+
+            //graba(); // Esto estaba comentado, lo mantengo comentado
+            txCodigo.setText(""); // Limpia para el siguiente escaneo
+
         }
-        
-        
     }//GEN-LAST:event_txCodigoKeyPressed
 
     private void lblAnticipada_Sala_HMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblAnticipada_Sala_HMouseClicked
@@ -1958,30 +1842,27 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
     }//GEN-LAST:event_lblAnticipada_Sala_HMouseClicked
 
     private void txCantKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txCantKeyTyped
-       
+
         char validar = evt.getKeyChar();    //Código agregado por R. Lopez
-        if (Character.isLetter(validar)){   //se valida que solo se ingresen 
-           
+        if (Character.isLetter(validar)) {   //se valida que solo se ingresen 
+
             evt.consume();                  //números al textfield 
         }
-        
-         if(((validar<'0') || (validar>'9'))){
-           evt.consume(); 
-        }        
-        
-        
+
+        if (((validar < '0') || (validar > '9'))) {
+            evt.consume();
+        }
+
+
     }//GEN-LAST:event_txCantKeyTyped
 
     private void Grilla_AntMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Grilla_AntMouseClicked
-        
+
         if (evt.getClickCount() == 1) {
-        
-        
+
             String cant = Grilla_Ant.getValueAt(Grilla_Ant.getSelectedRow(), 4).toString().trim();
             txCant.setText(cant);
-        
-        
-        
+
         }
     }//GEN-LAST:event_Grilla_AntMouseClicked
 
@@ -1989,88 +1870,134 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_lblAnticipada_Sala_PMouseClicked
 
-    
-    
-    public void CargaSku(String Codigo) {
+    public String CargaSku(String Codigo) {
         ExeSql Sql = new ExeSql();
         ExeSql luv = new ExeSql();
-         
+        String inputCodigo = Codigo; // Guardamos el código original
+
         ResultSet Rs = null;
-        
-        int revisa_codbar =0;
-        int revisa_codchile =0;
-       
-        
-        
-        NoEncontrado=0;
-   
+
+        int revisa_codbar = 0;
+        int revisa_codchile = 0;
+
+        NoEncontrado = 0;
+
         try {
             String Query;
             //Limpia la Lista
-            
-            Rs = luv.Select("select codbar, sku from codbar where sku='" + Codigo + "' or codbar='"+ Codigo + "'" );        
-                    if (Rs.next())
-                        {
-                        Codigo = Rs.getString("sku").trim();
-                        revisa_codbar++;
-                        }
-            Rs = luv.Select("select idch, sku from codchile where sku='" + Codigo +"' or idch='"+ Codigo + "'" );
-                    if (Rs.next())
-                        {
-                        Codigo = Rs.getString("sku").trim();
-                        revisa_codchile++;
-                        }
-            Rs = luv.Select("select codbar, sku from codbar where sku='" + Codigo + "' or codbar='"+ Codigo + "'" );        
-                    if (Rs.next())
-                        {
-                        Codigo = Rs.getString("sku").trim();
-                        revisa_codbar++;
-                        }
-             
-                    
-                    
-            Query ="select p.sku,p.nombre from producto p \n" +
-                   "where p.sku='" + Codigo + "' or p.sku in (select sku from codbar where codbar='" + Codigo + "')";
-              
+
+            Rs = luv.Select("select codbar, sku from codbar where sku='" + Codigo + "' or codbar='" + Codigo + "'");
+            if (Rs.next()) {
+                Codigo = Rs.getString("sku").trim();
+                revisa_codbar++;
+            }
+            Rs = luv.Select("select idch, sku from codchile where sku='" + Codigo + "' or idch='" + Codigo + "'");
+            if (Rs.next()) {
+                Codigo = Rs.getString("sku").trim();
+                revisa_codchile++;
+            }
+            Rs = luv.Select("select codbar, sku from codbar where sku='" + Codigo + "' or codbar='" + Codigo + "'");
+            if (Rs.next()) {
+                Codigo = Rs.getString("sku").trim();
+                revisa_codbar++;
+            }
+
+            Query = "select p.sku,p.nombre from producto p \n"
+                    + "where p.sku='" + Codigo + "' or p.sku in (select sku from codbar where codbar='" + Codigo + "')";
+
             Rs = luv.Select(Query);
 
-            if(luv.GetRowCount()==0){   
-                 fmMain.Mensaje("SKU: " + txCodigo.getText().trim() + " no esta en Nuestra Bases de Datos. Comuniquese con Informática");
-                 txCodigo.setText("");
-                 txCodigo.requestFocus();
-                 NoEncontrado=0;
-                 return;
-            }else{
-            
-                NoEncontrado=1;
-            
-            }      
-            
-            
-            
-           
+            if (luv.GetRowCount() == 0) {
+                fmMain.Mensaje("SKU: " + inputCodigo + " no esta en Nuestra Bases de Datos. Comuniquese con Informática");
+                txCodigo.setText("");
+                txCodigo.requestFocus();
+                NoEncontrado = 0;
+                return null; // <-- AÑADIDO
+            } else {
+
+                NoEncontrado = 1;
+
+            }
+
+            return Codigo; // <-- AÑADIDO (Devuelve el SKU resuelto)
+
         } catch (SQLException ex) {
             System.out.println(ex);
+            return null; // <-- AÑADIDO
         } finally {
             Sql.Close();
             luv.Close();
         }
+//        ExeSql Sql = new ExeSql();
+//        ExeSql luv = new ExeSql();
+//         
+//        ResultSet Rs = null;
+//        
+//        int revisa_codbar =0;
+//        int revisa_codchile =0;
+//       
+//        
+//        
+//        NoEncontrado=0;
+//   
+//        try {
+//            String Query;
+//            //Limpia la Lista
+//            
+//            Rs = luv.Select("select codbar, sku from codbar where sku='" + Codigo + "' or codbar='"+ Codigo + "'" );        
+//                    if (Rs.next())
+//                        {
+//                        Codigo = Rs.getString("sku").trim();
+//                        revisa_codbar++;
+//                        }
+//            Rs = luv.Select("select idch, sku from codchile where sku='" + Codigo +"' or idch='"+ Codigo + "'" );
+//                    if (Rs.next())
+//                        {
+//                        Codigo = Rs.getString("sku").trim();
+//                        revisa_codchile++;
+//                        }
+//            Rs = luv.Select("select codbar, sku from codbar where sku='" + Codigo + "' or codbar='"+ Codigo + "'" );        
+//                    if (Rs.next())
+//                        {
+//                        Codigo = Rs.getString("sku").trim();
+//                        revisa_codbar++;
+//                        }
+//             
+//                    
+//                    
+//            Query ="select p.sku,p.nombre from producto p \n" +
+//                   "where p.sku='" + Codigo + "' or p.sku in (select sku from codbar where codbar='" + Codigo + "')";
+//              
+//            Rs = luv.Select(Query);
+//
+//            if(luv.GetRowCount()==0){   
+//                 fmMain.Mensaje("SKU: " + txCodigo.getText().trim() + " no esta en Nuestra Bases de Datos. Comuniquese con Informática");
+//                 txCodigo.setText("");
+//                 txCodigo.requestFocus();
+//                 NoEncontrado=0;
+//                 return;
+//            }else{
+//            
+//                NoEncontrado=1;
+//            
+//            }      
+//            
+//            
+//            
+//           
+//        } catch (SQLException ex) {
+//            System.out.println(ex);
+//        } finally {
+//            Sql.Close();
+//            luv.Close();
+//        }
     }
-    
-    
-    
-    
-    
-    public Boolean selecciona_reg(){
-        Grilla.changeSelection(0, 0 , false, false);
+
+    public Boolean selecciona_reg() {
+        Grilla.changeSelection(0, 0, false, false);
         return true;
     }
-    
-    
-    
-    
-    
-    
+
     /**
      * @param args the command line arguments
      */
@@ -2133,7 +2060,7 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 jd_UbicacionProductos dialog = new jd_UbicacionProductos(new javax.swing.JFrame(), true);
-                
+
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

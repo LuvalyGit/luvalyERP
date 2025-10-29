@@ -223,7 +223,7 @@ public class jdAsociaCodChilemat extends javax.swing.JDialog {
             
                 try{
                     
-                    
+                    String rutchm = txRutChilemat.getText().trim();
                     
                     Sql2.ExeSql("insert into codbar (sku, codbar, usuario, rutprv, fecha) values ('"+txSku.getText().trim()+"',"
                                 + " '"+txCodChilemat.getText().trim()+"','"+fmMain.GetUsuario().trim()+"', "+txRutChilemat.getText().trim()+
