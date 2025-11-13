@@ -1627,163 +1627,155 @@ public class pfFAProveedor extends javax.swing.JPanel {
     }//GEN-LAST:event_btIrFacturaActionPerformed
 
     private void btAutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAutorizarActionPerformed
-        
-        if (txEstado.getText().trim().equals("AUTORIZADO")){
-        
+    
+        if (txEstado.getText().trim().equals("AUTORIZADO")) {
             fmMain.Mensaje("La factura se encuentra Autorizada");
             return;
-        
         }
-        
-        
-        if (cbTipoPago.getSelectedIndex() == 0){
-        
+
+        if (cbTipoPago.getSelectedIndex() == 0) {
             fmMain.Mensaje("Debe elegir el Tipo de Pago");
             return;
-        
         }
-        
-        if(fmMain.OkCancel("¿Autorizar?")== JOptionPane.OK_OPTION){
-                ExeSql Sql = new ExeSql();
-                ExeSql Sql2 = new ExeSql();
-                ExeSql Sql3 = new ExeSql();
-                ExeSql Sql4 = new ExeSql();
-                ExeSql Sql6 = new ExeSql();
-                
-                ResultSet Rs3 = null;
-                     
-      //******************************* Calculo Costo Promedio *******************************************
-        
-//                for (int i = 0; i < Grilla.getRowCount(); i++) {
-//                
-//                    
-//                    String Sku = Grilla.getModel().getValueAt(i, 0).toString().trim();
-//                    String ValorUnitario = Grilla.getModel().getValueAt(i, 4).toString().trim();
-//                    String Cantidad = Grilla.getModel().getValueAt(i, 3).toString();
-//                    
-//                    Calcular_CostoPromedio(Sku,Cantidad,ValorUnitario,i);
-//                
-//                
-//                }
-        
-      //********************************************************************************************************
-                
-                try {
-                    Sql.ExeSql("update ctacteprv set\n"
-                            + "cuotas=" + txCuotas.getText().trim() + ",\n"
-                            + "tipopago=" + cbTipoPagoId.getSelectedItem().toString() + ",\n"
-                            + "dias='" + txDias.getText().trim() + "'\n"
-                            + "where rut=" + txRut.getText().trim() + "\n"
-                            + "and tipdocto='FAP'\n"
-                            + "and nrodocto=" + txNroFactura.getText().trim());
-                    
-                    Sql.ExeSql("update ctacteprv set\n"
-                            + "autoriza=1 \n"
-                            + "where rut=" + txRut.getText().trim() + "\n"
-                            + "and tipdocto='FAP'\n"
-                            + "and nrodocto=" + txNroFactura.getText().trim());
-                    Sql.Commit();
-                    
-                    
-                    
-                //Modifica detalle producto
-                
-                    
-                    
-                    for (int i = 0; i < Grilla.getRowCount(); i++) {
-                        
-                        Rs3 = Sql3.Select("SELECT DISTINCT ctp.rut, ctp.tipdocto, ctp.nrodocto, ctp.sku, ct.femision, ctp.valorunitario FROM ctacteprvdet ctp\n" +
-                                          "LEFT JOIN ctacteprv ct ON ctp.nrodocto = ct.nrodocto AND ctp.tipdocto = ct.tipdocto AND ctp.rut = ct.rut \n" +
-                                          "WHERE ctp.sku = '"+ Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim()+"' AND ctp.tipdocto = 'FAP'\n" +
-                                          "AND ctp.nrodocto <> '"+txNroFactura.getText().trim() +"'\n" +
-                                          "ORDER BY ct.femision DESC LIMIT 1 ");
-                        
-                        
-                        if (Sql3.GetRowCount() > 0){             
-                       
-                            Rs3.next();
-                           
-                            String sfemision = sdf.format(Rs3.getDate("femision"));
-                            String sfactura = sdf.format(dtEmision.getDate());
-                            
-                            Date femision = sdf.parse(sfemision);
-                            Date ffactura = sdf.parse(sfactura);  
-                           
-                       //Verifica si el precio mas reciente antes de actualizarlo     
-                            
-                            if (ffactura.compareTo(femision) < 0){     //Si no es precio mas reciente, conserva el actual
-                                
-                            
-                            
-                            }else{          //Si es el precio mas reciente, actualiza el valor
-                     
-                                
-                                if (!txRut.getText().equals("76440015")){  //que no sea ECONA
-                                
-                                    Sql2.ExeSql("UPDATE producto SET \n"
-                                              + "valultcompra= " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + "\n"
-                                              + "WHERE sku = '" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "'\n");
-                                
-                                    Sql2.Commit();
-                                
-                                }
-                            }
 
-                        
+        if (fmMain.OkCancel("¿Autorizar?") == JOptionPane.OK_OPTION) {
+            ExeSql Sql = new ExeSql();
+            ExeSql Sql2 = new ExeSql();
+            ExeSql Sql3 = new ExeSql();
+            ExeSql Sql4 = new ExeSql();
+            ExeSql Sql6 = new ExeSql();
+
+            ResultSet Rs3 = null;
+
+            //******************************* Calculo Costo Promedio *******************************************
+            //
+            //        for (int i = 0; i < Grilla.getRowCount(); i++) {
+            //
+            //
+            //            String Sku = Grilla.getModel().getValueAt(i, 0).toString().trim();
+            //            String ValorUnitario = Grilla.getModel().getValueAt(i, 4).toString().trim();
+            //            String Cantidad = Grilla.getModel().getValueAt(i, 3).toString();
+            //
+            //            Calcular_CostoPromedio(Sku,Cantidad,ValorUnitario,i);
+            //
+            //
+            //        }
+            //********************************************************************************************************
+            try {
+                Sql.ExeSql("update ctacteprv set\n"
+                        + "cuotas=" + txCuotas.getText().trim() + ",\n"
+                        + "tipopago=" + cbTipoPagoId.getSelectedItem().toString() + ",\n"
+                        + "dias='" + txDias.getText().trim() + "'\n"
+                        + "where rut=" + txRut.getText().trim() + "\n"
+                        + "and tipdocto='FAP'\n"
+                        + "and nrodocto=" + txNroFactura.getText().trim());
+
+                Sql.ExeSql("update ctacteprv set\n"
+                        + "autoriza=1 \n"
+                        + "where rut=" + txRut.getText().trim() + "\n"
+                        + "and tipdocto='FAP'\n"
+                        + "and nrodocto=" + txNroFactura.getText().trim());
+                Sql.Commit();
+
+                //Modifica detalle producto
+                for (int i = 0; i < Grilla.getRowCount(); i++) {
+
+                    // Busca la última compra (FAP) de este producto, excluyendo la factura actual
+                    Rs3 = Sql3.Select("SELECT DISTINCT ctp.rut, ctp.tipdocto, ctp.nrodocto, ctp.sku, ct.femision, ctp.valorunitario FROM ctacteprvdet ctp\n"
+                            + "LEFT JOIN ctacteprv ct ON ctp.nrodocto = ct.nrodocto AND ctp.tipdocto = ct.tipdocto AND ctp.rut = ct.rut \n"
+                            + "WHERE ctp.sku = '" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "' AND ctp.tipdocto = 'FAP'\n"
+                            + "AND ctp.nrodocto <> '" + txNroFactura.getText().trim() + "'\n"
+                            + "ORDER BY ct.femision DESC LIMIT 1 ");
+
+                    // --- INICIO DE CORRECCIÓN ---
+                    // Variable para decidir si se debe actualizar el precio maestro (valultcompra)
+                    boolean actualizarPrecio = false;
+
+                    // CASO 1: El producto SÍ tiene un historial de compras (FAP)
+                    if (Sql3.GetRowCount() > 0) {
+                        Rs3.next();
+
+                        String sfemision = sdf.format(Rs3.getDate("femision")); // Fecha histórica
+                        String sfactura = sdf.format(dtEmision.getDate()); // Fecha actual
+
+                        Date femision = sdf.parse(sfemision);
+                        Date ffactura = sdf.parse(sfactura);
+
+                        //Verifica si el precio mas reciente antes de actualizarlo
+                        // Si la fecha de esta factura es MÁS NUEVA o IGUAL que la histórica, marcamos para actualizar.
+                        if (ffactura.compareTo(femision) >= 0) {
+                            actualizarPrecio = true;
                         }
-                        
-                        Sql4.ExeSql("update ctacteprvdet set\n"   
-                                  + "valorunitario= " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + ",\n"
-                                  + "totallinea= " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()) + "\n"
-                                  + "where sku ='" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString() + "'\n"
-                                  + "and tipdocto= 'OCP' \n"
-                                  + "and nrodocto=" + txOrden.getText().trim());
-                    
+                        // Si es más antigua (ffactura.compareTo(femision) < 0), la bandera queda 'false' y no se actualiza.
+
+                    } else {
+                        // CASO 2: El producto NO tiene historial (primera compra FAP o producto nuevo)
+                        // ¡Aquí estaba el error! Antes no se hacía nada.
+                        // Ahora, marcamos para actualizar, ya que este es el precio más reciente.
+                        actualizarPrecio = true;
                     }
-                      
- 
-                    Nuevo_Blog(2);
-                    
-                    JOptionPane.showMessageDialog(null,"Factura Autorizada");
-                    
-                    actualiza_venta_web ();
-                    
-                    Tipo=2;
-                    btIrFactura.doClick();
-                    
-                    
-                    if (txRut.getText().equals("76440015") || txRut.getText().equals("77244658") ){   //ECONA o DISOSUR
-                    
-                        Verifica_Saldo_Ocp(txOrden.getText().trim(),Exento,Neto,Iva,Comision,Total);
-                        actualiza_blog_ocp();
-                    
+
+                    // EJECUCIÓN DE LA ACTUALIZACIÓN EN TABLA 'producto'
+                    // Solo se ejecuta si la bandera 'actualizarPrecio' es verdadera
+                    if (actualizarPrecio) {
+                        if (!txRut.getText().equals("76440015")) {  //que no sea ECONA
+
+                            Sql2.ExeSql("UPDATE producto SET \n"
+                                    + "valultcompra= " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + "\n"
+                                    + "WHERE sku = '" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "'\n");
+
+                            Sql2.Commit();
+                        }
                     }
-                    
-                    
-                
-                }catch (SQLException | HeadlessException e) {
-                 
-                    fmMain.Mensaje(e.getMessage());
-                    Sql.Rollback();
-                    Sql2.Rollback();
-                    Sql4.Rollback();
-                    Sql6.Rollback();
-                   
-                    
-                } catch (ParseException ex) {
-                
-                    Logger.getLogger(pfFAProveedor.class.getName()).log(Level.SEVERE, null, ex);
-                
-                }finally{
-                    Sql.Close();
-                    Sql2.Close();
-                    Sql4.Close();
-                    Sql6.Close();
-                   
-                    
+                    // --- FIN DE CORRECCIÓN ---
+
+                    // Este update actualiza el detalle de la OCP relacionada, SIEMPRE.
+                    Sql4.ExeSql("update ctacteprvdet set\n"
+                            + "valorunitario= " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + ",\n"
+                            + "totallinea= " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()) + "\n"
+                            + "where sku ='" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString() + "'\n"
+                            + "and tipdocto= 'OCP' \n"
+                            + "and nrodocto=" + txOrden.getText().trim());
+
                 }
-                
+
+                Nuevo_Blog(2);
+
+                JOptionPane.showMessageDialog(null, "Factura Autorizada");
+
+                actualiza_venta_web();
+
+                Tipo = 2;
+                btIrFactura.doClick();
+
+                if (txRut.getText().equals("76440015") || txRut.getText().equals("77244658")) {    //ECONA o DISOSUR
+
+                    Verifica_Saldo_Ocp(txOrden.getText().trim(), Exento, Neto, Iva, Comision, Total);
+                    actualiza_blog_ocp();
+
+                }
+
+            } catch (SQLException | HeadlessException e) {
+
+                fmMain.Mensaje(e.getMessage());
+                Sql.Rollback();
+                Sql2.Rollback();
+                Sql4.Rollback();
+                Sql6.Rollback();
+
+            } catch (ParseException ex) {
+
+                Logger.getLogger(pfFAProveedor.class.getName()).log(Level.SEVERE, null, ex);
+
+            } finally {
+                Sql.Close();
+                Sql2.Close();
+                Sql4.Close();
+                Sql6.Close();
+
             }
+
+        }
     }//GEN-LAST:event_btAutorizarActionPerformed
 
     

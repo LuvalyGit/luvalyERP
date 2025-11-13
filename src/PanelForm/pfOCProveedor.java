@@ -580,6 +580,12 @@ public class pfOCProveedor extends javax.swing.JPanel{
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel4.setText("Nro Orden");
 
+        txNroOc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txNroOcActionPerformed(evt);
+            }
+        });
+
         btOtrasOrdenes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos22/Go.png"))); // NOI18N
         btOtrasOrdenes.setBorderPainted(false);
         btOtrasOrdenes.addActionListener(new java.awt.event.ActionListener() {
@@ -684,7 +690,7 @@ public class pfOCProveedor extends javax.swing.JPanel{
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbExento)
                     .addComponent(lbNeto)
-                    .addComponent(lbIVA, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                    .addComponent(lbIVA)
                     .addComponent(lbImp)
                     .addComponent(lbTotal))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -895,7 +901,7 @@ public class pfOCProveedor extends javax.swing.JPanel{
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -960,7 +966,6 @@ public class pfOCProveedor extends javax.swing.JPanel{
         GrillaBlog.setToolTipText("");
         GrillaBlog.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_NEXT_COLUMN);
         GrillaBlog.setGridColor(new java.awt.Color(255, 255, 255));
-        GrillaBlog.setShowHorizontalLines(false);
         GrillaBlog.getTableHeader().setReorderingAllowed(false);
         jScrollPane4.setViewportView(GrillaBlog);
         if (GrillaBlog.getColumnModel().getColumnCount() > 0) {
@@ -2759,6 +2764,10 @@ return( sdf.format( (dtDespacho.getDate()).getTime() ) );
     private void lbExentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lbExentoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_lbExentoActionPerformed
+
+    private void txNroOcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txNroOcActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txNroOcActionPerformed
 
     public void CargarChilemat(String NumeroOC) throws ParseException {
         

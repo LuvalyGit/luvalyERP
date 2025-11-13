@@ -7,6 +7,7 @@ package Dialogos;
 
 import Conexion.ExeSql;
 import Formularios.fmMain;
+import Utilidades.StockReloadWorker;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -138,6 +139,7 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
         jScrollPane4 = new javax.swing.JScrollPane();
         Grilla_Ant = new javax.swing.JTable();
         chkAnticipada_ant = new javax.swing.JCheckBox();
+        btAuth = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         lbTotal = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -361,6 +363,13 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
         chkAnticipada_ant.setText("Anticipada Anterior");
         chkAnticipada_ant.setToolTipText("");
 
+        btAuth.setText("HABILITAR CANTIDAD");
+        btAuth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAuthActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -368,9 +377,6 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(pnAnticipada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -389,13 +395,19 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txCodigo))
                             .addComponent(txNombreUbica, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel5)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(pnAnticipada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(158, 158, 158)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
                             .addComponent(txCant, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28)
-                        .addComponent(btOk, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btOk, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btAuth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -421,8 +433,13 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
                         .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(chkAnticipada_ant))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnAnticipada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(pnAnticipada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(btAuth, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -587,7 +604,7 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 472, Short.MAX_VALUE)
+            .addGap(0, 466, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addContainerGap()
@@ -1033,7 +1050,7 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
         ResultSet Rs5 = null;
         //********************************   
 
-        String Sku, Ubicacion, StUsuario, QryIns, qryUpd, Query2;
+        String Sku, Ubicacion = "", StUsuario, QryIns, qryUpd, Query2;
         String inv_positivo = "INV.1011.1", inv_negativo = "INV.1011.2";
 
         double cantidad_insertada;
@@ -1309,7 +1326,25 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
 
             Sql.Close();
         }
+        // --- INICIO: Actualización de Stock en Segundo Plano (OPTIMIZADO - SIN BD LOOKUP) ---
+        try {
+            // Define la lista fija de sucursales a actualizar SIEMPRE
+            // Asegúrate de importar java.util.List y java.util.Arrays al inicio del archivo
+            java.util.List<Integer> sucursalesParaActualizar = java.util.Arrays.asList(1, 2, 3);
 
+            System.out.println("Disparando actualización de stock en segundo plano para sucursales FIJAS: " + sucursalesParaActualizar);
+
+            // Llama al worker con la lista fija
+            // Asegúrate de importar Utilidades.StockReloadWorker al inicio del archivo
+            Utilidades.StockReloadWorker worker = new Utilidades.StockReloadWorker(sucursalesParaActualizar);
+            worker.execute(); // Inicia la actualización en segundo plano
+
+        } catch (Exception e) {
+            // Captura cualquier error inesperado al preparar/llamar al worker
+            System.err.println("Error crítico al intentar preparar/ejecutar el StockReloadWorker:");
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al iniciar la actualización de stock: " + e.getMessage(), "Error Worker", JOptionPane.ERROR_MESSAGE);
+        }
         dispose();
 
     }
@@ -1870,6 +1905,20 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_lblAnticipada_Sala_PMouseClicked
 
+    private void btAuthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAuthActionPerformed
+        String codigoIngresado = JOptionPane.showInputDialog(
+                this,
+                "Ingrese Código de Habilitación:",
+                "Habilitar Cantidad",
+                JOptionPane.PLAIN_MESSAGE
+        );
+    }//GEN-LAST:event_btAuthActionPerformed
+
+    private void validaCodigo() {
+        ExeSql sqlValidaCodigo = new ExeSql();
+
+    }
+
     public String CargaSku(String Codigo) {
         ExeSql Sql = new ExeSql();
         ExeSql luv = new ExeSql();
@@ -1998,6 +2047,46 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
         return true;
     }
 
+//    private Integer getSucursalIdFromUbicacion(String ubicacionCod) {
+//        // Asegúrate de que tu clase ExeSql esté en el paquete correcto si es necesario
+//        // Ejemplo: import Conexion.ExeSql;
+//        ExeSql sql = null; // Inicializar a null
+//        ResultSet rs = null;
+//        Integer sucursalId = null;
+//
+//        // Validar que la ubicación no esté vacía
+//        if (ubicacionCod == null || ubicacionCod.trim().isEmpty()) {
+//            System.err.println("getSucursalIdFromUbicacion: Código de ubicación vacío.");
+//            return null;
+//        }
+//
+//        // Asumo que tu tabla se llama 'mt_codmetro' y las columnas 'codmetro' y 'sucursal'
+//        String query = "SELECT sucursal FROM mt_codmetro WHERE codmetro = '" + ubicacionCod.trim() + "' LIMIT 1";
+//
+//        try {
+//            sql = new ExeSql(); // Crear la instancia dentro del try
+//            rs = sql.Select(query);
+//            if (rs != null && rs.next()) {
+//                sucursalId = rs.getInt("sucursal");
+//                // Considera ID 0 como inválido o no asignado a una sucursal real
+//                if (sucursalId == 0) {
+//                    System.out.println("getSucursalIdFromUbicacion: Ubicación " + ubicacionCod + " tiene sucursal 0 o nula.");
+//                    sucursalId = null;
+//                }
+//            } else {
+//                System.out.println("getSucursalIdFromUbicacion: No se encontró sucursal para " + ubicacionCod);
+//            }
+//        } catch (Exception e) {
+//            System.err.println("Error buscando sucursalId para: " + ubicacionCod);
+//            e.printStackTrace();
+//        } finally {
+//            // Asegurarse de cerrar la conexión incluso si falló la creación
+//            if (sql != null) {
+//                sql.Close(); // El método Close debería manejar errores internos si los hay
+//            }
+//        }
+//        return sucursalId;
+//    }
     /**
      * @param args the command line arguments
      */
@@ -2078,6 +2167,7 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
     private javax.swing.JTable Grilla_detalle;
     private javax.swing.JTable Grilla_detalle_posibles;
     private javax.swing.JButton btAceptar;
+    private javax.swing.JButton btAuth;
     private javax.swing.JButton btOk;
     private javax.swing.JButton btUbc;
     private javax.swing.JCheckBox chkAnticipada_ant;

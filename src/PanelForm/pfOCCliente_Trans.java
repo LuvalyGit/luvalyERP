@@ -3351,6 +3351,28 @@ public class pfOCCliente_Trans extends javax.swing.JPanel {
                            String Qr1 = "";
                            int separador = 0;
                            
+                        // 1. Asigna -ml y -web al separador 1
+                        if (Orden.contains("-ml") || Orden.contains("-web")) {
+
+                            separador = 1;
+
+// 2. Asigna ECONA al separador 2
+                        } else if (Rut.contains("76440015")) { //ECONA
+
+                            separador = 2;
+
+// 3. Asigna DISOSUR al separador 3
+                        } else if (Rut.contains("77244658")) { //DISOSUR
+
+                            separador = 3;
+
+// 4. Asigna TODO LO DEMÁS (incluyendo -cm, -ag, -se y otros clientes) al separador 4
+                        } else {
+
+                            separador = 4;
+
+                        }
+                           
                            //Se verifica el tipo de Orden de Compra
                            
 //                           if (Orden.contains("-cm") || Orden.contains("-ag") || Orden.contains("-se")){    // CHILECOMPRAS
@@ -3377,7 +3399,7 @@ public class pfOCCliente_Trans extends javax.swing.JPanel {
 //                           }
                            
                            
-                           separador = 1;
+//                           separador = 1;
                            
                            
                            

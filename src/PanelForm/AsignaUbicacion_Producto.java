@@ -14,21 +14,13 @@ import Dialogos.jdSeparacionesUbicacion;
 import Dialogos.jd_UbicacionProductos;
 import Formularios.fmMain;
 import static Formularios.fmMain.pnPestanas;
-import Utilidades.Combo_CodStr;
-import Utilidades.ComboCodigos;
 import Utilidades.PanelTab;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -47,7 +39,6 @@ public class AsignaUbicacion_Producto extends javax.swing.JPanel {
     /**
      * Creates new form AsignaUbicacion
      */
-
     public AsignaUbicacion_Producto() {
         initComponents();
         //txtUbicacion.setText("TRAN.1001.1");
