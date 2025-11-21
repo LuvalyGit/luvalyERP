@@ -40,37 +40,36 @@ public class StockReloadWorker extends SwingWorker<Void, Void> {
         ExeSql sql = null;
         try {
             sql = new ExeSql();
-            System.out.println("Iniciando actualización BATCH de stock en SEGUNDO PLANO...");
+            System.out.println("Iniciando actualización de stock (POR SUCURSAL)...");
 
-            // 1. Convertir la lista [1, 2, 3] al formato de array de PostgreSQL "{1,2,3}"
-            String sqlArray = "{" + this.idsDeSucursales.stream()
-                    .map(String::valueOf)
-                    .collect(Collectors.joining(",")) + "}";
+            // RECORREMOS LA LISTA DE SUCURSALES UNA POR UNA
+            // (La lista que pasaste al constructor: 1, 2, 3)
+            for (Integer idSucursal : this.idsDeSucursales) {
 
-            // 2. Crear la consulta SQL (UNA SOLA LLAMADA)
-            String sqlQueryCompleto = "SELECT public.upsert_producto_sucursal_BATCH('" + sqlArray + "')";
+                // Creamos la consulta simple para ESE id específico
+                String query = "SELECT public.upsert_producto_sucursal_por_sucursal(" + idSucursal + ")";
 
-            // 3. Ejecutar la función de la base de datos
-            sql.ExeSql(sqlQueryCompleto);
+                System.out.println("Actualizando Sucursal ID: " + idSucursal);
 
-            System.out.println("¡Proceso de actualización BATCH en fondo finalizado!");
+                // Ejecutamos
+                sql.ExeSql(query);
+            }
+
+            System.out.println("¡Todas las sucursales fueron actualizadas!");
 
         } catch (Exception e) {
-            // Si algo falla, guardamos el mensaje de error para mostrarlo después
             this.errorMensaje = e.getMessage();
             e.printStackTrace();
         } finally {
-            // Es MUY importante cerrar la conexión en el 'finally'
             if (sql != null) {
                 try {
                     sql.Close();
                 } catch (Exception e) {
-                    System.err.println("Error crítico: no se pudo cerrar la conexión.");
                     e.printStackTrace();
                 }
             }
         }
-        return null; // No devolvemos nada
+        return null;
     }
 
     /**

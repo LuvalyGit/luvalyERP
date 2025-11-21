@@ -176,6 +176,7 @@ public class pfProductos extends javax.swing.JPanel {
     //************************************************************************    
     public pfProductos() {
         initComponents();
+        iniciarPestanaLotes();
         txSku.requestFocus();
         Tipo = -99;
         CargaUnidades();
@@ -3999,6 +4000,12 @@ public class pfProductos extends javax.swing.JPanel {
 //    limpiaLsCodBarra.removeAllElements();
         }
 
+        if (modelLotes != null) {
+            while (modelLotes.getRowCount() > 0) {
+                modelLotes.removeRow(0);
+            }
+        }
+
         chkNoTransado.setSelected(false);
         chkWeb.setSelected(false);
         chkPublicado.setSelected(false);
@@ -4098,6 +4105,34 @@ public class pfProductos extends javax.swing.JPanel {
         btEliminaRelacion.setEnabled(Estado);
 
         txidchmadre.setEditable(Estado);
+        // 1. Obtener usuario actual (Asumiendo que fmMain.GetUsuario() devuelve el String del login)
+        String usuarioActual = "";
+        try {
+            usuarioActual = fmMain.GetUsuario().trim();
+        } catch (Exception e) {
+            usuarioActual = "";
+        }
+
+        // 2. Definir quiénes tienen permiso (Lista Blanca)
+        boolean tienePermisoLotes = usuarioActual.equals("LRUBILAR")
+                || usuarioActual.equals("LEORUBILAR")
+                || usuarioActual.equals("ALOPEZ");
+
+        // 3. Aplicar lógica a los botones
+        if (btAgregaLote != null && btEliminaLote != null && btEditarLote != null) {
+
+            if (Estado && tienePermisoLotes) {
+                // Si está editando (Estado=true) Y tiene permiso -> HABILITAR
+                btAgregaLote.setEnabled(true);
+                btEliminaLote.setEnabled(true);
+                btEditarLote.setEnabled(true);
+            } else {
+                // Si no está editando O no tiene permiso -> DESHABILITAR
+                btAgregaLote.setEnabled(false);
+                btEliminaLote.setEnabled(false);
+                btEditarLote.setEnabled(false);
+            }
+        }
 
 //    txUbicados.setEnabled(Estado);
 //    btUbica.setEnabled(Estado);
@@ -4608,6 +4643,7 @@ public class pfProductos extends javax.swing.JPanel {
             // OrdenesProveedor();
             CargaRelacion(Codigo);
             SetTipo(2);
+            CargaReglasLote(Codigo.trim());
             // cargarImagenDesdeBd();
             //CargaFechaLlegadaProveedor();
 
@@ -5569,12 +5605,12 @@ public class pfProductos extends javax.swing.JPanel {
             }
 
             if (txNroPublicacion.getText().trim().isEmpty()) {
-
                 txNroPublicacion.setText("0");
-
             }
 
-            //Nuevo Producto
+            // -------------------------------------------------------------------------
+            // CASO 1: NUEVO PRODUCTO
+            // -------------------------------------------------------------------------
             if (Tipo == 1) {
 
                 try {
@@ -5630,198 +5666,48 @@ public class pfProductos extends javax.swing.JPanel {
                     Sql.ExeSql(queryUpdateContador);
                     System.out.println("Paso final: Contador de sublínea actualizado.");
 
-                    // 3. Confirmamos la transacción completa
+                    // 3. Confirmamos la transacción completa del producto
                     Sql.Commit();
+
+                    // ===========================================================================
+                    // >>> AQUI GUARDAMOS LOS LOTES (Justo despues del Commit del producto) <<<
+                    // ===========================================================================
+                    GuardarReglasLote(txSku.getText().trim());
+                    // ===========================================================================
 
                     // 4. Mostramos el mensaje de éxito y actualizamos la UI según el caso
                     if (fmMain.GetUsuario().trim().equals("LRUBILAR")) {
                         JOptionPane.showMessageDialog(null, "Producto Guardado");
-                        CargaProducto(Sku);
-                        btAgregaID.setEnabled(true);
-                        btEliminaID.setEnabled(true);
+                        SetTipo(-1);
+                        CargaProducto(Sku); // Recargamos para ver los cambios
                     } else {
                         JOptionPane.showMessageDialog(null, "Producto Guardado para Autorización!!");
+                        SetTipo(-1);
                     }
 
-                    SetTipo(-1);
-
                 } catch (SQLException e) {
-                    Sql.Rollback(); // Si algo falla (inserción O actualización del contador), se revierte TODO.
+                    Sql.Rollback();
                     JOptionPane.showMessageDialog(null, "Error al guardar el producto: " + e.getMessage());
                     Logger.getLogger(pfProductos.class.getName()).log(Level.SEVERE, null, e);
 
                 } finally {
                     Sql.Close();
-                    // Ya no necesitamos diso ni Sql3 si usamos una sola conexión
+                    diso.Close(); // Cerrar conexión disosur si se abrió
                 }
 
-//                if (fmMain.GetUsuario().trim().equals("LRUBILAR")){
-//                
-//                
-//                    try {
-//                    
-//                        Query = "INSERT INTO producto\n"
-//                              + "(sku, unidad, nombre, pventa, imptoiva, linea, sublinea, peso, largo, ancho,alto, marca, display, publicado, discontinuado, \n"
-//                              + "sinstock, desxprecio, notransado, convenio, sin_publicar, pventa_web2,precio_publicar, comision,envio,nropublicacion)\n" 
-//                              + "VALUES \n"                                                                                                     
-//                              + "('" + txSku.getText() + "', "
-//                              + cbUnidadId.getSelectedItem().toString().trim() + ","
-//                              + "'" + txNombre.getText().trim() + "',"
-//                              + PPublico + ","
-//                              + AfectoIva() + "," 
-//                              + Familia + ","
-//                              + SubFamilia + ","
-//                              + fmMain.SetGuardar(Peso) + ","
-//                              + Largo + ","
-//                              + Ancho + ","
-//                              + Alto + ","
-//                              + Marca + ","
-//                              + Display + ","
-//                              + Publicado + ","
-//                              + Discontinuado + ","
-//                              + SinStock + ","
-//                              + DesxPrecio + ","
-//                              + NoTransado + ","
-//                              + Convenio + ","
-//                              + DesHabilitado+","
-//                              + txWeb.getText().trim()+","
-//                              + txPublicacion.getText().trim()+","
-//                              + txComision.getText().trim()+","
-//                              + txEnvio.getText().trim()+",'"
-//                              + txNroPublicacion.getText().trim()+"')";
-//                    
-//                        System.out.println(Query);
-//                        Sql.ExeSql(Query);
-//                        System.out.println("Listo 1");
-//                    
-//                        Sql.ExeSql("delete from transformacion where sku='" + txSku.getText() + "'");
-//                        System.out.println("Listo 2");
-//                    
-//                        for(int i=0; i< GrillaRelacion.getRowCount(); i++){
-//                    
-//                          Sql.ExeSql("INSERT into TRANSFORMACION (sku,skurel,cantidad) VALUES ("
-//                                   + "'" + txSku.getText() + "',"
-//                                   + "'" + GrillaRelacion.getValueAt(i, 0).toString().trim() + "',"
-//                                   + GrillaRelacion.getValueAt(i, 2).toString() + ")");
-//                        }
-//                    
-//                        Sql.Commit();
-              ////                    guardarImagen(); //Cuando este OK
-//                       JOptionPane.showMessageDialog(null, "Producto Guardado");
-//
-//                       SetTipo(-1);
-//                       CargaProducto(Sku);
-//                       btAgregaID.setEnabled(true);
-//                       btEliminaID.setEnabled(true);
-//                    
-//                    } catch (SQLException e) {
-//                    
-//                        Sql.Rollback();
-//                        JOptionPane.showMessageDialog(null, "Error al guardar2 " + e.getMessage());
-//                        Logger.getLogger(pfProductos.class.getName()).log(Level.SEVERE, null, e);
-//                    
-//                   
-//                    } finally {
-//                    
-//                        Sql.Close();
-//                        diso.Close();
-//                    }
-//            
-//                //***************************************************************************************************************************************************//
-//                }else {      
-//
-//                    try {
-//                    
-//                    
-//                            Query = "INSERT INTO producto_autoriza\n"
-//                                  + "(sku, unidad, nombre, convenio, linea, sublinea, display, nombre_generico,marca,modelo,tallacontenido )\n" 
-//                                  + "VALUES \n"                                                                                                     
-//                                  + "('" + txSku.getText() + "',"
-//                                  + cbUnidadId.getSelectedItem().toString().trim() + ","
-//                                  + "'" + txNombre.getText().trim() + "',"
-//                                  + Convenio + ","
-//                                  + Familia + ","
-//                                  + SubFamilia +","
-//                                  + txDisplay.getText().trim() +"," 
-//                                  + "'" + txNombreGen.getText().trim() + "',"
-//                                  + "'" + txMarca.getText().trim() + "',"
-//                                  + "'" + txModelo.getText().trim() + "',"
-//                                  + "'" + txTallaCont.getText().trim() + "')";
-//                    
-//                            
-//                            Sql.ExeSql(Query);
-//                            System.out.println("Listo 1");
-//                    
-//                    
-//                            Sql.Commit();
-//
-//                            String Query3 = "update par_sublinea \n" +
-//                                            "set contador = contador + 1\n" +
-//                                            "where codigo="+SubFamilia;
-//                    
-//                    
-//                            Sql3.ExeSql(Query3);
-//                            Sql3.Commit();
-//                    
-//                    
-//                            JOptionPane.showMessageDialog(null, "Producto Guardado para Autorización!!");
-//                    
-//                            SetTipo(-1);
-////                          CargaProducto(Sku);
-////                          btAgregaID.setEnabled(true);
-////                          btEliminaID.setEnabled(true);
-//                    
-//                    } catch (SQLException e) {
-//                    
-//                        Sql.Rollback();
-//                        Sql3.Rollback();
-//                        JOptionPane.showMessageDialog(null, "Error al guardar2 " + e.getMessage());
-//                        Logger.getLogger(pfProductos.class.getName()).log(Level.SEVERE, null, e);
-//                    
-//                   
-//                    } finally {
-//                    
-//                        Sql.Close();
-//                        Sql3.Close();
-//                    
-//                    }
-//                
-//                
-//                }
-                
-                
-                
-                //***************************************************************************************************************************************************//
-                
-                
-            
-            }else if (Tipo == 3) {  //Update Producto
+                // -------------------------------------------------------------------------
+                // CASO 2: EDITAR PRODUCTO (Tipo == 3)
+                // -------------------------------------------------------------------------
+            } else if (Tipo == 3) {
 
                 try {
-
                     precioWeb = Double.parseDouble(txWeb.getText().trim());
 
-                    System.out.println("precioWeb ES : " + precioWeb);
-                    System.out.println("precioWeb2 ES : " + precioWeb2);
-
-                    if (precioWeb2 == precioWeb) {
-
-                        System.out.println("El Precio es IGUAL !!");
-
-                    } else if (precioWeb2 != precioWeb) {
-
+                    if (precioWeb2 != precioWeb) {
                         compra = 0;
-
-                        System.out.println("Usuario ES : " + fmMain.GetUsuario());
-
                         if (fmMain.GetUsuario().equals("LEORUBILAR")) {
-
                             compra2 = 3;
-
                         }
-
-                        System.out.println("El Precio es DISTINTO !!");
-
                     }
 
                     Query = "UPDATE producto SET\n"
@@ -5830,15 +5716,12 @@ public class pfProductos extends javax.swing.JPanel {
                             + ", pventa=" + PPublico
                             + ", linea=" + cbFamiliaCod.getSelectedItem().toString().trim()
                             + ", sublinea=" + cbSubFamiliaCod.getSelectedItem().toString().trim()
-                            //+ ", codbar=" + fmMain.SetString(txCodBar.getText().trim())
-                            //+ ", codigo_cc=" + fmMain.SetString(txCodBar2.getText().trim())
                             + ", peso=" + fmMain.SetGuardar(Peso)
                             + ", largo=" + Largo
                             + ", ancho=" + Ancho
                             + ", alto=" + Alto
                             + ", display=" + Display
                             + ", publicado=" + Publicado
-                            //+ ", oferta=" + EnOferta
                             + ", discontinuado=" + Discontinuado
                             + ", sinstock=" + SinStock
                             + ", desxprecio=" + DesxPrecio
@@ -5857,23 +5740,31 @@ public class pfProductos extends javax.swing.JPanel {
 
                     Sql.ExeSql(Query);
 
+                    // Actualizar transformaciones
                     Sql.ExeSql("delete from transformacion where sku='" + txSku.getText() + "'");
 
                     for (int i = 0; i < GrillaRelacion.getRowCount(); i++) {
-
                         Sql.ExeSql("INSERT into TRANSFORMACION (sku,skurel,cantidad) VALUES ("
                                 + "'" + txSku.getText() + "',"
                                 + "'" + GrillaRelacion.getValueAt(i, 0).toString().trim() + "',"
                                 + GrillaRelacion.getValueAt(i, 2).toString() + ")");
                     }
 
+                    // Commit de la actualización principal
                     Sql.Commit();
 
-                    Query2 = "UPDATE codchile SET cant_unidad =";
+                    // ===========================================================================
+                    // >>> AQUI GUARDAMOS LOS LOTES (Justo despues del Commit del producto) <<<
+                    // ===========================================================================
+                    GuardarReglasLote(txSku.getText().trim());
+                    // ===========================================================================
 
+                    // Actualizar Disosur si corresponde
                     if (chkDisosur.isSelected()) {
+                        Query2 = "UPDATE codchile SET cant_unidad ="; // (Parece incompleto en tu código original, lo dejo igual)
+
+                        // Query Disosur INSERT (revisar si debería ser Update o Insert según lógica)
                         Query = "INSERT INTO producto\n"
-                                //+ "(sku, unidad, nombre, pventa, imptoiva, linea, sublinea, codbar, codigo_cc, peso,marca, display, publicado, oferta, convenio)\n"
                                 + "(sku, unidad, nombre, pventa, imptoiva, linea, sublinea, peso,marca, display, publicado, discontinuado, sinstock, desxprecio, notransado, convenio, sin_publicar)\n"
                                 + "VALUES \n"
                                 + "('" + txSku.getText() + "', "
@@ -5883,8 +5774,6 @@ public class pfProductos extends javax.swing.JPanel {
                                 + AfectoIva() + ","
                                 + Familia + ","
                                 + SubFamilia + ","
-                                //+ fmMain.SetString(txCodBar.getText().trim()) + ","
-                                //+ fmMain.SetString(txCodBar2.getText().trim()) + ","
                                 + fmMain.SetGuardar(Peso) + ","
                                 + Marca + ","
                                 + Display + ","
@@ -5897,39 +5786,33 @@ public class pfProductos extends javax.swing.JPanel {
                                 + DesHabilitado + ")";
 
                         int resultado = diso.ExeSqlInt(Query);
-
                         if (resultado > 0) {
                             System.out.println("Se registro en disosur");
-                        } else {
-
                         }
-
                     }
 
                     JOptionPane.showMessageDialog(null, "Producto Guardado");
                     SetTipo(-1);
-                    CargaProducto(Sku);
+                    CargaProducto(Sku); // Recargar para ver cambios reflejados
 
                 } catch (Exception e) {
-
                     Sql.Rollback();
                     JOptionPane.showMessageDialog(null, "Error al guardar !!!:\n" + e.getMessage());
                     System.out.println(e);
-
                 } finally {
-
                     Sql.Close();
+                    diso.Close();
                 }
             }
+
+            // Deshabilitar controles post-guardado
             txWeb.setEnabled(false);
             btActWeb.setEnabled(false);
-
             txNroPublicacion.setEnabled(false);
             txPublicacion.setEnabled(false);
             txComision.setEnabled(false);
             txEnvio.setEnabled(false);
             txidchmadre.setEnabled(false);
-
         }
     }//GEN-LAST:event_btGuardarActionPerformed
 
@@ -8971,6 +8854,304 @@ public class pfProductos extends javax.swing.JPanel {
         }
     }
 
+    private void iniciarPestanaLotes() {
+        // 1. Panel Principal de la Pestaña
+        javax.swing.JPanel pnPreciosLote = new javax.swing.JPanel();
+        // Usamos FlowLayout ALINEADO A LA IZQUIERDA para que no estire la tabla
+        pnPreciosLote.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        // 2. Panel Contenedor Vertical (Para apilar Tabla arriba y Botones abajo)
+        javax.swing.JPanel pnContenedorVertical = new javax.swing.JPanel();
+        pnContenedorVertical.setLayout(new javax.swing.BoxLayout(pnContenedorVertical, javax.swing.BoxLayout.Y_AXIS));
+
+        // 3. Configurar Tabla
+        grillaLotes = new javax.swing.JTable();
+        modelLotes = new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{"ID", "Cant. Mínima", "Margen (%)", "Precio Ref."}
+        ) {
+            Class[] types = new Class[]{
+                java.lang.Long.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Double.class
+            };
+            boolean[] canEdit = new boolean[]{false, false, false, false};
+
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
+        grillaLotes.setModel(modelLotes);
+
+        // --- ESTÉTICA: Ajustar Anchos de Columna ---
+        // Columna ID (Oculta)
+        grillaLotes.getColumnModel().getColumn(0).setMinWidth(0);
+        grillaLotes.getColumnModel().getColumn(0).setMaxWidth(0);
+        grillaLotes.getColumnModel().getColumn(0).setWidth(0);
+
+        // Columna Cantidad (Pequeña)
+        grillaLotes.getColumnModel().getColumn(1).setPreferredWidth(90);
+
+        // Columna Margen (Pequeña)
+        grillaLotes.getColumnModel().getColumn(2).setPreferredWidth(80);
+
+        // Columna Precio (Mediana)
+        grillaLotes.getColumnModel().getColumn(3).setPreferredWidth(100);
+
+        // ScrollPane con TAMAÑO FIJO (Aquí controlas el tamaño visual)
+        javax.swing.JScrollPane scrollLotes = new javax.swing.JScrollPane();
+        scrollLotes.setViewportView(grillaLotes);
+        // [ANCHO, ALTO] -> Ajusta estos números a tu gusto
+        scrollLotes.setPreferredSize(new java.awt.Dimension(400, 180));
+
+        // 4. Panel de Botones
+        javax.swing.JPanel pnBotonesLotes = new javax.swing.JPanel();
+        // FlowLayout para centrar los botones debajo de la tabla pequeña
+        pnBotonesLotes.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER));
+
+        btAgregaLote = new javax.swing.JButton("Agregar");
+        btEditarLote = new javax.swing.JButton("Editar");
+        btEliminaLote = new javax.swing.JButton("Eliminar");
+
+        // Tamaño botones más compacto
+        java.awt.Dimension btnSize = new java.awt.Dimension(80, 25);
+        btAgregaLote.setPreferredSize(btnSize);
+        btEditarLote.setPreferredSize(btnSize);
+        btEliminaLote.setPreferredSize(btnSize);
+
+        btAgregaLote.setEnabled(false);
+        btEditarLote.setEnabled(false);
+        btEliminaLote.setEnabled(false);
+
+        // Acciones (Igual que antes)
+        btAgregaLote.addActionListener(evt -> mostrarDialogoRegla(-1));
+
+        btEditarLote.addActionListener(evt -> {
+            int row = grillaLotes.getSelectedRow();
+            if (row >= 0) {
+                mostrarDialogoRegla(row);
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(null, "Seleccione una regla.");
+            }
+        });
+
+        btEliminaLote.addActionListener(evt -> {
+            int row = grillaLotes.getSelectedRow();
+            if (row >= 0) {
+                modelLotes.removeRow(row);
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(null, "Seleccione una fila.");
+            }
+        });
+
+        pnBotonesLotes.add(btAgregaLote);
+        pnBotonesLotes.add(btEditarLote);
+        pnBotonesLotes.add(btEliminaLote);
+
+        // 5. Armado Final
+        // Agregamos scroll y botones al contenedor vertical
+        pnContenedorVertical.add(scrollLotes);
+        pnContenedorVertical.add(javax.swing.Box.createVerticalStrut(5)); // Espacio
+        pnContenedorVertical.add(pnBotonesLotes);
+
+        // Agregamos el contenedor vertical al panel principal (que está alineado a la izquierda)
+        pnPreciosLote.add(pnContenedorVertical);
+
+        Pestanas.addTab("Precios por Lote", pnPreciosLote);
+    }
+
+// --- MÉTODO AUXILIAR PARA REUTILIZAR EL DIÁLOGO (AGREGAR/EDITAR) ---
+    private void mostrarDialogoRegla(int row) {
+        javax.swing.JTextField txCant = new javax.swing.JTextField();
+        javax.swing.JTextField txMargen = new javax.swing.JTextField();
+        // Eliminamos el checkbox 'Es Defecto' del diálogo
+
+        if (row >= 0) {
+            txCant.setText(modelLotes.getValueAt(row, 1).toString());
+            txMargen.setText(modelLotes.getValueAt(row, 2).toString());
+        }
+
+        Object[] message = {
+            "Cantidad Mínima:", txCant,
+            "Margen % (Ej: 20):", txMargen
+        };
+
+        String titulo = (row >= 0) ? "Editar Regla" : "Nueva Regla";
+        int option = javax.swing.JOptionPane.showConfirmDialog(null, message, titulo, javax.swing.JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == javax.swing.JOptionPane.OK_OPTION) {
+            try {
+                int cant = Integer.parseInt(txCant.getText().trim());
+                double marg = Double.parseDouble(txMargen.getText().trim().replace(",", "."));
+
+                if (cant < 0) {
+                    throw new Exception("Cantidad negativa");
+                }
+
+                // Calcular el Precio Referencial visualmente (usando tu método helper calcularPrecioRef)
+                double precioRef = calcularPrecioRef(marg);
+
+                if (row >= 0) {
+                    modelLotes.setValueAt(cant, row, 1);
+                    modelLotes.setValueAt(marg, row, 2);
+                    modelLotes.setValueAt(precioRef, row, 3); // Actualizar precio ref
+                } else {
+                    // ID null, Cant, Margen, PrecioRef
+                    modelLotes.addRow(new Object[]{null, cant, marg, precioRef});
+                }
+
+            } catch (Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Datos inválidos. Ingrese números correctos.");
+            }
+        }
+    }
+
+    // Cargar datos al abrir el producto
+    private void CargaReglasLote(String sku) {
+        ExeSql sql = new ExeSql();
+        ResultSet rs = null;
+
+        while (modelLotes.getRowCount() > 0) {
+            modelLotes.removeRow(0);
+        }
+
+        try {
+            // Traemos los datos, aunque 'es_regla_defecto' ya no lo mostramos
+            String query = "SELECT id, cantidad_lote, margen_ganancia FROM producto_regla_lote "
+                    + "WHERE sku_producto = '" + sku + "' ORDER BY cantidad_lote ASC";
+
+            rs = sql.Select(query);
+
+            while (rs.next()) {
+                double margenBD = rs.getDouble("margen_ganancia"); // Ej: 0.20
+                double margenVisual = margenBD * 100.0; // Ej: 20.0
+
+                double precioRef = calcularPrecioRef(margenVisual);
+
+                modelLotes.addRow(new Object[]{
+                    rs.getLong("id"), // Columna 0 (Oculta)
+                    rs.getInt("cantidad_lote"), // Columna 1
+                    margenVisual, // Columna 2
+                    precioRef // Columna 3
+                });
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(pfProductos.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            sql.Close();
+        }
+    }
+
+// Guardar datos al presionar Guardar
+    private void GuardarReglasLote(String sku) {
+
+        ExeSql sql = new ExeSql();
+        if (grillaLotes.isEditing()) {
+            grillaLotes.getCellEditor().stopCellEditing();
+        }
+
+        try {
+            // 2. Conservar IDs
+            StringBuilder idsConservar = new StringBuilder();
+            for (int i = 0; i < modelLotes.getRowCount(); i++) {
+                Object idObj = modelLotes.getValueAt(i, 0);
+                if (idObj != null && !idObj.toString().isEmpty() && !idObj.toString().equals("0")) {
+                    if (idsConservar.length() > 0) {
+                        idsConservar.append(",");
+                    }
+                    idsConservar.append(idObj.toString());
+                }
+            }
+
+            // 3. Borrar eliminados
+            String deleteQuery;
+            if (idsConservar.length() > 0) {
+                deleteQuery = "DELETE FROM producto_regla_lote WHERE sku_producto = '" + sku + "' "
+                        + "AND id NOT IN (" + idsConservar.toString() + ")";
+            } else {
+                deleteQuery = "DELETE FROM producto_regla_lote WHERE sku_producto = '" + sku + "'";
+            }
+            sql.ExeSql(deleteQuery);
+
+            // 4. Insertar/Actualizar
+            for (int i = 0; i < modelLotes.getRowCount(); i++) {
+                Object idObj = modelLotes.getValueAt(i, 0); // ID Oculto
+
+                int cantidad = Integer.parseInt(modelLotes.getValueAt(i, 1).toString());
+                double margenVisual = Double.parseDouble(modelLotes.getValueAt(i, 2).toString());
+                double margenBD = margenVisual / 100.0;
+
+                // HARDCODED: Siempre false porque quitamos la columna
+                String boolString = "false";
+
+                if (idObj == null || idObj.toString().isEmpty() || idObj.toString().equals("0")) {
+                    // INSERT
+                    String insertQuery = "INSERT INTO producto_regla_lote (sku_producto, cantidad_lote, margen_ganancia, es_regla_defecto) "
+                            + "VALUES ('" + sku + "', " + cantidad + ", " + margenBD + ", " + boolString + ")";
+                    sql.ExeSql(insertQuery);
+                } else {
+                    // UPDATE
+                    String updateQuery = "UPDATE producto_regla_lote SET "
+                            + "cantidad_lote = " + cantidad + ", "
+                            + "margen_ganancia = " + margenBD + ", "
+                            + "es_regla_defecto = " + boolString + " "
+                            + "WHERE id = " + idObj.toString();
+                    sql.ExeSql(updateQuery);
+                }
+            }
+
+            System.out.println("Lotes guardados correctamente.");
+
+        } catch (Exception ex) {
+            sql.Rollback();
+            Logger.getLogger(pfProductos.class.getName()).log(Level.SEVERE, null, ex);
+            javax.swing.JOptionPane.showMessageDialog(null, "Error al guardar lotes: " + ex.getMessage());
+        } finally {
+            sql.Close();
+        }
+    }
+
+    private double calcularPrecioRef(double margenPorcentaje) {
+        try {
+            // 1. Obtener Costo de la pantalla
+            // CORRECCIÓN: Eliminar todo lo que NO sea número para evitar problemas con "," o "."
+            String costoTexto = txPUltCompra.getText().trim();
+            String costoLimpio = costoTexto.replaceAll("[^0-9]", ""); // Deja solo digitos: "10,653" -> "10653"
+
+            if (costoLimpio.isEmpty()) {
+                return 0.0;
+            }
+
+            double costo = Double.parseDouble(costoLimpio);
+
+            // 2. Factor IVA
+            double ivaFactor = 1.19;
+
+            // 3. Cálculo
+            double margenDecimal = margenPorcentaje / 100.0;
+
+            if (margenDecimal >= 1.0) {
+                return 0.0;
+            }
+
+            // Fórmula: Costo / (1 - Margen) * IVA
+            double precioNeto = costo / (1.0 - margenDecimal);
+            double precioBruto = precioNeto * ivaFactor;
+
+            return Math.round(precioBruto);
+        } catch (Exception e) {
+            return 0.0;
+        }
+    }
+
+    private javax.swing.JTable grillaLotes;
+    private javax.swing.table.DefaultTableModel modelLotes;
+    private javax.swing.JButton btAgregaLote;
+    private javax.swing.JButton btEliminaLote;
+    private javax.swing.JButton btEditarLote;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable Grilla;

@@ -3367,7 +3367,7 @@ public class pfOCCliente_Trans extends javax.swing.JPanel {
                             separador = 3;
 
 // 4. Asigna TODO LO DEMÁS (incluyendo -cm, -ag, -se y otros clientes) al separador 4
-                        } else {
+                        } else if (Orden.contains("-cm") || Orden.contains("-ag") || Orden.contains("-se")){
 
                             separador = 4;
 

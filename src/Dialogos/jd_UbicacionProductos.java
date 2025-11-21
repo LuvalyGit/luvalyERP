@@ -103,6 +103,7 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
 
         jLabel8.setVisible(false);
         lbTotal.setVisible(false);
+        txCant.setEditable(false);
 
     }
 
@@ -1330,7 +1331,7 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
         try {
             // Define la lista fija de sucursales a actualizar SIEMPRE
             // Asegúrate de importar java.util.List y java.util.Arrays al inicio del archivo
-            java.util.List<Integer> sucursalesParaActualizar = java.util.Arrays.asList(1, 2, 3);
+            java.util.List<Integer> sucursalesParaActualizar = java.util.Arrays.asList(1, 3);
 
             System.out.println("Disparando actualización de stock en segundo plano para sucursales FIJAS: " + sucursalesParaActualizar);
 
@@ -1906,12 +1907,61 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
     }//GEN-LAST:event_lblAnticipada_Sala_PMouseClicked
 
     private void btAuthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAuthActionPerformed
-        String codigoIngresado = JOptionPane.showInputDialog(
+        // 1. Crear el campo de contraseña
+        javax.swing.JPasswordField pf = new javax.swing.JPasswordField();
+
+        // 2. Mostrar el diálogo con el campo de contraseña dentro
+        // El array 'Object' nos permite personalizar qué mostramos en el cuerpo del mensaje
+        int opcion = javax.swing.JOptionPane.showConfirmDialog(
                 this,
-                "Ingrese Código de Habilitación:",
-                "Habilitar Cantidad",
-                JOptionPane.PLAIN_MESSAGE
+                pf,
+                "Ingrese Código de Habilitación",
+                javax.swing.JOptionPane.OK_CANCEL_OPTION,
+                javax.swing.JOptionPane.WARNING_MESSAGE
         );
+
+        // 3. Verificar si el usuario presionó OK
+        if (opcion == javax.swing.JOptionPane.OK_OPTION) {
+
+            // Convertimos los caracteres del password a String para la consulta
+            String codigoIngresado = new String(pf.getPassword());
+
+            // Validación simple: si está vacío no hacemos nada
+            if (codigoIngresado.trim().isEmpty()) {
+                return;
+            }
+
+            ExeSql sql = new ExeSql();
+            ResultSet rs = null;
+
+            try {
+                // 4. Consultar a la base de datos
+                String query = "SELECT codigo FROM auth_productos WHERE codigo = '" + codigoIngresado.trim() + "'";
+                rs = sql.Select(query);
+
+                // 5. Verificar resultado
+                if (rs.next()) {
+                    // ¡CÓDIGO CORRECTO!
+                    txCant.setEditable(true);
+                    txCant.setEnabled(true);
+                    txCant.requestFocus();
+                    txCant.selectAll();
+
+                    fmMain.Mensaje("Autorización exitosa. Puede modificar la cantidad.");
+                } else {
+                    // CÓDIGO INCORRECTO
+                    fmMain.Mensaje("El código ingresado no es válido.");
+                    txCant.setEditable(false);
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error al verificar código: " + e.getMessage());
+                e.printStackTrace();
+                fmMain.Mensaje("Error de conexión.");
+            } finally {
+                sql.Close();
+            }
+        }
     }//GEN-LAST:event_btAuthActionPerformed
 
     private void validaCodigo() {
