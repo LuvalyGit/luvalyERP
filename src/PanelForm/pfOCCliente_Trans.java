@@ -3349,27 +3349,24 @@ public class pfOCCliente_Trans extends javax.swing.JPanel {
                            String Orden = txNroOc.getText().toLowerCase();
                            String Rut = txRut.getText();
                            String Qr1 = "";
-                           int separador = 0;
                            
-                        // 1. Asigna -ml y -web al separador 1
-                        if (Orden.contains("-ml") || Orden.contains("-web")) {
+                        int separador = 0;
 
+// 1. Prioridad Máxima: Ventas Web y MercadoLibre
+                        if (Orden.contains("-ml") || Orden.contains("-web")) {
                             separador = 1;
 
-// 2. Asigna ECONA al separador 2
-                        } else if (Rut.contains("76440015")) { //ECONA
+// 2. Prioridad Alta: Convenios (cm, ag, se). 
+// MOVIDO AQUÍ: Si quieres que esto gane sobre el RUT del cliente
+                        } else if (Orden.contains("-cm") || Orden.contains("-ag") || Orden.contains("-se")) {
+                            separador = 4;
 
+// 3. Prioridad Media: Clientes Específicos
+                        } else if (Rut.contains("76440015")) { // ECONA
                             separador = 2;
 
-// 3. Asigna DISOSUR al separador 3
-                        } else if (Rut.contains("77244658")) { //DISOSUR
-
+                        } else if (Rut.contains("77244658")) { // DISOSUR
                             separador = 3;
-
-// 4. Asigna TODO LO DEMÁS (incluyendo -cm, -ag, -se y otros clientes) al separador 4
-                        } else if (Orden.contains("-cm") || Orden.contains("-ag") || Orden.contains("-se")){
-
-                            separador = 4;
 
                         }
                            

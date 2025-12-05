@@ -9116,32 +9116,45 @@ public class pfProductos extends javax.swing.JPanel {
 
     private double calcularPrecioRef(double margenPorcentaje) {
         try {
-            // 1. Obtener Costo de la pantalla
-            // CORRECCIÓN: Eliminar todo lo que NO sea número para evitar problemas con "," o "."
+            // 1. Obtener Costo de la pantalla (Igual que tenías)
             String costoTexto = txPUltCompra.getText().trim();
-            String costoLimpio = costoTexto.replaceAll("[^0-9]", ""); // Deja solo digitos: "10,653" -> "10653"
+            String costoLimpio = costoTexto.replaceAll("[^0-9]", "");
 
             if (costoLimpio.isEmpty()) {
                 return 0.0;
             }
 
-            double costo = Double.parseDouble(costoLimpio);
+            // Usamos BigDecimal desde el inicio para precisión
+            java.math.BigDecimal costo = new java.math.BigDecimal(costoLimpio);
 
-            // 2. Factor IVA
-            double ivaFactor = 1.19;
-
-            // 3. Cálculo
+            // 2. Variables
+            java.math.BigDecimal ivaFactor = new java.math.BigDecimal("0.19");
             double margenDecimal = margenPorcentaje / 100.0;
 
             if (margenDecimal >= 1.0) {
                 return 0.0;
             }
 
-            // Fórmula: Costo / (1 - Margen) * IVA
-            double precioNeto = costo / (1.0 - margenDecimal);
-            double precioBruto = precioNeto * ivaFactor;
+            java.math.BigDecimal divisor = java.math.BigDecimal.ONE.subtract(new java.math.BigDecimal(margenDecimal));
 
-            return Math.round(precioBruto);
+            // 3. Cálculo del NETO Unitario (Alta precisión interna, 8 decimales)
+            // Costo / (1 - Margen)
+            java.math.BigDecimal precioNetoPreciso = costo.divide(divisor, 8, java.math.RoundingMode.HALF_UP);
+
+            // 4. SIMULACIÓN LÓGICA SII (Base Imponible + IVA)
+            // Como es unitario, asumimos cantidad = 1 para la muestra visual.
+            // A. Base Imponible (Neto) redondeada a 2 decimales
+            java.math.BigDecimal baseImponible = precioNetoPreciso.setScale(2, java.math.RoundingMode.HALF_UP);
+
+            // B. IVA redondeado a 2 decimales
+            java.math.BigDecimal montoIva = baseImponible.multiply(ivaFactor).setScale(2, java.math.RoundingMode.HALF_UP);
+
+            // C. Total Bruto (Suma exacta)
+            java.math.BigDecimal totalBruto = baseImponible.add(montoIva);
+
+            // 5. Retorno final redondeado a Entero (CLP)
+            return totalBruto.setScale(0, java.math.RoundingMode.HALF_UP).doubleValue();
+
         } catch (Exception e) {
             return 0.0;
         }

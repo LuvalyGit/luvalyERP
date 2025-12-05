@@ -2693,11 +2693,28 @@ public class pfOCCliente extends javax.swing.JPanel {
 //                           
 //                           
 //                           }
+
+
+// 1. Prioridad Máxima: Ventas Web y MercadoLibre
+                        if (Orden.contains("-ml") || Orden.contains("-web")) {
+                            separador = 1;
+
+// 2. Prioridad Alta: Convenios (cm, ag, se). 
+// MOVIDO AQUÍ: Si quieres que esto gane sobre el RUT del cliente
+                        } else if (Orden.contains("-cm") || Orden.contains("-ag") || Orden.contains("-se")) {
+                            separador = 4;
+
+// 3. Prioridad Media: Clientes Específicos
+                        } else if (Rut.contains("76440015")) { // ECONA
+                            separador = 2;
+
+                        } else if (Rut.contains("77244658")) { // DISOSUR
+                            separador = 3;
+
+                        }
                            
                            
-                            if (VerificaStock(cbCodigoOc.getSelectedItem().toString().trim(),txNroOc.getText().toLowerCase())){
-                           
-                                separador = 1;
+                            if (VerificaStock(cbCodigoOc.getSelectedItem().toString().trim(),txNroOc.getText().toLowerCase())){ 
                            
                                 Qr1 = "SELECT usuario FROM usuario WHERE separador = "+separador;        //Se busca el usuario de acuerdo a su asignacion de separacion
                            

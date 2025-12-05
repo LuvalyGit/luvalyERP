@@ -547,6 +547,11 @@ public class pfProveedores extends javax.swing.JPanel {
         jPanel11.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(313, 116, -1, -1));
 
         txDiasN.setText("0");
+        txDiasN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txDiasNActionPerformed(evt);
+            }
+        });
         txDiasN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txDiasNKeyPressed(evt);
@@ -1187,7 +1192,7 @@ public void CargaProveedor(String Rut){
                 int diasn = Integer.parseInt(txDiasN.getText().toString().trim());
         
         
-                if (diasn <= 0){
+                if (diasn < 0){
             
                     fmMain.Mensaje("La cantidad deber ser mayor 0 !!!");
                     txDiasN.requestFocus();
@@ -1760,6 +1765,10 @@ public void CargaProveedor(String Rut){
         
         
     }//GEN-LAST:event_btNuevaCondicion2ActionPerformed
+
+    private void txDiasNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txDiasNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txDiasNActionPerformed
 
     
     

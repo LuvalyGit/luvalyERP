@@ -533,7 +533,7 @@ public class AsignaUbicacion_Producto extends javax.swing.JPanel {
                     || nombrePalabra.substring(0, 3).trim().equals("BOD") || nombrePalabra.substring(0, 5).trim().equals("TPSAL")
                     || nombrePalabra.substring(0, 5).trim().equals("THSAL") || nombrePalabra.substring(0, 5).trim().equals("TPPAT")
                     || nombrePalabra.substring(0, 5).trim().equals("THPAT") || nombrePalabra.substring(0, 3).trim().equals("INV")
-                    || nombrePalabra.substring(0, 3).trim().equals("SAL")) {
+                    || nombrePalabra.substring(0, 3).trim().equals("SAL") || nombrePalabra.substring (0,2).trim().equals("EX")) {
 
 //            if (nombrePalabra.substring(0,3).trim().equals("LVL") || nombrePalabra.substring(0,4).trim().equals("TRAN") || 
 //                nombrePalabra.substring(0,3).trim().equals("INV") || nombrePalabra.substring(0,3).trim().equals("SAL") || nombrePalabra.substring(0,3).trim().equals("BOD")){
