@@ -2557,7 +2557,7 @@ public class fmMain extends javax.swing.JFrame {
 
     public static String BodegaTransito() {
 
-        return "TRAN.1001.1";
+        return "TRAN.1001.PLC";
     }
 
     public static String BodegaTransformacion() {

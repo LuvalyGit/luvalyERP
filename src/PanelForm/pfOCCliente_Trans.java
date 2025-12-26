@@ -2176,17 +2176,28 @@ public class pfOCCliente_Trans extends javax.swing.JPanel {
             PosCodigoOc = cbCodigoOc.getSelectedIndex();
             
             // Setea contacto
-            for (int i = 0; i <= cbContacto.getItemCount(); i++) {
-                System.out.println("entra a Contacto");
-                cbContacto.setSelectedIndex(i);
-                System.out.println("compara");
-                System.out.println(cbId_Accion(cbContacto));
-                System.out.println(Rs.getInt("contacto"));
-                
-                if (cbId_Accion(cbContacto) == Rs.getInt("contacto")) {
-                    break;
+            if (cbContacto.getItemCount() > 0) { // Verificamos que existan datos antes de tocar el combo
+                for (int i = 0; i < cbContacto.getItemCount(); i++) { // Usamos < en vez de <=
+                    cbContacto.setSelectedIndex(i);
+
+                    if (cbId_Accion(cbContacto) == Rs.getInt("contacto")) {
+                        break;
+                    }
                 }
+            } else {
+                System.out.println("Advertencia: El cliente no tiene contactos asignados para seleccionar.");
             }
+//            for (int i = 0; i <= cbContacto.getItemCount(); i++) {
+//                System.out.println("entra a Contacto");
+//                cbContacto.setSelectedIndex(i);
+//                System.out.println("compara");
+//                System.out.println(cbId_Accion(cbContacto));
+//                System.out.println(Rs.getInt("contacto"));
+//                
+//                if (cbId_Accion(cbContacto) == Rs.getInt("contacto")) {
+//                    break;
+//                }
+//            }
             
             PosContacto = cbContacto.getSelectedIndex();
             
@@ -2366,16 +2377,16 @@ public class pfOCCliente_Trans extends javax.swing.JPanel {
             
             PosContacto = cbContacto.getSelectedIndex();
             // Setea contacto
-            for (int i = 0; i <= cbContacto.getItemCount(); i++) {
-                System.out.println("entra a Contacto");
-                cbContacto.setSelectedIndex(i);
-                System.out.println("compara");
-                System.out.println(cbId_Accion(cbContacto));
-                System.out.println(Rs.getInt("contacto"));
-                
-                if (cbId_Accion(cbContacto) == Rs.getInt("contacto")) {
-                    break;
+            if (cbContacto.getItemCount() > 0) { // Verificamos que existan datos antes de tocar el combo
+                for (int i = 0; i < cbContacto.getItemCount(); i++) { // Usamos < en vez de <=
+                    cbContacto.setSelectedIndex(i);
+
+                    if (cbId_Accion(cbContacto) == Rs.getInt("contacto")) {
+                        break;
+                    }
                 }
+            } else {
+                System.out.println("Advertencia: El cliente no tiene contactos asignados para seleccionar.");
             }
             
             PosContacto = cbContacto.getSelectedIndex();
@@ -2645,17 +2656,16 @@ public class pfOCCliente_Trans extends javax.swing.JPanel {
             
             PosContacto = cbContacto.getSelectedIndex();
             // Setea contacto
-            for (int i = 0; i <= cbContacto.getItemCount(); i++){
-                
-                System.out.println("entra a Contacto");
-                cbContacto.setSelectedIndex(i);
-                System.out.println("compara");
-                System.out.println(cbId_Accion(cbContacto));
-                System.out.println(Rs.getInt("contacto"));
-                
-                if (cbId_Accion(cbContacto) == Rs.getInt("contacto")) {
-                    break;
+            if (cbContacto.getItemCount() > 0) { // Verificamos que existan datos antes de tocar el combo
+                for (int i = 0; i < cbContacto.getItemCount(); i++) { // Usamos < en vez de <=
+                    cbContacto.setSelectedIndex(i);
+
+                    if (cbId_Accion(cbContacto) == Rs.getInt("contacto")) {
+                        break;
+                    }
                 }
+            } else {
+                System.out.println("Advertencia: El cliente no tiene contactos asignados para seleccionar.");
             }
             
           
@@ -3168,6 +3178,13 @@ public class pfOCCliente_Trans extends javax.swing.JPanel {
         return existe;
     }
     
+    private void guardarOc() {
+        //Inicializar objetos de conexión
+        ExeSql Sql = new ExeSql();
+        ExeSql Sql2 = new ExeSql();
+        
+    }
+    
     private void btGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGuardarActionPerformed
        
         ExeSql Sql3 = new ExeSql();
@@ -3287,6 +3304,7 @@ public class pfOCCliente_Trans extends javax.swing.JPanel {
                             }
 
                         }
+
                     //***************************************************************************************************//    
 
                         int estado = 0;

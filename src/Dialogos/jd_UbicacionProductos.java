@@ -1331,7 +1331,7 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
         try {
             // Define la lista fija de sucursales a actualizar SIEMPRE
             // Asegúrate de importar java.util.List y java.util.Arrays al inicio del archivo
-            java.util.List<Integer> sucursalesParaActualizar = java.util.Arrays.asList(1, 3);
+            java.util.List<Integer> sucursalesParaActualizar = java.util.Arrays.asList(1, 3, 11);
 
             System.out.println("Disparando actualización de stock en segundo plano para sucursales FIJAS: " + sucursalesParaActualizar);
 
@@ -1910,6 +1910,27 @@ public class jd_UbicacionProductos extends javax.swing.JDialog {
         // 1. Crear el campo de contraseña
         javax.swing.JPasswordField pf = new javax.swing.JPasswordField();
 
+        pf.addAncestorListener(new javax.swing.event.AncestorListener() {
+            @Override
+            public void ancestorAdded(javax.swing.event.AncestorEvent event) {
+                // Solicitamos el foco una vez que el componente es visible
+                // Usamos invokeLater para asegurar que la ventana esté 100% dibujada antes de pedir foco
+                javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        pf.requestFocusInWindow();
+                    }
+                });
+            }
+
+            @Override
+            public void ancestorRemoved(javax.swing.event.AncestorEvent event) {
+            }
+
+            @Override
+            public void ancestorMoved(javax.swing.event.AncestorEvent event) {
+            }
+        });
+        
         // 2. Mostrar el diálogo con el campo de contraseña dentro
         // El array 'Object' nos permite personalizar qué mostramos en el cuerpo del mensaje
         int opcion = javax.swing.JOptionPane.showConfirmDialog(

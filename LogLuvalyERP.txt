@@ -363,3 +363,10 @@
 [2024-03-22][09:57:44][pfOCCReporte] Invalid index
 [2025-01-29][14:51:09][pfOCCliente] null
 [2025-11-24][18:38:41][pfOCCliente] null
+[2025-12-09][16:32:17][pfOCCliente] null
+[2025-12-09][16:43:56][pfOCCliente_Trans] null
+[2025-12-09][16:44:33][pfOCCliente_Trans] null
+[2025-12-09][16:52:52][pfOCCliente_Trans] null
+[2025-12-09][16:54:56][pfOCCliente_Trans] null
+[2025-12-09][16:57:20][pfOCCliente] null
+[2025-12-09][17:03:29][pfOCCliente] null

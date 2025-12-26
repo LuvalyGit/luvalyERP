@@ -4637,29 +4637,37 @@ public class pfProductos extends javax.swing.JPanel {
                 chkdeshabilitado.setSelected(false);
             }
 
-            CargaMovimientos(Codigo);
-            CargaVentas(Codigo);
-            CargaCompras(Codigo);
-            // OrdenesProveedor();
-            CargaRelacion(Codigo);
+//            CargaMovimientos(Codigo);
+//            CargaVentas(Codigo);
+//            CargaCompras(Codigo);
+//            // OrdenesProveedor();
+//            CargaRelacion(Codigo);
+//            SetTipo(2);
+//            CargaReglasLote(Codigo.trim());
+//            // cargarImagenDesdeBd();
+//            //CargaFechaLlegadaProveedor();
+//
+//            carga_montos_ventas();
+//            carga_publica_ventas();
+//            Codchile();
+//
+//            OtrosStock();
+//
+//            CargaWeb();
+//
+//            Pestanas.setEnabled(true);
+//
+//            System.out.println("El CONVENIO ES : " + cbConvenioCod.getSelectedItem());
+//
+//            carga_ubicainv(txSku.getText().trim());
+
+            // 1. Activamos la interfaz básica inmediatamente
             SetTipo(2);
-            CargaReglasLote(Codigo.trim());
-            // cargarImagenDesdeBd();
-            //CargaFechaLlegadaProveedor();
-
-            carga_montos_ventas();
-            carga_publica_ventas();
-            Codchile();
-
-            OtrosStock();
-
-            CargaWeb();
-
             Pestanas.setEnabled(true);
-
             System.out.println("El CONVENIO ES : " + cbConvenioCod.getSelectedItem());
 
-            carga_ubicainv(txSku.getText().trim());
+            // 2. ¡TURBO! Lanzamos todo el resto en paralelo
+            cargarDatosComplementarios(Codigo);
 
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -4667,6 +4675,82 @@ public class pfProductos extends javax.swing.JPanel {
         } finally {
             Sql.Close();
         }
+    }
+    
+    /**
+     * MÉTODO OPTIMIZADO: Carga toda la información secundaria en paralelo.
+     * Esto evita que el usuario espere a que termine una consulta para empezar la siguiente.
+     */
+    private void cargarDatosComplementarios(String Codigo) {
+        // Creamos un "equipo" de 6 hilos trabajando al mismo tiempo
+        java.util.concurrent.ExecutorService executor = java.util.concurrent.Executors.newFixedThreadPool(6);
+
+        // 1. Cargar Movimientos (Hilo 1)
+        executor.submit(() -> {
+            try {
+                CargaMovimientos(Codigo);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // 2. Cargar Ventas (Hilo 2)
+        executor.submit(() -> {
+            try {
+                CargaVentas(Codigo);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // 3. Cargar Compras (Hilo 3)
+        executor.submit(() -> {
+            try {
+                CargaCompras(Codigo);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // 4. Cargar Relaciones y Reglas (Hilo 4)
+        executor.submit(() -> {
+            try {
+                CargaRelacion(Codigo);
+                CargaReglasLote(Codigo.trim());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // 5. Cargar Stocks Externos y Ubicaciones (Hilo 5)
+        executor.submit(() -> {
+            try {
+                OtrosStock();
+                carga_ubicainv(txSku.getText().trim());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // 6. Cargar Web y Cálculos de Ventas (Hilo 6)
+        executor.submit(() -> {
+            try {
+                Codchile();
+                CargaWeb();
+
+                // Los cálculos que tocan muchos textfields visuales los ejecutamos 
+                // asegurando que la UI esté lista para recibirlos
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    carga_montos_ventas();
+                    carga_publica_ventas();
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // Cerramos el pool para liberar memoria cuando terminen
+        executor.shutdown();
     }
 
     private void OtrosStock() {
