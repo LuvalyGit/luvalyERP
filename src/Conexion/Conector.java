@@ -14,14 +14,14 @@ public class Conector {
     private final boolean Internet = fmMain.GetInternet();
     private static String SistemaActual;
 
-////PRODUCCION//
-    private final String dbPath = "jdbc:postgresql://192.168.0.150:5432/luvaly_final";
+    ////PRODUCCION//
+    private final String dbPath = "jdbc:postgresql://192.168.0.150:5432/luvaly_backup";
     private final String dbPathInternet = "jdbc:postgresql://179.57.172.101:10001/luvaly_final";
     private final String user = fmMain.GetUsuario().toLowerCase();
     private final String pass = fmMain.GetPass();
 
     //asigna Sistemna utilizado desde la cadena de coneccion  //3940 y 3941   
-////ANDROID DONJACK//  
+    ////ANDROID DONJACK//  
 //    private final String dbPath = "jdbc:postgresql://192.168.0.150:5432/android_donjack"; 
 //    private final String dbPathInternet = "jdbc:postgresql://179.57.172.101:10001/android_donjack";
 //    private final String user   = fmMain.GetUsuario().toLowerCase();

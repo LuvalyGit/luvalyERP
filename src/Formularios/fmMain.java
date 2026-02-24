@@ -138,6 +138,7 @@ import PanelForm.pfUsuarios;
 import PanelForm.pf_ManteCarteraClientes;
 import PanelForm.pf_Compras_Cliente;
 import NotaPedido.pfNotaPedido;
+import PanelForm.pfAsignaUbicacion2;
 import Utilidades.PanelTab;
 import java.awt.Color;
 import java.awt.Toolkit;
@@ -2137,6 +2138,7 @@ public class fmMain extends javax.swing.JFrame {
 
         mnTrasladoProductos.setText("TRASLADO PRODUCTOS");
         mnTrasladoProductos.setToolTipText("");
+        mnTrasladoProductos.setEnabled(false);
         mnTrasladoProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnTrasladoProductosActionPerformed(evt);
@@ -5128,6 +5130,7 @@ public class fmMain extends javax.swing.JFrame {
 //            fmMain.Mensaje("Usuario: " + fmMain.GetUsuario() + " no esta autorizado") ;
 //                    return;
 //      
+//        pfAsignaUbicacion2 AsUbica = new pfAsignaUbicacion2();
         AsignaUbicacion_Producto AsUbica = new AsignaUbicacion_Producto();
         pnPestanas.addTab("Ubicacion de Productos", AsUbica);
         PanelTab btc = new PanelTab(pnPestanas, 0);

@@ -2170,7 +2170,7 @@ private void Habilita(boolean Estado){
     
     
     private void btGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGuardarActionPerformed
-       
+        
         ExeSql Sql = new ExeSql();
         ExeSql Sql2 = new ExeSql();
         ExeSql Sql3 = new ExeSql();

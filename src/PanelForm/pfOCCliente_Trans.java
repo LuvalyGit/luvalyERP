@@ -54,6 +54,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
@@ -61,8 +62,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -118,6 +121,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import java.util.*;
 
 
 public class pfOCCliente_Trans extends javax.swing.JPanel {
@@ -3179,438 +3183,293 @@ public class pfOCCliente_Trans extends javax.swing.JPanel {
     }
     
     private void guardarOc() {
-        //Inicializar objetos de conexión
+        // Objetos de conexión
         ExeSql Sql = new ExeSql();
         ExeSql Sql2 = new ExeSql();
-        
+        ExeSql Sql3 = new ExeSql();
+
+        ResultSet Rs;
+        ResultSet Rs3;
+
+        // --- 1. VALIDACIONES DE INTERFAZ ---
+        if (cbTipoDoc.getSelectedIndex() == 0) {
+            fmMain.Mensaje("Debe Elegir el Tipo de Documento!");
+            return;
+        }
+        if (cbVendedor.getSelectedIndex() == 0) {
+            fmMain.Mensaje("Debe Elegir un Vendedor!");
+            return;
+        }
+        if (txNroOc.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Falta ingresar orden");
+            return;
+        }
+
+        String FolioOCC = cbCodigoOc.getSelectedItem().toString().trim() + "-" + txNroOc.getText().toString().trim();
+        if (FolioOCC.length() > 18) {
+            fmMain.Mensaje("Largo de la Orden (" + FolioOCC.length() + ") no puede ser Mayor a 18 caracteres!");
+            return;
+        }
+
+        // Datos básicos
+        String rut = txRut.getText();
+        String Codigos = "";
+        int codigoVendedor;
+
+        if (cbCodigoVendedor.getSelectedItem().toString().trim().equals("Codigo")) {
+            codigoVendedor = 0;
+        } else {
+            codigoVendedor = Integer.valueOf(cbCodigoVendedor.getSelectedItem().toString().trim());
+        }
+
+        // Confirmación
+        if (fmMain.OkCancel("¿Guardar Documento?") == JOptionPane.OK_OPTION) {
+
+            String Query = "";
+            Prioridad = chbPrioridad.isSelected();
+            Exento = chbExenta.isSelected();
+            PosContacto = cbContacto.getSelectedIndex();
+
+            // Detectar venta directa
+            for (int i = 0; i < Grilla.getRowCount(); i++) {
+                boolean direct = (boolean) Grilla.getValueAt(i, 11);
+                if (direct) {
+                    esdirecta = true;
+                    break;
+                } else {
+                    esdirecta = false;
+                }
+            }
+
+            // -----------------------------------------------------------
+            // 2. INICIO DE LA TRANSACCIÓN SEGURA
+            // -----------------------------------------------------------
+            try {
+                // BLOQUE A: NUEVA ORDEN (Aquí aplicamos la máxima optimización)
+                if (Tipo == 1) {
+
+                    // A. Validar si ya existe la cabecera en BD
+                    String Query2 = "SELECT rut,codigo_oc,orden FROM occh \n"
+                            + "WHERE rut =" + txRut.getText().trim() + " \n"
+                            + "AND codigo_oc = " + cbCodigoOc.getSelectedItem().toString().trim() + " \n"
+                            + "AND orden = '" + txNroOc.getText().toLowerCase() + "'";
+
+                    Sql2.Select(Query2);
+                    if (Sql2.GetRowCount() > 0) {
+                        fmMain.Mensaje("Orden de compra ya existe!");
+                        return;
+                    }
+
+                    // B. Validar productos duplicados en pantalla (Optimización HashSet)
+                    Set<String> skusProcesados = new HashSet<>();
+                    for (int i = 0; i < Grilla.getRowCount(); i++) {
+                        String sku = Grilla.getValueAt(i, GetCol("Sku")).toString().trim();
+                        if (!skusProcesados.add(sku)) {
+                            fmMain.Mensaje("¡Error! El producto con código '" + sku + "' está duplicado en la lista.");
+                            return;
+                        }
+                    }
+
+                    int estado = 0;
+                    int estadodespacho = 0;
+                    if (txRut.getText().equals("76440015")) {
+                        TipoPago = 2;
+                    }
+
+                    // C. INSERTAR CABECERA
+                    Query = "INSERT INTO occh(vendedor, rut, codigo_oc, orden, femision,contacto, totalafecto,totalexento, totaliva, totaldocto,\n"
+                            + "prioridad,esexento,directoc, tipopago, tipodoc, tipo_pago, estado, estadodespacho)\n"
+                            + "VALUES ("
+                            + codigoVendedor + "," + txRut.getText() + "," + cbCodigoOc.getSelectedItem().toString().trim() + ","
+                            + "'" + txNroOc.getText().toLowerCase() + "','" + getFechaAsString() + "'," + cbId_Accion(cbContacto) + ","
+                            + fmMain.SetGuardar(txNeto.getText()) + "," + fmMain.SetGuardar(txExento.getText()) + "," + fmMain.SetGuardar(txIva.getText()) + ","
+                            + fmMain.SetGuardar(txTotal.getText()) + "," + BoolToInt(chbPrioridad.isSelected()) + "," + BoolToInt(chbExenta.isSelected()) + ","
+                            + esdirecta + ", " + cbIdTipo.getSelectedItem().toString() + "," + cbTipoDoc.getSelectedIndex() + "," + TipoPago + "," + estado + "," + estadodespacho + ")";
+
+                    Sql.ExeSql(Query);
+
+                    // D. INSERTAR DETALLE (OPTIMIZADO CON BATCH INSERT)
+                    // -----------------------------------------------------------
+                    String sqlBatch = "INSERT INTO occhdet( rut, codigo_oc, orden, sku, cantidad, valorunitario, totlinea, descuento_porcentaje, descuento_valor, directo, tdesc) "
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+                    // Usamos la conexión directa del objeto Sql (Transacción principal)
+                    PreparedStatement ps = Sql.getConnection().prepareStatement(sqlBatch);
+
+                    for (int i = 0; i < Grilla.getRowCount(); i++) {
+                        // Preparamos variables limpias
+                        String skuRow = Grilla.getModel().getValueAt(i, GetCol("Sku")).toString();
+                        double cantRow = Double.parseDouble(fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Cantidad")).toString()));
+                        double unitRow = Double.parseDouble(fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Unitario")).toString()));
+                        double totRow = Double.parseDouble(fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()));
+                        double descP = Double.parseDouble(fmMain.SetGuardar(Grilla.getModel().getValueAt(i, 7).toString()));
+                        double descV = Double.parseDouble(fmMain.SetGuardar(Grilla.getModel().getValueAt(i, 8).toString()));
+                        boolean isDir = (boolean) Grilla.getModel().getValueAt(i, GetCol("Directo"));
+                        boolean isTdesc = (boolean) Grilla.getModel().getValueAt(i, 13);
+
+                        // Asignamos valores al Batch
+                        ps.setInt(1, Integer.parseInt(txRut.getText()));
+                        ps.setInt(2, Integer.parseInt(cbCodigoOc.getSelectedItem().toString().trim()));
+                        ps.setString(3, txNroOc.getText().toLowerCase());
+                        ps.setString(4, skuRow);
+                        ps.setDouble(5, cantRow);
+                        ps.setDouble(6, unitRow);
+                        ps.setDouble(7, totRow);
+                        ps.setDouble(8, descP);
+                        ps.setDouble(9, descV);
+                        ps.setBoolean(10, isDir);
+                        ps.setBoolean(11, isTdesc);
+
+                        ps.addBatch(); // Agregamos al carrito
+                    }
+
+                    // Enviamos todos los productos de un solo viaje
+                    ps.executeBatch();
+                    ps.close();
+                    // -----------------------------------------------------------
+
+                    // BLOQUE B: EDICIÓN DE ORDEN
+                } else {
+                    // ACTUALIZA CABECERA
+                    Query = "UPDATE occh SET \n"
+                            + "contacto=" + cbId_Accion(cbContacto) + ", \n"
+                            + "totalafecto=" + fmMain.SetGuardar(txNeto.getText()) + ","
+                            + "totalexento=" + fmMain.SetGuardar(txExento.getText()) + ","
+                            + "totaliva=" + fmMain.SetGuardar(txIva.getText()) + ","
+                            + "totaldocto=" + fmMain.SetGuardar(txTotal.getText()) + ","
+                            + "femision='" + getFechaAsString() + "', "
+                            + "esexento=" + BoolToInt(chbExenta.isSelected()) + ",\n"
+                            + "prioridad=" + BoolToInt(chbPrioridad.isSelected()) + ",\n"
+                            + "codigo_oc=" + cbCodigoOc.getSelectedItem().toString().trim() + ",\n"
+                            + "orden='" + txNroOc.getText().trim().toLowerCase() + "',\n"
+                            + "tipopago =" + cbIdTipo.getSelectedItem().toString() + ",\n"
+                            + "tipodoc =" + cbTipoDoc.getSelectedIndex() + ",\n"
+                            + "tipo_pago =" + TipoPago + ",\n"
+                            + "vendedor=" + codigoVendedor + ",\n"
+                            + "directoc=" + esdirecta + "\n"
+                            + "WHERE rut=" + txRut.getText() + "\n"
+                            + "AND codigo_oc=" + Master_Codigo_Oc + "\n"
+                            + "AND orden='" + Master_Orden + "'";
+
+                    Sql.ExeSql(Query);
+
+                    // ACTUALIZA DETALLE (Fila por Fila para verificar existencia)
+                    for (int i = 0; i < Grilla.getRowCount(); i++) {
+                        Rs = Sql.Select("SELECT count(*) AS Existe FROM occhdet \n"
+                                + "WHERE rut= " + txRut.getText() + " \n"
+                                + "AND codigo_oc=" + Master_Codigo_Oc + " \n"
+                                + "AND orden='" + Master_Orden + "'\n"
+                                + "AND sku='" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString() + "'");
+                        Rs.next();
+
+                        if (Rs.getInt("Existe") > 0) {
+                            Query = "UPDATE occhdet SET \n"
+                                    + "cantidad = " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Cantidad")).toString()) + ",\n"
+                                    + "valorunitario=" + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Unitario")).toString()) + ",\n"
+                                    + "totlinea =" + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()) + ",\n"
+                                    + "codigo_oc=" + cbCodigoOc.getSelectedItem().toString().trim() + ",\n"
+                                    + "orden='" + txNroOc.getText().trim().toLowerCase() + "',\n"
+                                    + "directo=" + Grilla.getModel().getValueAt(i, GetCol("Directo")) + "\n"
+                                    + "WHERE rut= " + txRut.getText() + " \n"
+                                    + "AND codigo_oc=" + Master_Codigo_Oc + "\n"
+                                    + "AND orden='" + Master_Orden + "'\n"
+                                    + "AND sku='" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "'";
+                        } else {
+                            Query = "INSERT INTO occhdet( rut, codigo_oc, orden, sku, cantidad, valorunitario, totlinea,directo)\n"
+                                    + "VALUES (" + txRut.getText() + "," + cbCodigoOc.getSelectedItem().toString().trim() + ","
+                                    + "'" + txNroOc.getText().toLowerCase() + "','" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString() + "',"
+                                    + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Cantidad")).toString()) + ","
+                                    + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Unitario")).toString()) + ","
+                                    + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()) + ","
+                                    + Grilla.getModel().getValueAt(i, GetCol("Directo")) + ")";
+                        }
+                        Sql.ExeSql(Query);
+                        Codigos = Codigos + "'" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "',";
+                    }
+
+                    // Borrar productos eliminados de la grilla
+                    if (Codigos.length() > 0) {
+                        Query = "DELETE FROM occhdet \n"
+                                + "WHERE rut= " + txRut.getText() + "\n"
+                                + "AND codigo_oc=" + Master_Codigo_Oc + "\n"
+                                + "AND orden='" + Master_Orden + "'\n"
+                                + "AND sku NOT IN (" + Codigos.substring(0, Codigos.length() - 1) + ")";
+                        Sql.ExeSql(Query);
+                    }
+                    Sql.ExeSql("select actualiza_estado_oc_borrar3(" + txRut.getText() + "," + Master_Codigo_Oc + ",'" + Master_Orden + "')");
+                }
+
+                // 3. ASIGNACIÓN DE SEPARACIÓN
+                String OrdenTexto = txNroOc.getText().toLowerCase();
+                String RutTexto = txRut.getText();
+                int separador = 0;
+
+                if (OrdenTexto.contains("-ml") || OrdenTexto.contains("-web")) {
+                    separador = 1;
+                } else if (OrdenTexto.contains("-cm") || OrdenTexto.contains("-ag") || OrdenTexto.contains("-se")) {
+                    separador = 4;
+                } else if (RutTexto.contains("76440015")) {
+                    separador = 2;
+                } else if (RutTexto.contains("77244658")) {
+                    separador = 3;
+                }
+
+                boolean autoriza = (OrdenTexto.contains("-ml") || OrdenTexto.contains("-web"));
+
+                String Qr1 = "SELECT usuario FROM usuario WHERE separador = " + separador;
+                Rs3 = Sql3.Select(Qr1);
+
+                if (Sql3.GetRowCount() > 0) {
+                    Rs3.next();
+                    String usuario = Rs3.getString("usuario").trim();
+                    Sql.ExeSql("UPDATE occh set \n"
+                            + "usuario_separacion = '" + usuario + "' ,\n"
+                            + "autoriza_separacion = " + autoriza + " \n"
+                            + "WHERE codigo_oc = " + cbCodigoOc.getSelectedItem().toString().trim() + " \n"
+                            + "AND orden = '" + txNroOc.getText().toLowerCase() + "'"
+                            + "AND rut = " + txRut.getText().toLowerCase() + " \n"
+                            + "AND usuario_separacion = 'LIBRES' ");
+                }
+
+                // 4. REGISTRAR PAGO (Antes del commit)
+                pago_mult(1);
+
+                // -------------------------------------------------------
+                // 5. COMMIT FINAL (Si llega aquí, todo está bien)
+                // -------------------------------------------------------
+                Sql.Commit();  // <--- Se guardan todos los cambios permanentemente
+                Sql3.Commit();
+
+                JOptionPane.showMessageDialog(null, "Orden Guardada Correctamente");
+
+                // Acciones posteriores
+                ValidaMargen();
+                SetTipo(2);
+                btDespachoD.setEnabled(false);
+                cbTipoDoc.setEnabled(false);
+                btDetalle.setEnabled(true);
+
+            } catch (Exception e) {
+                // -------------------------------------------------------
+                // ERROR: DESHACER TODO (ROLLBACK)
+                // -------------------------------------------------------
+                Sql.Rollback();
+                Sql3.Rollback();
+
+                LogError.Guardar(this.getClass().getSimpleName(), e.getMessage());
+                JOptionPane.showMessageDialog(null, "Ocurrió un error al guardar. SE HAN DESHECHO LOS CAMBIOS.\nDetalle: " + e.getMessage());
+                fmMain.Mensaje("Error: " + e);
+
+            } finally {
+                Sql.Close();
+                Sql2.Close();
+                Sql3.Close();
+            }
+        }
     }
     
     private void btGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGuardarActionPerformed
-       
-        ExeSql Sql3 = new ExeSql();
-        ExeSql Sql4 = new ExeSql();
-        ResultSet Rs3;
-        
-        if (cbTipoDoc.getSelectedIndex() == 0) {
-        
-            fmMain.Mensaje("Debe Elegir el Tipo de Documento!");
-            return;
-        
-        }
-        
-        
-        if (cbVendedor.getSelectedIndex() == 0) {
-        
-            fmMain.Mensaje("Debe Elegir un Vendedor!");
-            return;
-        
-        }
-        
-        String FolioOCC = cbCodigoOc.getSelectedItem().toString().trim()+"-"+txNroOc.getText().toString().trim();
-        
-        if (FolioOCC.length() > 18) {
-        
-            fmMain.Mensaje("Largo de la Orden ("+FolioOCC.length()+") no puede ser Mayor a 18 caracteres!");
-            return;
-        
-        }
-        
-        
-        
-        
-       // if(ExisteContactoFactura()){
-            System.out.println("siguiente");
-
-
-            ExeSql Sql = new ExeSql();
-            ExeSql Sql2 = new ExeSql();
-            String rut = txRut.getText();
-
-            String Codigos = "";
-            int codigoVendedor;
-
-            if (txNroOc.getText().trim().isEmpty()){
-                JOptionPane.showMessageDialog(null, "Falta ingresar orden");
-                return;
-            }
-
-            if (cbCodigoVendedor.getSelectedItem().toString().trim().equals("Codigo")){
-                codigoVendedor=0;
-            }else{
-                codigoVendedor = Integer.valueOf(cbCodigoVendedor.getSelectedItem().toString().trim());
-            }
-
-
-            if(fmMain.OkCancel("¿Guardar Documento?")== JOptionPane.OK_OPTION){
-
-                String Query = "";
-                String Query2 = "";
-
-                Prioridad = chbPrioridad.isSelected();
-                Exento = chbExenta.isSelected();
-                PosContacto = cbContacto.getSelectedIndex();
-
-                for(int i=0; i<Grilla.getRowCount(); i++){
-
-                    boolean direct = (boolean) Grilla.getValueAt(i,11);
-
-                    if (direct){
-                        esdirecta=true;
-                        break;
-                    }
-                    else {
-                        esdirecta=false;
-                    }
-                }
-
-                //GUARDA NUEVA OCC
-                //----------------
-                if (Tipo == 1){
-
-                    try{
-
-                        //*************************  Se verifica si la orden está ya existe *****************************//
-
-                        Query2 = "SELECT rut,codigo_oc,orden FROM occh \n"+
-                                 "WHERE rut ="+txRut.getText().trim()+" \n"+
-                                 "AND codigo_oc = "+cbCodigoOc.getSelectedItem().toString().trim()+" \n"+
-                                 "AND orden = '"+txNroOc.getText().toLowerCase()+"'";
-
-                        Sql2.Select(Query2);
-
-                        if (Sql2.GetRowCount() > 0){
-
-                            fmMain.Mensaje("Orden de compra ya existe!");
-                            return;
-                        }
-                   //**************************************************************************************************//
-
-                   //******************************** Se verfica si hay articulos duplicados *********************//     
-
-                        for (int f=0; f< Grilla.getRowCount();f++){
-
-                            String elemento = Grilla.getValueAt(f, 0).toString().trim();
-
-                            for (int i=f+1; i< Grilla.getRowCount();i++){
-
-                                String elemento2 = Grilla.getValueAt(i, 0).toString().trim();
-
-                                if (elemento2.equals(elemento)){
-
-                                    fmMain.Mensaje("Productos Duplicados!");
-                                    return;
-                                }
-
-                            }
-
-                        }
-
-                    //***************************************************************************************************//    
-
-                        int estado = 0;
-                        int estadodespacho = 0;
-                        
-                        if (txRut.getText().equals("76440015")){
-                        
-                            TipoPago = 2;
-                        
-                        }
-                        
-                        
-                        Query = "INSERT INTO occh(vendedor, rut, codigo_oc, orden, femision,contacto, totalafecto,totalexento, totaliva, totaldocto,\n" +
-                                "prioridad,esexento,directoc, tipopago, tipodoc, tipo_pago, estado, estadodespacho)\n" +
-                                "VALUES (" +
-                                codigoVendedor+ "," + txRut.getText() + "," + cbCodigoOc.getSelectedItem().toString().trim() + "," +
-                                "'" + txNroOc.getText().toLowerCase() + "','" + getFechaAsString() + "'," +  cbId_Accion(cbContacto) + "," +
-                                fmMain.SetGuardar(txNeto.getText()) + "," + fmMain.SetGuardar(txExento.getText()) + "," + fmMain.SetGuardar(txIva.getText()) + "," +
-                                fmMain.SetGuardar(txTotal.getText()) + "," + BoolToInt(chbPrioridad.isSelected()) + "," + BoolToInt(chbExenta.isSelected())  + "," +
-                                 esdirecta+ ", "+cbIdTipo.getSelectedItem().toString()+","+cbTipoDoc.getSelectedIndex()+","+TipoPago+","+estado+","+estadodespacho+")"; 
-                               
-
-                        Sql.ExeSql(Query);
-                        
-                        // Guarda Productos
-                        for (int i = 0; i < Grilla.getRowCount(); i++) {
-                            Query = "INSERT INTO occhdet( rut, codigo_oc, orden, sku, cantidad, valorunitario, totlinea,descuento_porcentaje,descuento_valor, directo,tdesc)\n" +
-                                    "VALUES ("  +
-                                    txRut.getText() + "," +
-                                    cbCodigoOc.getSelectedItem().toString().trim() + ",'" +
-                                    txNroOc.getText().toLowerCase() + "','" +
-                                    Grilla.getModel().getValueAt(i, GetCol("Sku")).toString() + "'," +
-                                    fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Cantidad")).toString()) + "," +
-                                    fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Unitario")).toString()) + "," +
-                                    fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()) + "," +
-                                    fmMain.SetGuardar(Grilla.getModel().getValueAt(i, 7).toString()) + "," +
-                                    fmMain.SetGuardar(Grilla.getModel().getValueAt(i, 8).toString()) + "," +
-                                    Grilla.getModel().getValueAt(i, GetCol("Directo"))+ ","+
-                                    Grilla.getModel().getValueAt(i, 13) + ")";
-                            Sql.ExeSql(Query);
-                        }
-                        
-                        
-                     //Rs.getDouble("descuento_porcentaje"),
-                    //fmMain.FormatoNumero(Rs.getDouble("descuento_valor")),
-                        
-
-                        Sql.Commit();
-    //                  ImprimeEnBodega();
-                        JOptionPane.showMessageDialog(null, "Orden Guardada");
-                        
-         //*************************************************************** PAGO MULTIPLE ******************************************************//                     
-                       pago_mult(1);
-                        
-       //*************************************************************************************************************************************************//                 
-         
-                       
-        //********************************************************** ASIGNACION SEPARACION OCC *****************************************************//      
-////                        
-                           String Orden = txNroOc.getText().toLowerCase();
-                           String Rut = txRut.getText();
-                           String Qr1 = "";
-                           
-                        int separador = 0;
-
-// 1. Prioridad Máxima: Ventas Web y MercadoLibre
-                        if (Orden.contains("-ml") || Orden.contains("-web")) {
-                            separador = 1;
-
-// 2. Prioridad Alta: Convenios (cm, ag, se). 
-// MOVIDO AQUÍ: Si quieres que esto gane sobre el RUT del cliente
-                        } else if (Orden.contains("-cm") || Orden.contains("-ag") || Orden.contains("-se")) {
-                            separador = 4;
-
-// 3. Prioridad Media: Clientes Específicos
-                        } else if (Rut.contains("76440015")) { // ECONA
-                            separador = 2;
-
-                        } else if (Rut.contains("77244658")) { // DISOSUR
-                            separador = 3;
-
-                        }
-                           
-                           //Se verifica el tipo de Orden de Compra
-                           
-//                           if (Orden.contains("-cm") || Orden.contains("-ag") || Orden.contains("-se")){    // CHILECOMPRAS
-//                               
-//                               separador = 1;
-//                           
-//                           
-//                           }else if (Rut.contains("76440015")){     //ECONA
-//                               
-//                               separador = 2;
-//                           
-//                           
-//                           }else if (Rut.contains("77244658")){         //DISOSUR
-//                               
-//                               separador = 3;
-//                           
-//                           
-//                           }else if (!Orden.contains("-cm") && !Orden.contains("-ag") && !Orden.contains("-se") && 
-//                                     !Rut.contains("76440015") && !Rut.contains("77244658")){
-//                               
-//                               separador = 4;
-//                           
-//                           
-//                           }
-                           
-                           
-//                           separador = 1;
-                           
-                           
-                           
-                           
-                           boolean autoriza = false;
-                           
-                            if (Orden.contains("-ml") || Orden.contains("-web")){    
-                              
-                                autoriza = true;
-                           
-                           
-                            }else {
-                            
-                                autoriza = false;
-                            
-                            }
-                           
-                           
-                           
-                           Qr1 = "SELECT usuario FROM usuario WHERE separador = "+separador;        //Se busca el usuario de acuerdo a su asignacion de separacion
-                           
-                           Rs3 = Sql3.Select(Qr1);
-                           
-                           if (Sql3.GetRowCount() > 0){
-                           
-                               Rs3.next();
-                               String usuario = Rs3.getString("usuario").trim();    
-                               
-                               
-                               Sql4.ExeSql("UPDATE occh set \n"+
-                                           "usuario_separacion = '" + usuario + "' ,\n" +
-                                           "autoriza_separacion = "+autoriza +" \n"+
-                                           "WHERE codigo_oc = "+cbCodigoOc.getSelectedItem().toString().trim()+" \n"+
-                                           "AND orden = '"+txNroOc.getText().toLowerCase()+"'"+
-                                           "AND rut = "+txRut.getText().toLowerCase()+" \n"+
-                                           "AND usuario_separacion = 'LIBRES' ");
-                           
-                               Sql4.Commit();
-                           }
-               
-            //*****************************************************************************************************************************************//                       
-                       
-                       
-                        
-                        ValidaMargen();
-
-                        SetTipo(2);
-                        
-                        btDetalle.setEnabled(true);
-
-                    }catch (SQLException e){
-                        Sql.Rollback();
-                        
-                        
-                        LogError.Guardar(this.getClass().getSimpleName(),e.getMessage());
-                        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-                        fmMain.Mensaje("Error: "  + e);
-                    }finally{
-                        Sql.Close();
-                        
-                    }
-
-                }else{                                    //GUARDA OCC ABIERTA
-
-                    try {
-                        // ACTUALIZA ENCABEZADO                
-                        Query = "UPDATE occh SET \n"+
-                                 "contacto=" + cbId_Accion(cbContacto) + ", \n" +
-                                 "totalafecto=" + fmMain.SetGuardar(txNeto.getText()) + "," +
-                                 "totalexento=" + fmMain.SetGuardar(txExento.getText()) + "," +
-                                 "totaliva=" + fmMain.SetGuardar(txIva.getText()) + "," +
-                                 "totaldocto=" + fmMain.SetGuardar(txTotal.getText()) + "," +
-                                 "femision='" + getFechaAsString() + "', " +
-                                 "esexento=" +  BoolToInt(chbExenta.isSelected()) + ",\n" +
-                                 "prioridad=" + BoolToInt(chbPrioridad.isSelected()) + ",\n" +
-                                 "codigo_oc=" + cbCodigoOc.getSelectedItem().toString().trim() + ",\n" +
-                                 "orden='" + txNroOc.getText().trim().toLowerCase() + "',\n" +
-                                 "tipopago =" + cbIdTipo.getSelectedItem().toString() + ",\n" +   //Forma de Pago (Transferencia, Efectivo, etc)
-                                 "tipodoc =" + cbTipoDoc.getSelectedIndex() + ",\n" +
-                                 "tipo_pago =" + TipoPago + ",\n" +         //Condicion de Pago (1 = Contado, 2 = Crédito y 3 = Sn Costo)
-                                 "vendedor=" + codigoVendedor + ",\n" +
-                                 "directoc=" + esdirecta + "\n" +
-                                 "WHERE rut=" + txRut.getText() +"\n" +
-                                 "AND codigo_oc=" + Master_Codigo_Oc +"\n"+
-                                 "AND orden='" + Master_Orden + "'";
-                         
-
-                        Sql.ExeSql(Query);
-                        
-                        
-
-                   // ACTUALIZA EL DETALLE
-                        ResultSet Rs;
-
-                    //******************************** Se verfica si hay articulos duplicados *********************//     
-
-                        for (int f=0; f< Grilla.getRowCount();f++){
-
-                            String elemento = Grilla.getValueAt(f, 0).toString().trim();
-
-                            for (int i=f+1; i< Grilla.getRowCount();i++){
-
-                                String elemento2 = Grilla.getValueAt(i, 0).toString().trim();
-
-                                if (elemento2.equals(elemento)){
-
-                                    fmMain.Mensaje("Productos Duplicados!");
-                                    return;
-                                }
-
-                            }
-
-                        }
-
-                    //***************************************************************************************************//    
-
-                        for (int i = 0; i < Grilla.getRowCount(); i++){
-
-                            // 1.- Verifica si existe 
-                            Rs = Sql.Select("SELECT count(*) AS Existe FROM occhdet \n" +
-                                            "WHERE rut= " + txRut.getText() + " \n"+
-                                            "AND codigo_oc=" + Master_Codigo_Oc + " \n"+
-                                            "AND orden='" + Master_Orden + "'\n" +
-                                            "AND sku='" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString() + "'");
-                            Rs.next();
-
-                            // 2.- Si Existe UPDATE
-                            if (Rs.getInt("Existe") > 0){
-
-                                Query = "UPDATE occhdet SET \n" +
-                                        "cantidad = " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Cantidad")).toString()) + ",\n" +
-                                        //"valorunitario=" + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + ",\n" +
-                                        "valorunitario=" + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Unitario")).toString()) + ",\n" +
-                                        "totlinea =" + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()) + ",\n" +
-                                        "codigo_oc=" + cbCodigoOc.getSelectedItem().toString().trim() + ",\n" +
-                                        "orden='" + txNroOc.getText().trim().toLowerCase() + "',\n" +
-                                        "directo=" + Grilla.getModel().getValueAt(i, GetCol("Directo")) + "\n" +
-                                        "WHERE rut= " + txRut.getText() + " \n" +
-                                        "AND codigo_oc=" + Master_Codigo_Oc + "\n" +
-                                        "AND orden='" + Master_Orden + "'\n" +
-                                        "AND sku='" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "'";
-                            }else{                           // 3.- Si no existe INSERT
-
-                                Query = "INSERT INTO occhdet( rut, codigo_oc, orden, sku, cantidad, valorunitario, totlinea,directo)\n"+
-                                          "VALUES ("+ txRut.getText() + ","  + cbCodigoOc.getSelectedItem().toString().trim() + "," +
-                                          "'" + txNroOc.getText().toLowerCase() + "','"+ Grilla.getModel().getValueAt(i, GetCol("Sku")).toString() + "'," +
-                                          fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Cantidad")).toString()) + "," +
-                                          fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + "," +
-                                          fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()) + "," +
-                                          Grilla.getModel().getValueAt(i, GetCol("Directo")) + ")";
-                            }
-                            Sql.ExeSql(Query);
-
-                            Codigos = Codigos + "'" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "',";
-                        }
-
-                        // ELIMINA LOS PRODUCTOS QUE YA NO PERTENECEN a la oc
-                        Query = "DELETE FROM occhdet \n" +
-                                "WHERE rut= " + txRut.getText() + "\n" +
-                                "AND codigo_oc=" + Master_Codigo_Oc + "\n" +
-                                "AND orden='" + Master_Orden + "'\n" +
-                                "AND sku NOT IN (" + Codigos.substring(0, Codigos.length() - 1) + ")";
-                        
-                        Sql.ExeSql(Query);
-
-                        Sql.Commit();
-                        Sql.ExeSql("select actualiza_estado_oc_borrar3("+txRut.getText()+","+Master_Codigo_Oc+",'"+Master_Orden+"')");
-                        Sql.Commit();
-                        
-                        JOptionPane.showMessageDialog(null, "Orden Guardada");
-                        
-                       //*************************************************************** PAGO MULTIPLE ******************************************************//                     
-                         pago_mult(1);
-                        
-                       //*************************************************************************************************************************************************//          
-
-                        ValidaMargen();
-                        SetTipo(2);
-                        btDespachoD.setEnabled(false);
-                        cbTipoDoc.setEnabled(false);
-                        
-                    }catch (Exception e){
-                        Sql.Rollback();
-                        Sql3.Rollback();
-                        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-                        fmMain.Mensaje("Error: "  + e);
-                    } finally {
-                        Sql.Close();
-                        Sql3.Close();
-                    }
-
-                }
-            }
-            
-            
-       // }
+        guardarOc();
     }//GEN-LAST:event_btGuardarActionPerformed
 
     private void btDetalleCon1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDetalleCon1ActionPerformed

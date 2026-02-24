@@ -413,7 +413,208 @@ public class pfProductos extends javax.swing.JPanel {
         txidchmadre.setVisible(false);
         btAgregaIDMadre.setVisible(false);
         btEliminaIDMadre.setVisible(false);
+    }
 
+    // Método auxiliar para no tener el constructor tan sucio
+    private void configurarComponentesIniciales() {
+        url_mercado.setEnabled(false);
+        url_web.setEnabled(false);
+        url_yapo.setEnabled(false);
+        valor_publico.setEnabled(false);
+        valor_mercadolibre.setEnabled(false);
+        cbConvenioCod.setVisible(false);
+        cbFamiliaCod.setVisible(false);
+        cbSubFamiliaCod.setVisible(false);
+        cbConvenioSku.setVisible(false);
+        cbFamiliaSku.setVisible(false);
+        cbSubFamiliaSku.setVisible(false);
+        cbUnidadId.setVisible(false);
+        cbOtroImpuestoId.setVisible(false);
+        cbOtroImpuestoTaza.setVisible(false);
+        chkOferta.setEnabled(false);
+        txUbicados.setEnabled(false);
+        txTransito.setEnabled(false);
+        lsCodbar.setVisible(false);
+        lsChilecompras.setVisible(false);
+        btUbica.setEnabled(false);
+        txMinimo.setEnabled(false);
+        txMinimo.setEditable(false);
+        txPosicion.setEditable(false);
+        txNuevoMinimo.setVisible(false);
+        btGuardarMinimo.setVisible(false);
+        lbNuevoMinimo.setVisible(false);
+        txPosicion.setEditable(false);
+        txPosicion.setEnabled(false);
+        chkIva.setEnabled(false);
+        chk_minimo.setVisible(false);
+        chkdeshabilitado.setEnabled(false);
+        btEstablecerRelacionado.setEnabled(false);
+        btBuscarRelacionado.setEnabled(false);
+        txtCrearRelacion.setEnabled(false);
+        valor_vendedor.setEnabled(false);
+        jButton4.setEnabled(false);
+        txPPublico.setVisible(false);
+        jLabel11.setVisible(false);
+        skulabel.setVisible(false);
+        txNombreGen.setVisible(false);
+        txMarca.setVisible(false);
+        txModelo.setVisible(false);
+        txTallaCont.setVisible(false);
+        chkWeb1.setVisible(false);
+        chkNoTransado.setVisible(false);
+        jPanel25.setVisible(false);
+        jPanel12.setVisible(false);
+        jPanel13.setVisible(false);
+        jButton6.setVisible(false);
+        txconvenio.setVisible(false);
+
+        if (fmMain.GetUsuarioAjuste()) {
+            btAjustes.setEnabled(true);
+        } else {
+            btAjustes.setEnabled(false);
+        }
+
+        btUbica.setVisible(false);
+
+        // Renderers de tablas
+        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        GrillaMovimientos.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
+        GrillaMovimientos.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
+        GrillaMovimientos.getColumnModel().getColumn(7).setCellRenderer(rightRenderer);
+        GrillaVenta.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
+        GrillaVenta.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
+        GrillaVenta.getColumnModel().getColumn(7).setCellRenderer(rightRenderer);
+        GrillaCompras.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        GrillaCompras.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+        GrillaCompras.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
+        GrillaCompras.getColumnModel().getColumn(7).setCellRenderer(rightRenderer);
+        GrillaCompras.getColumnModel().getColumn(8).setCellRenderer(rightRenderer);
+
+        jPanel14.setVisible(false);
+        jButton5.setVisible(false);
+        btCargarImagen.setVisible(false);
+        jtPosiciones.setVisible(false);
+        jtEnOferta.setVisible(false);
+        jLabel68.setVisible(false);
+        txidchmadre.setVisible(false);
+        btAgregaIDMadre.setVisible(false);
+        btEliminaIDMadre.setVisible(false);
+//        
+        //************************************************************************************************************************************************************//     
+
+        valor_vendedor.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0') && (c <= '9') || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_COMMA) || (c == KeyEvent.VK_COLON))) {
+                    getToolkit().beep();
+                    e.consume();
+                }
+            }
+        });
+        valor_mercadolibre.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0') && (c <= '9')
+                        || (c == KeyEvent.VK_BACK_SPACE)
+                        || (c == KeyEvent.VK_DELETE))) {
+                    getToolkit().beep();
+                    e.consume();
+                }
+            }
+        });
+        valor_publico.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0') && (c <= '9')
+                        || (c == KeyEvent.VK_BACK_SPACE)
+                        || (c == KeyEvent.VK_DELETE))) {
+                    getToolkit().beep();
+                    e.consume();
+                }
+            }
+        });
+
+//        Pestanas.addChangeListener(new ChangeListener() {
+//            public void stateChanged(ChangeEvent e) {
+//                System.out.println("Tab: " + Pestanas.getSelectedIndex());
+//                
+//                if(Pestanas.getSelectedIndex()==7){
+//                    url_mercado.setEnabled(false);
+//                    url_web.setEnabled(false);
+//                    url_yapo.setEnabled(false);
+//                    valor_publico.setEnabled(false);
+//                    valor_mercadolibre.setEnabled(false);
+//                    jLabel43.setEnabled(false);
+//                    Runnable miRunnable = new Runnable() {
+//                        public void run() {
+//                            try{
+//                                ExeSql sql = new ExeSql();
+//                                ResultSet rs = null;
+//                                if(Pestanas.getSelectedIndex()==7){
+//                                    String sku = txSku.getText().trim();
+//                                    if(!sku.equals("")) {
+//                                        if(CheckIfExist(sku)) {
+//                                            String query = "select url_luvaly, url_mercadolibre, url_yapo, pvp_coniva, ml_coniva, valor_general from producto where sku = '"+sku+"'";
+//                                            try {
+//                                                rs = sql.Select(query);
+//                                                if(rs.next()){
+//                                                    url_mercado.setText(rs.getString("url_mercadolibre"));
+//                                                    url_web.setText(rs.getString("url_luvaly"));
+//                                                    url_yapo.setText(rs.getString("url_yapo"));
+//                                                    valor_mercadolibre.setText(rs.getString("ml_coniva"));
+//                                                    valor_publico.setText(rs.getString("pvp_coniva"));
+//                                                    jLabel43.setText(rs.getString("valor_general"));
+//                                                }
+//                                                else {
+//                                                    JOptionPane.showMessageDialog(null, "No se encontraron datos");
+//                                                }
+//                                            } catch (SQLException ex) {
+//                                                Logger.getLogger(pfProductos.class.getName()).log(Level.SEVERE, null, ex);
+//                                            }
+//                                        }
+//                                        else {
+//                                            JOptionPane.showMessageDialog(null, "No se encontró producto");
+//                                        }
+//                                    }
+//                                }
+//                                jButton5.setEnabled(true);
+//                                lbcargando.setVisible(false);
+//                                lbcargando.setEnabled(false);
+//                                url_mercado.setEnabled(true);
+//                                url_web.setEnabled(true);
+//                                url_yapo.setEnabled(true);
+//                                valor_publico.setEnabled(true);
+//                                valor_mercadolibre.setEnabled(true);
+//                                jLabel43.setEnabled(true);
+//                            } catch (Exception e) { 
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    };
+//                    Thread hilo = new Thread(miRunnable);
+//                    hilo.start();  
+//                    lbcargando.setText("Cargando.....");
+//                    URL urlInfo =  this.getClass().getResource("/Iconos16/wait.gif");
+//                    ImageIcon IconoInfo =  new ImageIcon(urlInfo); 
+//                    lbcargando.setIcon(IconoInfo);
+//                    lbcargando.setForeground(Color.red);  
+//                }
+//            }
+//        });
+        Tipo = 0;
+        PosImpuesto = -1;
+
+        //        Enlaza OC con sus Facturas, Notas de creditos y Guias asiociadas
+//        GrillaCompras.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+//        @Override
+//       public void valueChanged(ListSelectionEvent e){
+//           if (GrillaFacturasC.getSelectedRowCount()>=0)
+//               
+//               carga_facturas_orden(GrillaCompras.getValueAt(GrillaCompras.getSelectedRow(), 3).toString().trim());
+//       } 
+//    });   
     }
 
     @SuppressWarnings("unchecked")
@@ -4242,8 +4443,19 @@ public class pfProductos extends javax.swing.JPanel {
 // Carga PRODUCTOS
 //--------------------------------------------------------------------------------
 
-    public void CargaProducto(String Codigo) {
+    private String getTextoSeguro(ResultSet rs, String columna) {
+        try {
+            String valor = rs.getString(columna);
+            if (valor == null) {
+                return "";
+            }
+            return valor.trim();
+        } catch (Exception e) {
+            return "";
+        }
+    }
 
+    public void CargaProducto(String Codigo) {
         ExeSql Sql = new ExeSql();
         ExeSql Sql2 = new ExeSql();
         ResultSet Rs = null, Rs1 = null, Rs2 = null, Rs3 = null;
@@ -4660,7 +4872,6 @@ public class pfProductos extends javax.swing.JPanel {
 //            System.out.println("El CONVENIO ES : " + cbConvenioCod.getSelectedItem());
 //
 //            carga_ubicainv(txSku.getText().trim());
-
             // 1. Activamos la interfaz básica inmediatamente
             SetTipo(2);
             Pestanas.setEnabled(true);
@@ -4676,10 +4887,11 @@ public class pfProductos extends javax.swing.JPanel {
             Sql.Close();
         }
     }
-    
+
     /**
-     * MÉTODO OPTIMIZADO: Carga toda la información secundaria en paralelo.
-     * Esto evita que el usuario espere a que termine una consulta para empezar la siguiente.
+     * MÉTODO OPTIMIZADO: Carga toda la información secundaria en paralelo. Esto
+     * evita que el usuario espere a que termine una consulta para empezar la
+     * siguiente.
      */
     private void cargarDatosComplementarios(String Codigo) {
         // Creamos un "equipo" de 6 hilos trabajando al mismo tiempo
@@ -6223,13 +6435,32 @@ public class pfProductos extends javax.swing.JPanel {
     }//GEN-LAST:event_cbOtroImpuestoActionPerformed
 
     private void cbOtroImpuestoIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbOtroImpuestoIdActionPerformed
-        if (Tipo != -99) {
-            cbOtroImpuesto.setSelectedIndex(cbOtroImpuestoId.getSelectedIndex());
-            cbOtroImpuestoTaza.setSelectedIndex(cbOtroImpuestoId.getSelectedIndex());
-            txTazaImpuesto.setText(cbOtroImpuestoTaza.getSelectedItem().toString().trim() + "%");
+        // VALIDACIÓN DE SEGURIDAD 1: Verificar que no estemos en modo carga (-99) y que haya selección
+        if (Tipo != -99 && cbOtroImpuestoId.getSelectedIndex() != -1) {
+
+            // Sincronizar el combo de nombre con el ID
+            if (cbOtroImpuesto.getItemCount() > cbOtroImpuestoId.getSelectedIndex()) {
+                cbOtroImpuesto.setSelectedIndex(cbOtroImpuestoId.getSelectedIndex());
+            }
+
+            // Sincronizar el combo de Taza con el ID
+            if (cbOtroImpuestoTaza.getItemCount() > cbOtroImpuestoId.getSelectedIndex()) {
+                cbOtroImpuestoTaza.setSelectedIndex(cbOtroImpuestoId.getSelectedIndex());
+
+                // VALIDACIÓN DE SEGURIDAD 2: Verificar que el item no sea NULL antes de hacer toString()
+                Object itemSeleccionado = cbOtroImpuestoTaza.getSelectedItem();
+                if (itemSeleccionado != null) {
+                    txTazaImpuesto.setText(itemSeleccionado.toString().trim() + "%");
+                } else {
+                    txTazaImpuesto.setText("0%");
+                }
+            }
         }
 
-        cbConvenioSku.setSelectedIndex(cbConvenioCod.getSelectedIndex());
+        // VALIDACIÓN DE SEGURIDAD 3: Verificar convenios
+        if (cbConvenioCod.getSelectedIndex() != -1 && cbConvenioSku.getItemCount() > cbConvenioCod.getSelectedIndex()) {
+            cbConvenioSku.setSelectedIndex(cbConvenioCod.getSelectedIndex());
+        }
     }//GEN-LAST:event_cbOtroImpuestoIdActionPerformed
 
     private void MnuAbrirOCCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnuAbrirOCCActionPerformed

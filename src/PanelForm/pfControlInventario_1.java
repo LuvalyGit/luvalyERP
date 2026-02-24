@@ -143,7 +143,7 @@ public class pfControlInventario_1 extends javax.swing.JPanel {
         cbSaldos = new javax.swing.JComboBox();
         btCargar = new javax.swing.JButton();
         lbContProductos = new javax.swing.JLabel();
-        cbConvenio = new javax.swing.JComboBox<String>();
+        cbConvenio = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         txBuscarProveedor = new javax.swing.JTextField();
         btLimpiar = new javax.swing.JButton();
@@ -166,9 +166,9 @@ public class pfControlInventario_1 extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         GrillaChilemat = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
-        cbProveedor = new javax.swing.JComboBox<String>();
-        cbIdProveedor = new javax.swing.JComboBox<String>();
-        cbIdConvenio = new javax.swing.JComboBox<String>();
+        cbProveedor = new javax.swing.JComboBox<>();
+        cbIdProveedor = new javax.swing.JComboBox<>();
+        cbIdConvenio = new javax.swing.JComboBox<>();
         txCadena = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         chk_ult_proveedor = new javax.swing.JCheckBox();
@@ -224,7 +224,7 @@ public class pfControlInventario_1 extends javax.swing.JPanel {
 
         lbContProductos.setText("0 Productos");
 
-        cbConvenio.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Convenio" }));
+        cbConvenio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Convenio" }));
         cbConvenio.setEnabled(false);
         cbConvenio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -672,7 +672,7 @@ public class pfControlInventario_1 extends javax.swing.JPanel {
 
         add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 480, 400, 140));
 
-        cbProveedor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Proveedor" }));
+        cbProveedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Proveedor" }));
         cbProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbProveedorActionPerformed(evt);
@@ -680,7 +680,7 @@ public class pfControlInventario_1 extends javax.swing.JPanel {
         });
         add(cbProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 690, -1, -1));
 
-        cbIdProveedor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "rut proveedor" }));
+        cbIdProveedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "rut proveedor" }));
         cbIdProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbIdProveedorActionPerformed(evt);
@@ -688,7 +688,7 @@ public class pfControlInventario_1 extends javax.swing.JPanel {
         });
         add(cbIdProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 690, -1, -1));
 
-        cbIdConvenio.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "id convenio" }));
+        cbIdConvenio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "id convenio" }));
         add(cbIdConvenio, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 690, -1, -1));
 
         txCadena.setEnabled(false);
@@ -749,88 +749,123 @@ public class pfControlInventario_1 extends javax.swing.JPanel {
 
     private void btCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCargarActionPerformed
         
-        btLimpiar.doClick();
-        
-        
-        lbcargando.setText("Cargando.....");
-        URL urlInfo =  this.getClass().getResource("/Iconos16/wait.gif");
-        ImageIcon IconoInfo =  new ImageIcon(urlInfo); 
-        lbcargando.setIcon(IconoInfo);
-        lbcargando.setForeground(Color.red);
-        
-        
-        
-        Runnable miRunnable = new Runnable() {
-          
-            public void run() {
-                
-                try{
-                
-                   lbcargando.setVisible(true); 
-                    
-                    //buscarDatos();
-                    //buscarDatos2();
-                     buscarDatos3();
-                    
-                   
-                   
-                    txBuscarNombre.setText("");
-                    txBuscarProveedor.setText("");
-                   
-                    if (Grilla.getRowCount() > 0){
-                   
-                        cbConvenio.setEnabled(true);
-                        txBuscarProveedor.setEnabled(true);
-                        btIr.setEnabled(true);
-                        
-                        txCadena.setEnabled(true);
-                       
-                        chk_occ.setEnabled(true);
-                        chk_web.setEnabled(true);
-                        chk_ml.setEnabled(true);
-                        chk_ml_sid.setEnabled(true);
-                        
-                        chk_todos.setEnabled(true);
-                       
-                       
-                    }else{
-                   
-                        cbConvenio.setEnabled(false);
-                        txBuscarProveedor.setEnabled(false);
-                        btIr.setEnabled(false); 
-                        
-                        
-                       txCadena.setEnabled(false);
-                       
-                       chk_occ.setEnabled(false);
-                       chk_web.setEnabled(false);
-                       chk_ml.setEnabled(false);
-                       chk_ml_sid.setEnabled(false);
-                      
-                       chk_todos.setEnabled(false);
-                       
-                       
-                       
-                   
-                    }
-                   lbcargando.setVisible(false);
-                    
-                    btCargar.setEnabled(false);
-                 
-                }catch (Exception e) {
-                    e.printStackTrace();
-                } 
-          
-            }
-        }; 
-        
-        Thread hilo = new Thread(miRunnable);
-        hilo.start();
-        
-        miRunnable = null;
+//        btLimpiar.doClick();
+//        
+//        
+//        lbcargando.setText("Cargando.....");
+//        URL urlInfo =  this.getClass().getResource("/Iconos16/wait.gif");
+//        ImageIcon IconoInfo =  new ImageIcon(urlInfo); 
+//        lbcargando.setIcon(IconoInfo);
+//        lbcargando.setForeground(Color.red);
+//        
+//        
+//        
+//        Runnable miRunnable = new Runnable() {
+//          
+//            public void run() {
+//                
+//                try{
+//                
+//                   lbcargando.setVisible(true); 
+//                    
+//                    //buscarDatos();
+//                    //buscarDatos2();
+//                     buscarDatos3();
+//                    
+//                   
+//                   
+//                    txBuscarNombre.setText("");
+//                    txBuscarProveedor.setText("");
+//                   
+//                    if (Grilla.getRowCount() > 0){
+//                   
+//                        cbConvenio.setEnabled(true);
+//                        txBuscarProveedor.setEnabled(true);
+//                        btIr.setEnabled(true);
+//                        
+//                        txCadena.setEnabled(true);
+//                       
+//                        chk_occ.setEnabled(true);
+//                        chk_web.setEnabled(true);
+//                        chk_ml.setEnabled(true);
+//                        chk_ml_sid.setEnabled(true);
+//                        
+//                        chk_todos.setEnabled(true);
+//                       
+//                       
+//                    }else{
+//                   
+//                        cbConvenio.setEnabled(false);
+//                        txBuscarProveedor.setEnabled(false);
+//                        btIr.setEnabled(false); 
+//                        
+//                        
+//                       txCadena.setEnabled(false);
+//                       
+//                       chk_occ.setEnabled(false);
+//                       chk_web.setEnabled(false);
+//                       chk_ml.setEnabled(false);
+//                       chk_ml_sid.setEnabled(false);
+//                      
+//                       chk_todos.setEnabled(false);
+//                       
+//                       
+//                       
+//                   
+//                    }
+//                   lbcargando.setVisible(false);
+//                    
+//                    btCargar.setEnabled(false);
+//                 
+//                }catch (Exception e) {
+//                    e.printStackTrace();
+//                } 
+//          
+//            }
+//        }; 
+//        
+//        Thread hilo = new Thread(miRunnable);
+//        hilo.start();
+//        
+//        miRunnable = null;
         
         
     //*************************************************************************************************************************************************************//    
+        // 1. Bloqueamos el botón inmediatamente para evitar doble clic accidental
+        btCargar.setEnabled(false);
+
+        // 2. Ejecutamos la limpieza (que ahora incluye resetear el Sorter)
+        btLimpiar.doClick();
+
+        // 3. Configuración visual de "Cargando"
+        lbcargando.setText("Cargando.....");
+        URL urlInfo = this.getClass().getResource("/Iconos16/wait.gif");
+        ImageIcon IconoInfo = new ImageIcon(urlInfo);
+        lbcargando.setIcon(IconoInfo);
+        lbcargando.setForeground(Color.red);
+        lbcargando.setVisible(true);
+
+        // 4. Creamos el Hilo secundario para la consulta pesada
+        Runnable miRunnable = new Runnable() {
+            public void run() {
+                try {
+                    // Llamamos al método que hace el trabajo duro
+                    buscarDatos3();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // En caso de error fatal, reactivamos el botón
+                    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            btCargar.setEnabled(true);
+                            lbcargando.setVisible(false);
+                        }
+                    });
+                }
+            }
+        };
+
+        Thread hilo = new Thread(miRunnable);
+        hilo.start();
         
     }//GEN-LAST:event_btCargarActionPerformed
 
@@ -2364,379 +2399,537 @@ public class pfControlInventario_1 extends javax.swing.JPanel {
     
     
     public void buscarDatos3(){
+//        ExeSql Sql = new ExeSql();
+//        ResultSet Rs = null;
+//        String Query = "";
+//
+//        // Modelos de tabla (Tal cual como estaban antes)
+//        DefaultTableModel tbModel = (DefaultTableModel) Grilla.getModel();
+//        DefaultTableModel tbModel2 = (DefaultTableModel) GrillaChilemat.getModel();
+//        DefaultTableModel tbModel3 = (DefaultTableModel) GrillaPrv.getModel();
+//
+//        String conv = "";
+//        String prov = "";
+//        String prov2 = "";
+//        String conocc = "";
+//
+//        // -------------------------------------------------------------------------
+//        // 1. LÓGICA DE BÚSQUEDA CORREGIDA (CTE)
+//        // Busca órdenes que contengan el guion antes de la sigla (Ej: -cm25)
+//        // -------------------------------------------------------------------------
+//        String preConsultaOCCH
+//                = "WITH CalculoOCCH AS ( \n"
+//                + "    SELECT od.sku, \n"
+//                + "           COALESCE(SUM(od.cantidad - (od.separado + od.despachado)), 0) * -1 as valor_occh \n"
+//                + "    FROM occhdet od \n"
+//                + "    INNER JOIN occh o ON od.rut = o.rut AND od.codigo_oc = o.codigo_oc \n"
+//                + "    WHERE od.cantidad > (od.separado + od.despachado) \n"
+//                + "    AND ( \n"
+//                + "       LOWER(o.orden) LIKE '%-cm%' OR \n"
+//                + "       LOWER(o.orden) LIKE '%-se%' OR \n"
+//                + "       LOWER(o.orden) LIKE '%-ag%' OR \n"
+//                + "       LOWER(o.orden) LIKE '%-td%' \n"
+//                + "    ) \n"
+//                + "    GROUP BY od.sku \n"
+//                + ") \n";
+//        // -------------------------------------------------------------------------
+//
+//        // Limpieza de grillas
+//        while (tbModel.getRowCount() > 0) {
+//            tbModel.removeRow(0);
+//        }
+//        while (tbModel2.getRowCount() > 0) {
+//            tbModel2.removeRow(0);
+//        }
+//        while (tbModel3.getRowCount() > 0) {
+//            tbModel3.removeRow(0);
+//        }
+//
+//        // Filtros
+//        if (!txBuscarProveedor.getText().isEmpty()) {
+//            prov = "and p.proveedor_asociado LIKE '%" + txBuscarProveedor.getText().trim() + "%'";
+//            prov2 = "where p.proveedor_asociado LIKE '%" + txBuscarProveedor.getText().trim() + "%'";
+//        }
+//
+//        if (chk_occ.isSelected()) {
+//            conocc = " and i.occ < 0";
+//        }
+//
+//        try {
+//            // Base de la consulta (Reutilizamos para no repetir código)
+//            String selectBase
+//                    = "select DISTINCT trim(i.sku) as codigo, p.nombre, p.convenio, \n"
+//                    + "case \n"
+//                    + "   when (select trim(nombre) from proveedor where rut=p.rutultprv) is null then 'SIN PROVEEDOR ASOCIADO' \n"
+//                    + "   else (select trim(nombre) from proveedor where rut=p.rutultprv) \n"
+//                    + "end as proveedor, \n"
+//                    + "u.um, i.stock, i.ocp, i.occ, i.gdc, \n"
+//                    + // Traemos el cálculo de OCCH separado por si lo necesitas
+//                    "COALESCE(cc.valor_occh, 0) as occh_real, \n"
+//                    + "i.stock+i.ocp+i.occ+i.gdc as total, \n"
+//                    + "ceiling(p.display/4) as critico, \n"
+//                    + "p.proveedor_asociado as proveedor_asc, p.rut_proveedor_asociado, \n"
+//                    + "case when p.minimo is null then 0 else p.minimo end, \n"
+//                    + "case when p.display is null then 0 else p.display end as embalaje, p.rutultprv, \n"
+//                    + "case when cw.publicado is null then false else cw.publicado end as publica, \n"
+//                    + "p.nropublicacion \n"
+//                    + "from inventario i \n"
+//                    + "left join producto p on i.sku=p.sku \n"
+//                    + "left join par_unidad u on p.unidad=u.codigo \n"
+//                    + // JOIN CON LA TABLA TEMPORAL
+//                    "left join CalculoOCCH cc on i.sku = cc.sku \n"
+//                    + "left join occhdet d on i.sku=d.sku and d.cantidad > d.separado + despachado \n"
+//                    + "left join occh oc on d.rut=oc.rut and d.codigo_oc=oc.codigo_oc and d.orden=oc.orden \n"
+//                    + "left join personal ps on oc.vendedor = ps.vendedor \n"
+//                    + "left join ctacteprvdet cpt on i.sku = cpt.sku \n"
+//                    + "left join proveedor po on cpt.rut = po.rut \n"
+//                    + "left join ctacteprv e on e.tipdocto=cpt.tipdocto and cpt.nrodocto=e.nrodocto and cpt.rut=e.rut \n"
+//                    + "left join codweb cw on p.sku=cw.sku \n";
+//
+//            String groupBy
+//                    = " group by i.sku, p.nombre, u.um, i.stock, i.ocp, i.occ, i.gdc, cc.valor_occh, i.stock+i.ocp+i.occ+i.gdc, p.rutultprv, p.proveedor_asociado, p.rut_proveedor_asociado, \n"
+//                    + " case when p.minimo is null then 0 else p.minimo end, p.rutultprv, po.nombre, case when p.display is null then 0 else p.display end, ceiling(p.display/4), p.convenio, \n"
+//                    + " case when cw.publicado is null then false else cw.publicado end, p.nropublicacion \n"
+//                    + " order by trim(i.sku)";
+//
+//            // Armado de Query final
+//            if (cbSaldos.getSelectedItem().toString().equals("Negativos")) {
+//                Query = preConsultaOCCH + selectBase
+//                        + "WHERE (i.stock+i.ocp+i.occ+i.gdc) < ceiling(p.display/4) \n"
+//                        + conv + prov + conocc + " \n" + groupBy;
+//
+//            } else if (cbSaldos.getSelectedItem().toString().equals("Positivos")) {
+//                Query = preConsultaOCCH + selectBase
+//                        + "WHERE (i.stock+i.ocp+i.occ+i.gdc) > ceiling(display/4) \n"
+//                        + conv + prov + conocc + " \n" + groupBy;
+//
+//            } else { // TODOS
+//                Query = preConsultaOCCH + selectBase
+//                        + "WHERE 1=1 \n"
+//                        + prov2.replace("where", "and") + conocc + " \n" + groupBy;
+//            }
+//
+//            Rs = Sql.Select(Query);
+//
+//            String Sku = "";
+//            String Sku2 = "";
+//            int total = 0;
+//            int cont = 0;
+//            boolean agrega = false;
+//            String proveedor_asc = "";
+//            String rut_proveedor_asc = "";
+//
+//            if (Sql.GetRowCount() > 0) {
+//
+//                while (Rs.next()) {
+//
+//                    Sku2 = Rs.getString("codigo").trim();
+//
+//                    if (!Sku2.equals(Sku)) {
+//
+//                        if (Rs.getString("proveedor_asc") == null) {
+//                            proveedor_asc = "SIN PROVEEDOR ASOCIADO";
+//                            rut_proveedor_asc = "0";
+//                        } else {
+//                            proveedor_asc = Rs.getString("proveedor_asc").trim();
+//                            rut_proveedor_asc = Rs.getString("rut_proveedor_asociado").trim();
+//                        }
+//
+//                        int critico = Rs.getInt("critico");
+//                        if (total == -0) {
+//                            total = 0;
+//                        }
+//                        String txDias30 = "0";
+//
+//                        // Cálculo de totales (Lógica original)
+//                        if (cbSaldos.getSelectedItem().toString().equals("Negativos")) {
+//                            if (Rs.getInt("embalaje") > 0) {
+//                                total = (Rs.getInt("embalaje") * -1);
+//                            } else {
+//                                total = Rs.getInt("total");
+//                            }
+//                            if (total < 0) {
+//                                int totales = Rs.getInt("total");
+//                                if (total > totales) {
+//                                    total = totales;
+//                                }
+//                            }
+//                        } else if (cbSaldos.getSelectedItem().toString().equals("Positivos")) {
+//                            total = Rs.getInt("total");
+//                        } else {
+//                            if (Rs.getInt("total") <= Rs.getInt("critico")) {
+//                                total = (Rs.getInt("embalaje") * -1);
+//                            } else {
+//                                total = 0;
+//                            }
+//                        }
+//
+//                        // Filtros lógicos
+//                        if ((Rs.getInt("stock") >= Rs.getInt("embalaje")) && Rs.getInt("ocp") == 0
+//                                && Rs.getInt("occ") == 0 && Rs.getInt("gdc") == 0) {
+//                            agrega = false;
+//                        } else if (Rs.getInt("stock") == 0 && Rs.getInt("ocp") == 0
+//                                && Rs.getInt("occ") == 0 && Rs.getInt("gdc") == 0 && Rs.getInt("embalaje") == 0) {
+//                            agrega = false;
+//                        } else if (total >= 0) {
+//                            agrega = true;
+//                        } else {
+//                            agrega = true;
+//                        }
+//
+//                        if (!txBuscarProveedor.getText().isEmpty()) {
+//                            if (!proveedor_asc.contains(txBuscarProveedor.getText().trim())) {
+//                                agrega = false;
+//                            }
+//                        }
+//
+//                        if (agrega || cbSaldos.getSelectedItem().toString().equals("Todos") || cbSaldos.getSelectedItem().toString().equals("Positivos")) {
+//
+//                            txDias30 = "";
+//                            lbcargando.setVisible(true);
+//
+//                            int web = Rs.getBoolean("publica") ? 1 : 0;
+//
+//                            int ml = 0;
+//                            boolean ML = false;
+//                            if (!Rs.getString("nropublicacion").toString().trim().equals("0")) {
+//                                ml = 1;
+//                                ML = true;
+//                            }
+//
+//                            int saldoweb = (Rs.getInt("stock") < critico) ? 1 : 0;
+//                            int convenio = Rs.getInt("convenio");
+//
+//                            // -------------------------------------------------------------
+//                            // Aquí preparamos los datos
+//                            // NOTA: 'occTotal' tiene la suma de ambos.
+//                            //       'occhReal' tiene solo lo de ChileCompra (CM, SE, etc)
+//                            // -------------------------------------------------------------
+//                            double occTotal = Rs.getDouble("occ");
+//                            double occhReal = Rs.getDouble("occh_real");
+//
+//                            // IMPORTANTE: Aquí NO usamos fmMain.FormatoNumero para las columnas numéricas (stock, ocp, occ)
+//                            // porque la tabla está definida como Double.class y explotaría.
+//                            tbModel.addRow(new Object[]{
+//                                Rs.getString("codigo").trim(), // 0
+//                                Rs.getString("nombre").trim(), // 1
+//                                Rs.getString("proveedor"), // 2
+//                                Rs.getString("um"), // 3
+//                                Rs.getDouble("stock"), // 4 (SIN FORMATO NUMERO PARA EVITAR ERROR)
+//                                Rs.getDouble("ocp"), // 5
+//                                Rs.getDouble("occ"), // 6 - AQUI MUESTRA EL TOTAL COMO ANTES
+//                                Rs.getDouble("gdc"), // 7
+////                                Rs.getDouble("stock"), // 4
+////                                Rs.getDouble("ocp"), // 5
+////                                Rs.getDouble("occh_real"), // 6 - AQUI USAMOS EL VALOR CALCULADO REAL (SERÁ 0)
+////                                Rs.getDouble("gdc"), // 7
+//                                Rs.getInt("minimo"), // 8
+//                                Rs.getInt("embalaje"), // 9
+//                                critico, // 10
+//                                total, // 11
+//                                proveedor_asc, // 12
+//                                false, // 13
+//                                rut_proveedor_asc, // 14
+//                                Rs.getInt("total"), // 15
+//                                txDias30, // 16
+//                                Rs.getDouble("stock") + Rs.getDouble("ocp") + Rs.getDouble("occ") + Rs.getDouble("gdc"), // 17
+//                                web, // 18
+//                                ml, // 19
+//                                saldoweb, // 20
+//                                convenio, // 21
+//                                ML // 22
+//                            });
+//
+//                            cont++;
+//                        }
+//                    }
+//                    Sku = Sku2;
+//                }
+//            }
+//
+//            lbContProductos.setText(cont + " Productos");
+//            btAsociar.setEnabled(true);
+//
+//        } catch (SQLException ex) {
+//            fmMain.Mensaje("Existe un error !! Revise la conexión.");
+//            Logger.getLogger(pfControlInventario_1.class.getName()).log(Level.SEVERE, null, ex);
+//        } finally {
+//            Sql.Close();
+//        }
         ExeSql Sql = new ExeSql();
         ResultSet Rs = null;
-        
         String Query = "";
-        
-        DefaultTableModel tbModel = (DefaultTableModel) Grilla.getModel();
-        DefaultTableModel tbModel2 = (DefaultTableModel) GrillaChilemat.getModel();
-        DefaultTableModel tbModel3 = (DefaultTableModel) GrillaPrv.getModel();
+
+        // Obtenemos los modelos (sin limpiarlos aquí, ya lo hizo el botón limpiar)
+        final DefaultTableModel tbModel = (DefaultTableModel) Grilla.getModel();
+
         String conv = "";
         String prov = "";
         String prov2 = "";
         String conocc = "";
-    
-        while(tbModel.getRowCount()>0)
-              tbModel.removeRow(0);
-        
-        while(tbModel2.getRowCount()>0)
-              tbModel2.removeRow(0);
-         
-         while(tbModel3.getRowCount()>0)
-              tbModel3.removeRow(0);
-     
-        
-        
-        if (!txBuscarProveedor.getText().isEmpty() || !txBuscarProveedor.getText().equals("") ){
-        
-            
-            prov="and p.proveedor_asociado LIKE '%"+txBuscarProveedor.getText().trim()+"%'";
-         
-            prov2="where p.proveedor_asociado LIKE '%"+txBuscarProveedor.getText().trim()+"%'";
-            
-        
-        }else {
-        
-            
-          prov="";
-         
-          prov2="";
-        
-        
-        
-        }
-        
 
-        if(chk_occ.isSelected()){
-        
-            conocc = " and i.occ < 0";
-            
-        }else{
-        
-            conocc = "";
-        
+        // -------------------------------------------------------------------------
+        // LOGICA DE FILTROS SQL (INTACTA)
+        // -------------------------------------------------------------------------
+        if (!txBuscarProveedor.getText().isEmpty()) {
+            prov = "and p.proveedor_asociado LIKE '%" + txBuscarProveedor.getText().trim() + "%'";
+            prov2 = "where p.proveedor_asociado LIKE '%" + txBuscarProveedor.getText().trim() + "%'";
         }
-        
-        
-        
-    
+
+        if (chk_occ.isSelected()) {
+            conocc = " and i.occ < 0";
+        }
+
+        // CTE para OCCH
+        String preConsultaOCCH
+                = "WITH CalculoOCCH AS ( \n"
+                + "    SELECT od.sku, \n"
+                + "           COALESCE(SUM(od.cantidad - (od.separado + od.despachado)), 0) * -1 as valor_occh \n"
+                + "    FROM occhdet od \n"
+                + "    INNER JOIN occh o ON od.rut = o.rut AND od.codigo_oc = o.codigo_oc \n"
+                + "    WHERE od.cantidad > (od.separado + od.despachado) \n"
+                + "    AND ( \n"
+                + "       LOWER(o.orden) LIKE '%-cm%' OR \n"
+                + "       LOWER(o.orden) LIKE '%-se%' OR \n"
+                + "       LOWER(o.orden) LIKE '%-ag%' OR \n"
+                + "       LOWER(o.orden) LIKE '%-td%' \n"
+                + "    ) \n"
+                + "    GROUP BY od.sku \n"
+                + ") \n";
+
+        String selectBase
+                = "select DISTINCT trim(i.sku) as codigo, p.nombre, p.convenio, \n"
+                + "case \n"
+                + "   when (select trim(nombre) from proveedor where rut=p.rutultprv) is null then 'SIN PROVEEDOR ASOCIADO' \n"
+                + "   else (select trim(nombre) from proveedor where rut=p.rutultprv) \n"
+                + "end as proveedor, \n"
+                + "u.um, i.stock, i.ocp, i.occ, i.gdc, \n"
+                + "COALESCE(cc.valor_occh, 0) as occh_real, \n"
+                + "i.stock+i.ocp+i.occ+i.gdc as total, \n"
+                + "ceiling(p.display/4) as critico, \n"
+                + "p.proveedor_asociado as proveedor_asc, p.rut_proveedor_asociado, \n"
+                + "case when p.minimo is null then 0 else p.minimo end, \n"
+                + "case when p.display is null then 0 else p.display end as embalaje, p.rutultprv, \n"
+                + "case when cw.publicado is null then false else cw.publicado end as publica, \n"
+                + "p.nropublicacion \n"
+                + "from inventario i \n"
+                + "left join producto p on i.sku=p.sku \n"
+                + "left join par_unidad u on p.unidad=u.codigo \n"
+                + "left join CalculoOCCH cc on i.sku = cc.sku \n" // JOIN TABLA TEMPORAL
+                + "left join occhdet d on i.sku=d.sku and d.cantidad > d.separado + despachado \n"
+                + "left join occh oc on d.rut=oc.rut and d.codigo_oc=oc.codigo_oc and d.orden=oc.orden \n"
+                + "left join personal ps on oc.vendedor = ps.vendedor \n"
+                + "left join ctacteprvdet cpt on i.sku = cpt.sku \n"
+                + "left join proveedor po on cpt.rut = po.rut \n"
+                + "left join ctacteprv e on e.tipdocto=cpt.tipdocto and cpt.nrodocto=e.nrodocto and cpt.rut=e.rut \n"
+                + "left join codweb cw on p.sku=cw.sku \n";
+
+        String groupBy
+                = " group by i.sku, p.nombre, u.um, i.stock, i.ocp, i.occ, i.gdc, cc.valor_occh, i.stock+i.ocp+i.occ+i.gdc, p.rutultprv, p.proveedor_asociado, p.rut_proveedor_asociado, \n"
+                + " case when p.minimo is null then 0 else p.minimo end, p.rutultprv, po.nombre, case when p.display is null then 0 else p.display end, ceiling(p.display/4), p.convenio, \n"
+                + " case when cw.publicado is null then false else cw.publicado end, p.nropublicacion \n"
+                + " order by trim(i.sku)";
+
+        // Armado de Query final según Saldos
+        if (cbSaldos.getSelectedItem().toString().equals("Negativos")) {
+            Query = preConsultaOCCH + selectBase
+                    + "WHERE (i.stock+i.ocp+i.occ+i.gdc) < ceiling(p.display/4) \n"
+                    + conv + prov + conocc + " \n" + groupBy;
+
+        } else if (cbSaldos.getSelectedItem().toString().equals("Positivos")) {
+            Query = preConsultaOCCH + selectBase
+                    + "WHERE (i.stock+i.ocp+i.occ+i.gdc) > ceiling(display/4) \n"
+                    + conv + prov + conocc + " \n" + groupBy;
+
+        } else { // TODOS
+            Query = preConsultaOCCH + selectBase
+                    + "WHERE 1=1 \n"
+                    + prov2.replace("where", "and") + conocc + " \n" + groupBy;
+        }
+
+        // -------------------------------------------------------------------------
+        // EJECUCIÓN Y PROCESAMIENTO
+        // -------------------------------------------------------------------------
         try {
-            
-            if (cbSaldos.getSelectedItem().toString().equals("Negativos")) {
-                
-                System.out.println("\n\n"+fmMain.GetUsuario()+"\n");
-                              
-                Query = "select DISTINCT trim(i.sku) as codigo,p.nombre,p.convenio,\n" +
-                        "case \n" +
-                        "when (select trim(nombre) from proveedor where rut=p.rutultprv) is null then 'SIN PROVEEDOR ASOCIADO' \n" +
-                        "else (select trim(nombre) from proveedor where rut=p.rutultprv) \n" +
-                        "end as proveedor,\n" +
-                        "u.um,i.stock,i.ocp,i.occ,i.gdc, \n"+
-                        "i.stock+i.ocp+i.occ+i.gdc as total,\n" +
-                        "ceiling(p.display/4) as critico, \n"+ 
-                        "p.proveedor_asociado as proveedor_asc, p.rut_proveedor_asociado, \n"+
-                        "case when p.minimo is null then 0 else p.minimo end, \n" +
-                        "case when p.display is null then 0 else p.display end as embalaje, p.rutultprv, \n" +
-                        "case when cw.publicado is null then false else cw.publicado end as publica, \n"+   //nuevo
-                        "p.nropublicacion \n"+  //nuevo
-                        "from inventario i\n" +
-                        "left join producto p on i.sku=p.sku\n" +
-                        "left join par_unidad u on p.unidad=u.codigo\n" +
-                        "left join occhdet d on i.sku=d.sku and d.cantidad > d.separado + despachado\n" +
-                        "left join occh oc on d.rut=oc.rut and d.codigo_oc=oc.codigo_oc and d.orden=oc.orden\n" +
-                        "left join personal ps on oc.vendedor = ps.vendedor\n" +
-                        "left join ctacteprvdet cpt on i.sku = cpt.sku\n" +
-                        "left join proveedor po on cpt.rut = po.rut  \n" +
-                        "left join ctacteprv e on e.tipdocto=cpt.tipdocto and cpt.nrodocto=e.nrodocto and cpt.rut=e.rut \n" +
-                        "left join codweb cw on p.sku=cw.sku \n"+  //nuevo
-                        "WHERE (i.stock+i.ocp+i.occ+i.gdc) < ceiling(p.display/4)  \n"+ conv + prov +  conocc + " \n";
-             
-                Query = Query + " group by i.sku,p.nombre,u.um,i.stock,i.ocp,i.occ,i.gdc, i.stock+i.ocp+i.occ+i.gdc,p.rutultprv,p.proveedor_asociado, p.rut_proveedor_asociado,\n" +
-                                " case when p.minimo is null then 0 else p.minimo end,p.rutultprv, po.nombre,case when p.display is null then 0 else p.display end, ceiling(p.display/4), p.convenio, \n" +
-                                " case when cw.publicado is null then false else cw.publicado end, p.nropublicacion \n"+ //nuevo
-                                " order by trim(i.sku)";
-                
-                
-            } else if (cbSaldos.getSelectedItem().toString().equals("Positivos")) {
-                
-                          
-                    Query="select DISTINCT trim(i.sku) as codigo,p.nombre,p.convenio,\n" +
-                          "case \n" +
-                          "when (select trim(nombre) from proveedor where rut=p.rutultprv) is null then 'SIN PROVEEDOR ASOCIADO' \n" +
-                          "else (select trim(nombre) from proveedor where rut=p.rutultprv) \n" +
-                          "end as proveedor,\n" +
-                          "u.um,i.stock,i.ocp,i.occ,i.gdc, \n"+
-                          "i.stock+i.ocp+i.occ+i.gdc as total,\n" +
-                          "ceiling(display/4) as critico, \n"+ 
-                          "p.proveedor_asociado as proveedor_asc, p.rut_proveedor_asociado, \n"+
-                          "case when p.minimo is null then 0 else p.minimo end, \n" +
-                          "case when p.display is null then 0 else p.display end as embalaje, p.rutultprv, \n" +
-                          "case when cw.publicado is null then false else cw.publicado end as publica, \n"+   //nuevo
-                          "p.nropublicacion \n"+  //nuevo
-                          "from inventario i\n" +
-                          "left join producto p on i.sku=p.sku\n" +
-                          "left join par_unidad u on p.unidad=u.codigo\n" +
-                          "left join occhdet d on i.sku=d.sku and d.cantidad > d.separado + despachado\n" +
-                          "left join occh oc on d.rut=oc.rut and d.codigo_oc=oc.codigo_oc and d.orden=oc.orden\n" +
-                          "left join personal ps on oc.vendedor = ps.vendedor\n" +
-                          "left join ctacteprvdet cpt on i.sku = cpt.sku\n" +
-                          "left join proveedor po on cpt.rut = po.rut \n" +
-                          "left join ctacteprv e on e.tipdocto=cpt.tipdocto and cpt.nrodocto=e.nrodocto and cpt.rut=e.rut \n"+
-                          "left join codweb cw on p.sku=cw.sku \n"+  //nuevo
-                          "WHERE (i.stock+i.ocp+i.occ+i.gdc) > ceiling(display/4) \n"+ conv + prov + conocc + " \n";
-                        
-                                            
-                    Query = Query + " group by i.sku,p.nombre,u.um,i.stock,i.ocp,i.occ,i.gdc, i.stock+i.ocp+i.occ+i.gdc,p.rutultprv,p.proveedor_asociado,p.rut_proveedor_asociado, \n" +
-                                    " case when p.minimo is null then 0 else p.minimo end,p.rutultprv,po.nombre,case when p.display is null then 0 else p.display end,ceiling(p.display/4), p.convenio,  \n" +
-                                    " case when cw.publicado is null then false else cw.publicado end, p.nropublicacion \n"+ //nuevo
-                                    " order by trim(i.sku)";
-                
-            }else {
-                     
-                    Query="select DISTINCT trim(i.sku) as codigo,p.nombre,p.convenio,\n" +
-                          "case \n" +
-                          "when (select trim(nombre) from proveedor where rut=p.rutultprv) is null then 'SIN PROVEEDOR ASOCIADO' \n" +
-                          "else (select trim(nombre) from proveedor where rut=p.rutultprv) \n" +
-                          "end as proveedor,\n" +
-                          "u.um,i.stock,i.ocp,i.occ,i.gdc, \n"+
-                          "i.stock+i.ocp+i.occ+i.gdc as total,\n" +
-                          "ceiling(display/4) as critico, \n"+ 
-                          "p.proveedor_asociado as proveedor_asc, p.rut_proveedor_asociado, \n"+
-                          "case when p.minimo is null then 0 else p.minimo end, \n" +
-                          "case when p.display is null then 0 else p.display end as embalaje, p.rutultprv, \n" +
-                          "case when cw.publicado is null then false else cw.publicado end as publica, \n"+   //nuevo
-                          "p.nropublicacion \n"+  //nuevo
-                          "from inventario i\n" +
-                          "left join producto p on i.sku=p.sku\n" +
-                          "left join par_unidad u on p.unidad=u.codigo\n" +
-                          "left join occhdet d on i.sku=d.sku and d.cantidad > d.separado + despachado\n" +
-                          "left join occh oc on d.rut=oc.rut and d.codigo_oc=oc.codigo_oc and d.orden=oc.orden\n" +
-                          "left join personal ps on oc.vendedor = ps.vendedor\n" +
-                          "left join ctacteprvdet cpt on i.sku = cpt.sku\n" +
-                          "left join proveedor po on cpt.rut = po.rut \n" +
-                          "left join codweb cw on p.sku=cw.sku \n"+  //nuevo
-                          "left join ctacteprv e on e.tipdocto=cpt.tipdocto and cpt.nrodocto=e.nrodocto and cpt.rut=e.rut \n"+ prov2 + conocc + " \n"; 
-                        
-             
-                    Query = Query + " group by i.sku,p.nombre,u.um,i.stock,i.ocp,i.occ,i.gdc, i.stock+i.ocp+i.occ+i.gdc,p.rutultprv, p.proveedor_asociado, p.rut_proveedor_asociado, \n" +
-                                    " case when p.minimo is null then 0 else p.minimo end,p.rutultprv, po.nombre,case when p.display is null then 0 else p.display end,ceiling(p.display/4), p.convenio, \n" +
-                                    " case when cw.publicado is null then false else cw.publicado end, p.nropublicacion \n"+ //nuevo
-                                    " order by trim(i.sku)";
-                
-               
-            }
-            
-            
             Rs = Sql.Select(Query);
-            
+
             String Sku = "";
             String Sku2 = "";
             int total = 0;
-            int cont = 0;
-            String proveedor_asc = "";
-            String rut_proveedor_asc = "";
-            
-            
-            if (Sql.GetRowCount() > 0){
-            
-                
-                while (Rs.next()){
-                    
+            int cont = 0; // Contador local
+
+            if (Sql.GetRowCount() > 0) {
+
+                while (Rs.next()) {
+                    boolean agrega = false; // Reiniciar por cada fila
                     Sku2 = Rs.getString("codigo").trim();
-                    
-                    if (!Sku2.equals(Sku)){
-                        
-                        
-                        if (Rs.getString("proveedor_asc") == null){
-                                                
+
+                    if (!Sku2.equals(Sku)) {
+                        String proveedor_asc;
+                        String rut_proveedor_asc;
+
+                        if (Rs.getString("proveedor_asc") == null) {
                             proveedor_asc = "SIN PROVEEDOR ASOCIADO";
                             rut_proveedor_asc = "0";
-                                
-                            
-                        }else {
-                            
+                        } else {
                             proveedor_asc = Rs.getString("proveedor_asc").trim();
                             rut_proveedor_asc = Rs.getString("rut_proveedor_asociado").trim();
-                            
-                            
                         }
-                       
-                        
-                        //********************************************************************************
-   
-                            
+
                         int critico = Rs.getInt("critico");
-                            
-                        if (total == -0){
-                                
-                            total = 0;
-                                
-                        }
-                            
-                            
-                        int Dias30 = 0;
-                        String txDias30 = "0";
-                                
-                                
+
+                        // Lógica de cálculo de TOTAL (Mantenida intacta)
                         if (cbSaldos.getSelectedItem().toString().equals("Negativos")) {
-                                 
-                                if (Rs.getInt("embalaje") > 0){
-                                    
-                                    total = (Rs.getInt("embalaje")*-1);   //se convierte embalaje a negativo para comprar con lo que falta de las occ
-                                    
-                                }else{
-                                    
-                                    total = Rs.getInt("total");
-                                    
+                            if (Rs.getInt("embalaje") > 0) {
+                                total = (Rs.getInt("embalaje") * -1);
+                            } else {
+                                total = Rs.getInt("total");
+                            }
+                            if (total < 0) {
+                                int totales = Rs.getInt("total");
+                                if (total > totales) {
+                                    total = totales;
                                 }
-                              
-                                if (total < 0){
-                                    
-                                    int totales = Rs.getInt("total");  //lo que falta por comprar que se solicita en la occ
-                                    
-                                    if (total > totales){   //
-                                        
-                                        total = totales;
-                                        
-                                    }
-                                    
-                                }
-                                
-                                
-                                if ( (Rs.getInt("stock") >= Rs.getInt("embalaje")) && Rs.getInt("ocp") == 0 && Rs.getInt("occ") == 0 && Rs.getInt("gdc") == 0 ) {
-                                
-                                    agrega = false;
-                                
-                                }else if (Rs.getInt("stock") == 0 && Rs.getInt("ocp") == 0 && 
-                                              Rs.getInt("occ") == 0 && Rs.getInt("gdc") == 0 && Rs.getInt("embalaje") == 0) {
-                                        
-                                    agrega = false;
-                                
-                                }else if (total >= 0){
-                                
-                                    agrega = true;
-                                
-                                }else {
-                            
-                                    Dias30 = -1;
-                                    agrega = true;
-                               
-                                }
-                                
-                                
-                        }else{  //Positivos o Todos
-                         
-                            total = Rs.getInt("total");;
-                         
-                        }    
-                            
-                        if (agrega  || cbSaldos.getSelectedItem().toString().equals("Todos")  || cbSaldos.getSelectedItem().toString().equals("Positivos")) {
-                                
-                                txDias30 = "";
-                                                                                  
-                                lbcargando.setVisible(true); 
-                                            
-                                int web = 0;
-                                    
-                                if(Rs.getBoolean("publica")){
-                                    
-                                    web = 1;
-                                    
-                                }else{
-                                    
-                                    web = 0;
-                                        
-                                }
-                                            
-                                            
-                                int ml = 0;
-                                boolean ML = false;
-                                    
-                                if (!Rs.getString("nropublicacion").toString().trim().equals("0") ){
-                
-                                    ml = 1;
-                                    ML = true;
-                    
-                                }else {
-                    
-                                    ml = 0;
-                                    ML = false;
-                
-                                }
-                                            
-                                            
-                                            
-                                int saldoweb = 0;
-                                    
-                                if (Rs.getInt("stock") < critico) {
-                                        
-                                    saldoweb = 1;
-                                    
-                                }else{
-                                    
-                                    saldoweb = 0;
-                                
-                                }
-                                            
-                                            
-                                int convenio = Rs.getInt("convenio");
-                                            
-                                tbModel.addRow(new Object[]{
-                                                    Rs.getString("codigo").trim(),
-                                                    Rs.getString("nombre").trim(),
-                                                    Rs.getString("proveedor"),
-                                                    Rs.getString("um"),    
-                                                    Rs.getInt("stock"),
-                                                    Rs.getInt("ocp"),
-                                                    Rs.getInt("occ"),
-                                                    Rs.getInt("gdc"),
-                                                    Rs.getInt("minimo"),
-                                                    Rs.getInt("embalaje"),
-                                                    critico,
-                                                    total,
-                                                    proveedor_asc, 
-                                                    false,
-                                                    rut_proveedor_asc, //Rs.getString("rutultprv")
-                                                    Rs.getInt("total"),
-                                                    txDias30,
-                                                    Rs.getDouble("stock")+Rs.getDouble("ocp")+Rs.getDouble("occ")+Rs.getDouble("gdc"),
-                                                    web,
-                                                    ml,
-                                                    saldoweb,
-                                                    convenio,
-                                                    ML
-                            
-                                });
-                            
-                                cont++;
-                                    
-                            
+                            }
+                        } else if (cbSaldos.getSelectedItem().toString().equals("Positivos")) {
+                            total = Rs.getInt("total");
+                        } else {
+                            if (Rs.getInt("total") <= Rs.getInt("critico")) {
+                                total = (Rs.getInt("embalaje") * -1);
+                            } else {
+                                total = 0;
+                            }
                         }
-                            
-                            
-                        Sku = Sku2;    
-                    
+
+                        if (total == -0) {
+                            total = 0;
+                        }
+
+                        // Filtros lógicos de agregación (Mantenidos intactos)
+                        if ((Rs.getInt("stock") >= Rs.getInt("embalaje")) && Rs.getInt("ocp") == 0
+                                && Rs.getInt("occ") == 0 && Rs.getInt("gdc") == 0) {
+                            agrega = false;
+                        } else if (Rs.getInt("stock") == 0 && Rs.getInt("ocp") == 0
+                                && Rs.getInt("occ") == 0 && Rs.getInt("gdc") == 0 && Rs.getInt("embalaje") == 0) {
+                            agrega = false;
+                        } else if (total >= 0) {
+                            agrega = true;
+                        } else {
+                            agrega = true;
+                        }
+
+                        // Filtro extra de texto proveedor
+                        if (!txBuscarProveedor.getText().isEmpty()) {
+                            if (!proveedor_asc.contains(txBuscarProveedor.getText().trim())) {
+                                agrega = false;
+                            }
+                        }
+
+                        // CONDICION FINAL PARA AGREGAR A LA TABLA
+                        if (agrega || cbSaldos.getSelectedItem().toString().equals("Todos") || cbSaldos.getSelectedItem().toString().equals("Positivos")) {
+
+                            String txDias30 = "";
+
+                            // Variables para la visualización
+                            int web = Rs.getBoolean("publica") ? 1 : 0;
+                            int ml = (!Rs.getString("nropublicacion").toString().trim().equals("0")) ? 1 : 0;
+                            boolean ML = (!Rs.getString("nropublicacion").toString().trim().equals("0"));
+                            int saldoweb = (Rs.getInt("stock") < critico) ? 1 : 0;
+                            int convenio = Rs.getInt("convenio");
+
+                            // -------------------------------------------------------------
+                            // AQUÍ ESTÁ EL CAMBIO CLAVE: invokeLater
+                            // Preparamos los datos en un array FINAL para pasarlo a la interfaz
+                            // -------------------------------------------------------------
+                            final Object[] filaDatos = new Object[]{
+                                Rs.getString("codigo").trim(), // 0
+                                Rs.getString("nombre").trim(), // 1
+                                Rs.getString("proveedor"), // 2
+                                 Rs.getString("um"), // 3
+                                Rs.getDouble("stock"), // 4 (SIN FORMATO NUMERO PARA EVITAR ERROR)
+                                Rs.getDouble("ocp"), // 5
+                                Rs.getDouble("occ"), // 6 - AQUI MUESTRA EL TOTAL COMO ANTES
+                                Rs.getDouble("gdc"), // 7
+////                                Rs.getDouble("stock"), // 4
+////                                Rs.getDouble("ocp"), // 5
+////                                Rs.getDouble("occh_real"), // 6 - AQUI USAMOS EL VALOR CALCULADO REAL (SERÁ 0)
+////                                Rs.getDouble("gdc"), // 7
+                                Rs.getInt("minimo"), // 8
+                                Rs.getInt("embalaje"), // 9
+                                critico, // 10
+                                total, // 11
+                                proveedor_asc, // 12
+                                false, // 13 (Checkbox selección)
+                                rut_proveedor_asc, // 14
+                                Rs.getInt("total"), // 15
+                                txDias30, // 16
+                                Rs.getDouble("stock") + Rs.getDouble("ocp") + Rs.getDouble("occ") + Rs.getDouble("gdc"), // 17
+                                web, // 18
+                                ml, // 19
+                                saldoweb, // 20
+                                convenio, // 21
+                                ML // 22
+                            };
+
+                            // Insertamos en la tabla de forma segura para los hilos
+                            javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                                public void run() {
+                                    tbModel.addRow(filaDatos);
+                                }
+                            });
+
+                            cont++; // Aumentamos contador interno
+                        }
                     }
-            
+                    Sku = Sku2; // Control de duplicados en el loop
                 }
-             
-            
             }
-            
-            
-            lbContProductos.setText(cont + " Productos");
-           
-            btAsociar.setEnabled(true);
-         
-            
-        
+
+            // -------------------------------------------------------------------------
+            // ACTUALIZACION FINAL DE INTERFAZ (LABEL Y BOTONES)
+            // -------------------------------------------------------------------------
+            final int totalProductos = cont;
+
+            javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    lbContProductos.setText(totalProductos + " Productos");
+
+                    // Si cargó algo, habilitamos los controles
+                    if (totalProductos > 0) {
+                        btAsociar.setEnabled(true);
+
+                        // Reactivamos filtros si hay datos
+                        cbConvenio.setEnabled(true);
+                        txBuscarProveedor.setEnabled(true);
+                        btIr.setEnabled(true);
+                        txCadena.setEnabled(true);
+
+                        chk_occ.setEnabled(true);
+                        chk_web.setEnabled(true);
+                        chk_ml.setEnabled(true);
+                        chk_ml_sid.setEnabled(true);
+                        chk_todos.setEnabled(true);
+                    }
+
+                    // Ocultamos el gif de carga y reactivamos el botón principal
+                    lbcargando.setVisible(false);
+                    btCargar.setEnabled(true);
+                }
+            });
+
         } catch (SQLException ex) {
-            
-            fmMain.Mensaje("Existe un error !!");
+            fmMain.Mensaje("Existe un error !! Revise la conexión.");
             Logger.getLogger(pfControlInventario_1.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally{
+
+            // En caso de error, asegurarnos de liberar el botón
+            javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    lbcargando.setVisible(false);
+                    btCargar.setEnabled(true);
+                }
+            });
+
+        } finally {
             Sql.Close();
         }
     }
@@ -3103,14 +3296,14 @@ public class pfControlInventario_1 extends javax.swing.JPanel {
              
             if (selecciona){
                
-                if (cantidad != cantfinal){
-                    
-                    Grilla.setValueAt(false,Grilla.getSelectedRow(), 13);
-                    fmMain.Mensaje("La Cantidad ("+cantidad+") no es múltiplo del embalaje ("+embalaje+") ...!");
-                    return;
-                
-                
-                }  
+//                if (cantidad != cantfinal){
+//                    
+//                    Grilla.setValueAt(false,Grilla.getSelectedRow(), 13);
+//                    fmMain.Mensaje("La Cantidad ("+cantidad+") no es múltiplo del embalaje ("+embalaje+") ...!");
+//                    return;
+//                
+//                
+//                }  
                  
                  
                 contselec++;
@@ -3417,28 +3610,36 @@ public class pfControlInventario_1 extends javax.swing.JPanel {
             hoja.addCell(new jxl.write.Label(10,0,"Proveedor Asociado",format));
            
             
-            for(int i=0; i < Grilla.getRowCount(); i++){ //For                  //Se agregan filas con los datos
-            
-                int fila = i+1;
-                   
-                hoja.addCell(new jxl.write.Label(0,fila,Grilla.getValueAt(i,0).toString()));
-                hoja.addCell(new jxl.write.Label(1,fila,Grilla.getValueAt(i,1).toString()));
-                hoja.addCell(new jxl.write.Label(2,fila,Grilla.getValueAt(i,2).toString()));
-                
-                int inv = Integer.parseInt(Grilla.getValueAt(i,4).toString().trim());
-                hoja.addCell(new jxl.write.Number(3,fila,inv));
-                
-                int ocp = Integer.parseInt(Grilla.getValueAt(i,5).toString().trim());
-                hoja.addCell(new jxl.write.Number(4,fila,ocp));
-                
-                hoja.addCell(new jxl.write.Number(5,fila,Integer.parseInt(Grilla.getValueAt(i,6).toString().trim())));
-                
-                hoja.addCell(new jxl.write.Number(6,fila,Integer.parseInt(Grilla.getValueAt(i,7).toString().trim())));
-                hoja.addCell(new jxl.write.Number(7,fila,Integer.parseInt(Grilla.getValueAt(i,9).toString().trim())));
-                hoja.addCell(new jxl.write.Number(8,fila,Integer.parseInt(Grilla.getValueAt(i,10).toString().trim())));
-                hoja.addCell(new jxl.write.Number(9,fila,Integer.parseInt(Grilla.getValueAt(i,11).toString().trim())));
-                hoja.addCell(new jxl.write.Label(10,fila,Grilla.getValueAt(i,12).toString()));
-              
+            for (int i = 0; i < Grilla.getRowCount(); i++) {
+                int fila = i + 1;
+
+                // Columnas de texto (sin cambios)
+                hoja.addCell(new jxl.write.Label(0, fila, Grilla.getValueAt(i, 0).toString()));
+                hoja.addCell(new jxl.write.Label(1, fila, Grilla.getValueAt(i, 1).toString()));
+                hoja.addCell(new jxl.write.Label(2, fila, Grilla.getValueAt(i, 2).toString()));
+
+                // --- CORRECCIÓN AQUÍ ---
+                // Usamos Double.parseDouble en lugar de Integer.parseInt
+                // Esto acepta "4.0", "4", "4.5", etc.
+                // Columna 3: Inventario
+                String invStr = Grilla.getValueAt(i, 4).toString().trim();
+                double inv = Double.parseDouble(invStr);
+                hoja.addCell(new jxl.write.Number(3, fila, parseToDouble(Grilla.getValueAt(i, 4))));
+
+                // Columna 4: OCP
+                String ocpStr = Grilla.getValueAt(i, 5).toString().trim();
+                double ocp = Double.parseDouble(ocpStr);
+                hoja.addCell(new jxl.write.Number(4, fila, ocp));
+
+                // Resto de columnas numéricas (Convertir todas a Double)
+                hoja.addCell(new jxl.write.Number(5, fila, Double.parseDouble(Grilla.getValueAt(i, 6).toString().trim()))); // OCC
+                hoja.addCell(new jxl.write.Number(6, fila, Double.parseDouble(Grilla.getValueAt(i, 7).toString().trim()))); // GUIAS
+                hoja.addCell(new jxl.write.Number(7, fila, Double.parseDouble(Grilla.getValueAt(i, 9).toString().trim()))); // Embalaje
+                hoja.addCell(new jxl.write.Number(8, fila, Double.parseDouble(Grilla.getValueAt(i, 10).toString().trim()))); // Critico
+                hoja.addCell(new jxl.write.Number(9, fila, Double.parseDouble(Grilla.getValueAt(i, 11).toString().trim()))); // TOTAL
+
+                // Columna 10: Proveedor Asociado (Texto)
+                hoja.addCell(new jxl.write.Label(10, fila, Grilla.getValueAt(i, 12).toString()));
             }
             
             
@@ -3462,6 +3663,23 @@ public class pfControlInventario_1 extends javax.swing.JPanel {
         }
     
     }
+
+    // Método auxiliar para evitar errores si la celda está vacía
+    private double parseToDouble(Object valor) {
+        if (valor == null) {
+            return 0.0;
+        }
+        String str = valor.toString().trim();
+        if (str.isEmpty()) {
+            return 0.0;
+        }
+        try {
+            return Double.parseDouble(str);
+        } catch (NumberFormatException e) {
+            System.err.println("Error parseando valor: " + str);
+            return 0.0; // O manejar según necesidad
+        }
+    }
     
     
     
@@ -3478,39 +3696,44 @@ public class pfControlInventario_1 extends javax.swing.JPanel {
     }//GEN-LAST:event_txBuscarProveedorKeyTyped
 
     private void btLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLimpiarActionPerformed
-       // Limpiar();
-        
-      
+        // Limpiar();
+
         DefaultTableModel tbModel = (DefaultTableModel) Grilla.getModel();
+
+        // 1. IMPORTANTE: Reiniciar el Sorter para quitar filtros viejos
+        Grilla.setRowSorter(null);
+
+        // Limpiar filas
+        while (tbModel.getRowCount() > 0) {
+            tbModel.removeRow(0);
+        }
+
+        // Limpiar otras tablas...
         DefaultTableModel tbModel2 = (DefaultTableModel) GrillaChilemat.getModel();
+        while (tbModel2.getRowCount() > 0) {
+            tbModel2.removeRow(0);
+        }
+
         DefaultTableModel tbModel3 = (DefaultTableModel) GrillaPrv.getModel();
-      
-        while(tbModel.getRowCount()>0)
-              tbModel.removeRow(0);
-        
-        while(tbModel2.getRowCount()>0)
-              tbModel2.removeRow(0);
-         
-         while(tbModel3.getRowCount()>0)
-              tbModel3.removeRow(0);
-         
+        while (tbModel3.getRowCount() > 0) {
+            tbModel3.removeRow(0);
+        }
+
         lbContProductos.setText("0 Productos");
-        
-        
+
+        // Deshabilitar controles
         cbConvenio.setEnabled(false);
         txBuscarProveedor.setEnabled(false);
-        btIr.setEnabled(false); 
+        btIr.setEnabled(false);
         txCadena.setEnabled(false);
-        
-        
+
         chk_occ.setEnabled(false);
         chk_web.setEnabled(false);
         chk_ml.setEnabled(false);
         chk_ml_sid.setEnabled(false);
-        
+
         chk_todos.setEnabled(false);
-        
-        
+        chk_todos.setSelected(true); // Volver a seleccionar por defecto
     }//GEN-LAST:event_btLimpiarActionPerformed
 
     private void txBuscarCodigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txBuscarCodigoKeyPressed

@@ -29,53 +29,47 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-
 public class pfFAProveedor extends javax.swing.JPanel {
-    
-  //***************Variables Costo Promedio *****************//  
-    
-    
+
+    //***************Variables Costo Promedio *****************//  
 //ArrayList<String>[][] Lista = new ArrayList[1000][2];
-    ArrayList<ArrayList<String>> Lista  = new ArrayList<ArrayList<String>>();
-            
- //*************************************************************//   
-    
-    
+    ArrayList<ArrayList<String>> Lista = new ArrayList<ArrayList<String>>();
+
+    //*************************************************************//   
     boolean CargaTipo = true;
     public static int intNivelUsuario = 0;   //Variable nueva 
-    private ExeSql  Sql = new ExeSql();
+    private ExeSql Sql = new ExeSql();
     String RutMaster;
     String RutBusca;
     int Tipo; // 0::Nuevo    1:Abrir
-    int PesoCorreccion=0;
+    int PesoCorreccion = 0;
     DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-    
+
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-    
-    private enum Columnas{Sku,Nombre,UM,Cantidad,Unitario,Total,CantReal,UniReal};
+
+    private enum Columnas {
+        Sku, Nombre, UM, Cantidad, Unitario, Total, CantReal, UniReal
+    };
     int PosTipoPago;
     boolean EsElectronica;
     DefaultListModel dfListModel = new DefaultListModel();
-    double SumadorNeto,SumadorIva;
-    
-    
+    double SumadorNeto, SumadorIva;
+
     double Exento = 0;
     double Neto = 0;
     double Iva = 0;
     double Comision = 0;
-    
+
     double ImpEsp = 0;
-    
+
     double EspHarina12 = 0;
     double EspIABA10 = 0;
     double EspIABA18 = 0;
-    
+
     double Total = 0;
-    
-    
- 
+
     public pfFAProveedor() {
-        Tipo=-99;
+        Tipo = -99;
         initComponents();
         rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
         Grilla.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
@@ -88,7 +82,6 @@ public class pfFAProveedor extends javax.swing.JPanel {
 //        cbNroOrden.setSelectedIndex(-1);
         CargaTipo = false;
     }
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -952,112 +945,111 @@ public class pfFAProveedor extends javax.swing.JPanel {
 
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
-    
-    static private int GetCol(String Col){
-    
+
+    static private int GetCol(String Col) {
+
         return Columnas.valueOf(Col).ordinal();
     }
 
-    private void CargaAdministrador(){
-    
-        int intNivelUsuario =0;   
-   
+    private void CargaAdministrador() {
+
+        int intNivelUsuario = 0;
+
         intNivelUsuario = fmMain.trae_nivel(fmMain.GetUsuario());
-        
-        if (((ccosto_usr!=4) ) && (intNivelUsuario<80)){ 
-        
-            fmMain.Mensaje("Usuario: " + fmMain.GetUsuario() + " no esta autorizado") ;
+
+        if (((ccosto_usr != 4)) && (intNivelUsuario < 80)) {
+
+            fmMain.Mensaje("Usuario: " + fmMain.GetUsuario() + " no esta autorizado");
             btReversar.setEnabled(false);
             return;
-        
-        }else{
-            
+
+        } else {
+
             btReversar.setEnabled(true);
         }
-    
+
 //    if(fmMain.GetUsuarioAdministrador()){  
 //        btReversar.setEnabled(true);
 //    }
 //    else
 //        btReversar.setEnabled(false);
-    
     }
 //--------------------------------------------------------------------------------
 // Funcion SET DE TIPOS
 //--------------------------------------------------------------------------------
-    private void SetTipo(int ElTipo){
+
+    private void SetTipo(int ElTipo) {
         // NADA
-        if(ElTipo==-1){
-          /*Botones*/  
-          btGuardar.setEnabled(false);
-          btCancelar.setEnabled(false);
-          btAbrir.setEnabled(true);
-          btNuevo.setEnabled(true);
-          btAutorizar.setEnabled(false);
-          btEditar.setEnabled(false);
-          
-          fmMain.SetEstado(fmMain.pnPestanas.getSelectedIndex(),0);
-          CargaTipoPago();
-          Habilita(false);
-          Edicion(false);
-          Limpia();
-          Tipo=-1;
-          
-          
-        }
-        // NUEVA FACTURA
-        else if(ElTipo==1){
-           btCancelar.setEnabled(true);
-           btGuardar.setEnabled(true);
-           btAbrir.setEnabled(false);
-           btEditar.setEnabled(false);
-           btNuevo.setEnabled(false);
-           Limpia();
-           Habilita(false);
-           Edicion(false);
-           txRut.setEnabled(true);
-           txRut.setEditable(true);
-           btIr .setEnabled(true);
-           txEstado.setText("PENDIENTE");
-           txEstadoPago.setText("VIGENTE");
-           txRut.requestFocus();
-           Tipo=1;
-        }
-        //Abrir Factura
-        else if(ElTipo==2){
-           Limpia();
-           Habilita(false);
-           Edicion(false);
-           txRut.setEnabled(true);
-           txRut.setEditable(true);
-           btIr .setEnabled(true);
-           txRut.requestFocus();
-           Tipo=2;
-        
-        }else if(ElTipo==3){
+        if (ElTipo == -1) {
+            /*Botones*/
+            btGuardar.setEnabled(false);
+            btCancelar.setEnabled(false);
+            btAbrir.setEnabled(true);
+            btNuevo.setEnabled(true);
+            btAutorizar.setEnabled(false);
+            btEditar.setEnabled(false);
+
+            fmMain.SetEstado(fmMain.pnPestanas.getSelectedIndex(), 0);
+            CargaTipoPago();
+            Habilita(false);
+            Edicion(false);
+            Limpia();
+            Tipo = -1;
+
+        } // NUEVA FACTURA
+        else if (ElTipo == 1) {
+            btCancelar.setEnabled(true);
+            btGuardar.setEnabled(true);
+            btAbrir.setEnabled(false);
+            btEditar.setEnabled(false);
+            btNuevo.setEnabled(false);
+            Limpia();
+            Habilita(false);
+            Edicion(false);
+            txRut.setEnabled(true);
+            txRut.setEditable(true);
+            btIr.setEnabled(true);
+            txEstado.setText("PENDIENTE");
+            txEstadoPago.setText("VIGENTE");
+            txRut.requestFocus();
+            Tipo = 1;
+        } //Abrir Factura
+        else if (ElTipo == 2) {
+            Limpia();
+            Habilita(false);
+            Edicion(false);
+            txRut.setEnabled(true);
+            txRut.setEditable(true);
+            btIr.setEnabled(true);
+            txRut.requestFocus();
+            Tipo = 2;
+
+        } else if (ElTipo == 3) {
             Habilita(true);
             Edicion(true);
         }
-            
+
     }
 //--------------------------------------------------------------------------------
 // EDICION
 //--------------------------------------------------------------------------------
-    private void Edicion(boolean Estado){
-    
+
+    private void Edicion(boolean Estado) {
+
         dtEmision.setEditable(Estado);
         dtRecepcion.setEditable(Estado);
-    
+
     }
 //--------------------------------------------------------------------------------
 // LIMPIA
 //--------------------------------------------------------------------------------
-    private void Limpia(){
-    
+
+    private void Limpia() {
+
         DefaultComboBoxModel dfCm = new DefaultComboBoxModel();
-        DefaultTableModel    dfTm = (DefaultTableModel) Grilla.getModel();
+        DefaultTableModel dfTm = (DefaultTableModel) Grilla.getModel();
         DefaultTableModel TableModel = (DefaultTableModel) GrillaDoc.getModel();
-    
+
         txRut.setText("");
         txNombre.setText("");
         txDv.setText("");
@@ -1065,18 +1057,16 @@ public class pfFAProveedor extends javax.swing.JPanel {
         txComision.setText("");
         txExento.setText("");
         txIva.setText("");
-        
+
         txImpEspecifico.setText("");
         txAdicHarina12.setText("");
         txAdicIABA10.setText("");
         txAdicIABA18.setText("");
-        
-        
-        
+
         txTotal.setText("");
         txCuotas.setText("");
         txNroFactura.setText("");
-    
+
         txEstado.setText("");
         txEstadoPago.setText("");
         dtEmision.setDate(null);
@@ -1085,31 +1075,33 @@ public class pfFAProveedor extends javax.swing.JPanel {
         txCuotas.setText("");
         txDias.setText("");
         lstGuias.removeAll();
-    
+
         //Bloquea Campo Nro Factura
-    
         txNroFactura.setEnabled(false);
-           
-        while(dfTm.getRowCount()>0)
+
+        while (dfTm.getRowCount() > 0) {
             dfTm.removeRow(0);
-        
+        }
+
         dfListModel.removeAllElements();
-    
+
         //Limpia Grilla Documentos Relacionados
-        while(TableModel.getRowCount()>0)
-             TableModel.removeRow(0);
-    
+        while (TableModel.getRowCount() > 0) {
+            TableModel.removeRow(0);
+        }
+
         txRut.requestFocus();
-    
-    }    
+
+    }
 //--------------------------------------------------------------------------------
 // HABILITA
 //--------------------------------------------------------------------------------
-    private void Habilita(boolean Estado){
+
+    private void Habilita(boolean Estado) {
         txRut.setEnabled(Estado);
         txNombre.setEnabled(Estado);
         txDv.setEnabled(Estado);
-  
+
         dtEmision.setEnabled(Estado);
         dtRecepcion.setEnabled(Estado);
         txNeto.setEnabled(Estado);
@@ -1119,7 +1111,7 @@ public class pfFAProveedor extends javax.swing.JPanel {
         txImpEspecifico.setEnabled(Estado);
         txTotal.setEnabled(Estado);
         btCorrigePeso.setEnabled((Estado));
-    
+
         txEstado.setEnabled(Estado);
         txCuotas.setEnabled(Estado);
         dtEmision.setEnabled(Estado);
@@ -1129,51 +1121,51 @@ public class pfFAProveedor extends javax.swing.JPanel {
         cbTipoPago.setEnabled(Estado);
         cbTipoPagoId.setEnabled(Estado);
         lstGuias.setEnabled(Estado);
-    
+
         btIr.setEnabled(Estado);
         btAgregaGuia.setEnabled(Estado);
         chkElectronica.setEnabled(Estado);
-    
-        if(!Estado)
+
+        if (!Estado) {
             lstGuias.setBackground(Color.LIGHT_GRAY);
-        else
+        } else {
             lstGuias.setBackground(Color.WHITE);
+        }
     }
 
+    private void CargaTipoPago() {
 
-    private void CargaTipoPago(){
-    
         ExeSql Sql = new ExeSql();
         ResultSet Rs;
         cbTipoPago.removeAllItems();
         cbTipoPagoId.removeAllItems();
-    
+
         try {
-            Rs = Sql.Select("select codigo,nombre\n" +
-                            "from par_general \n" +
-                            "where tipo='TIPOPAGOPRV'\n" +
-                            "and codigo IN ('0','2','3','4','11','12','13') \n" +
-                            "and vigente=1\n" +
-                            "order by codigo");
-        
-            while(Rs.next()){
-            
+            Rs = Sql.Select("select codigo,nombre\n"
+                    + "from par_general \n"
+                    + "where tipo='TIPOPAGOPRV'\n"
+                    + "and codigo IN ('0','2','3','4','11','12','13') \n"
+                    + "and vigente=1\n"
+                    + "order by codigo");
+
+            while (Rs.next()) {
+
                 cbTipoPago.addItem(Rs.getString("nombre"));
                 cbTipoPagoId.addItem(Rs.getString("codigo"));
-            
+
             }
-    
-        }catch (Exception e) {
-     
+
+        } catch (Exception e) {
+
             fmMain.Mensaje(e.getMessage());
-    
-        }finally{
+
+        } finally {
             Sql.Close();
         }
     }
-    
+
     private void txRutKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txRutKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             btIr.doClick();
         }
     }//GEN-LAST:event_txRutKeyPressed
@@ -1182,265 +1174,256 @@ public class pfFAProveedor extends javax.swing.JPanel {
         txRut.setEditable(true);
         btIr.setEnabled(true);
         txRut.requestFocus();
-        SumadorIva=0;  //Utilizado para ajustar totales
-        SumadorNeto=0;//Utilizado para ajustar totales
+        SumadorIva = 0;  //Utilizado para ajustar totales
+        SumadorNeto = 0;//Utilizado para ajustar totales
         SetTipo(2);
     }//GEN-LAST:event_btAbrirActionPerformed
-    
-    private void AbrirFactura(String Rut,String Numero){
+
+    private void AbrirFactura(String Rut, String Numero) {
         ExeSql Sql = new ExeSql();
         ResultSet Rs;
         DefaultTableModel TableModel = (DefaultTableModel) Grilla.getModel();
-        
-        
+
         Exento = 0;
         Neto = 0;
         Iva = 0;
         Comision = 0;
         Total = 0;
-        
-        
-        
+
         try {
-            
-            Rs = Sql.Select("select case p.autoriza when 1 then 'AUTORIZADO' else 'PENDIENTE' end as estado,  case p.comision when null then 0 else p.comision end as comision, p.femision,p.frecepcion,p.nrodocorigen,p.autoriza,\n" +
-                            "(select cuotas from ctacteprv where tipdocto='OCP' and nrodocto=p.nrodocorigen) as cuotas,\n" +
-                            "(select dias from ctacteprv where tipdocto='OCP' and nrodocto=p.nrodocorigen) as dias, p.totalafecto,p.totaliva, \n"+
-                            "p.totalotroimp,p.adicioharina12,p.adicioiaba10,p.adicioiaba18,"+
-                            "p.totaldocto, p.cuotaspagadas,p.tipopago,p.electronica \n" +
-                            "from ctacteprv p\n" +
-                            "where rut=" + Rut +"\n" +
-                            "and tipdocto='FAP'\n" +
-                            "and nrodocto=" + Numero);
-           
-            if(Sql.GetRowCount()==0){
-                JOptionPane.showMessageDialog(null,"Factura No encontrada");
+
+            Rs = Sql.Select("select case p.autoriza when 1 then 'AUTORIZADO' else 'PENDIENTE' end as estado,  case p.comision when null then 0 else p.comision end as comision, p.femision,p.frecepcion,p.nrodocorigen,p.autoriza,\n"
+                    + "(select cuotas from ctacteprv where tipdocto='OCP' and nrodocto=p.nrodocorigen) as cuotas,\n"
+                    + "(select dias from ctacteprv where tipdocto='OCP' and nrodocto=p.nrodocorigen) as dias, p.totalafecto,p.totaliva, \n"
+                    + "p.totalotroimp,p.adicioharina12,p.adicioiaba10,p.adicioiaba18,"
+                    + "p.totaldocto, p.cuotaspagadas,p.tipopago,p.electronica \n"
+                    + "from ctacteprv p\n"
+                    + "where rut=" + Rut + "\n"
+                    + "and tipdocto='FAP'\n"
+                    + "and nrodocto=" + Numero);
+
+            if (Sql.GetRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "Factura No encontrada");
                 return;
             }
-            
-            while(TableModel.getRowCount()>0)
+
+            while (TableModel.getRowCount() > 0) {
                 TableModel.removeRow(0);
-            
+            }
+
             dfListModel.removeAllElements();
-            
+
             Rs.next();
-            
+
             chkElectronica.setSelected(Rs.getBoolean("electronica"));
             EsElectronica = Rs.getBoolean("electronica");
             txEstado.setText(Rs.getString("Estado").trim());
             dtEmision.setDate(Rs.getDate("femision"));
             dtRecepcion.setDate(Rs.getDate("frecepcion"));
-            txOrden.setText(Rs.getString("nrodocorigen"));  
-            
-            if (Rs.getString("cuotas") == null){
-            
-                 txCuotas.setText("0");
-            
-            }else {
-            
-                 txCuotas.setText(Rs.getString("cuotas").trim());  
-              
+            txOrden.setText(Rs.getString("nrodocorigen"));
+
+            if (Rs.getString("cuotas") == null) {
+
+                txCuotas.setText("0");
+
+            } else {
+
+                txCuotas.setText(Rs.getString("cuotas").trim());
+
             }
-            
-            if (Rs.getString("dias") == null){
-            
+
+            if (Rs.getString("dias") == null) {
+
                 txDias.setText("0");
-            
-            }else {
-            
+
+            } else {
+
                 txDias.setText(Rs.getString("dias").trim());
-            
+
             }
-            
+
             txExento.setText("0");
-            
+
             txNeto.setText(fmMain.FormatoTotal(Rs.getDouble("totalafecto")));
             Neto = Rs.getDouble("totalafecto");
-            
-            
+
             txComision.setText(fmMain.FormatoTotal(Rs.getDouble("comision")));
             Comision = Rs.getDouble("comision");
-            
+
             txIva.setText(fmMain.FormatoTotal(Rs.getDouble("totaliva")));
             Iva = Rs.getDouble("totaliva");
-            
-            
-            
+
             txImpEspecifico.setText(fmMain.FormatoTotal(Rs.getInt("totalotroimp")));
             ImpEsp = Rs.getDouble("totalotroimp");
-            
-            
+
             txAdicHarina12.setText(fmMain.FormatoTotal(Rs.getInt("adicioharina12")));
             EspHarina12 = Rs.getDouble("adicioharina12");
-            
-            
+
             txAdicIABA10.setText(fmMain.FormatoTotal(Rs.getInt("adicioiaba10")));
             EspIABA10 = Rs.getDouble("adicioiaba10");
-            
+
             txAdicIABA18.setText(fmMain.FormatoTotal(Rs.getInt("adicioiaba18")));
             EspIABA18 = Rs.getDouble("adicioiaba18");
-            
-            
+
             txTotal.setText(fmMain.FormatoTotal(Rs.getDouble("totaldocto")));
-            Total = Rs.getDouble("totaldocto"); 
-            
-            
-            System.out.println("Tipo Pago ID "+Rs.getInt("tipopago"));
-            
+            Total = Rs.getDouble("totaldocto");
+
+            System.out.println("Tipo Pago ID " + Rs.getInt("tipopago"));
+
             PosTipoPago = Rs.getInt("tipopago");
-            cbTipoPagoId.setSelectedItem(Rs.getString("tipopago"));             
+            cbTipoPagoId.setSelectedItem(Rs.getString("tipopago"));
             cbTipoPago.setSelectedIndex(cbTipoPagoId.getSelectedIndex());
 //            cbTipoPago.setSelectedIndex(Rs.getInt("tipopago"));
-           
-            System.out.println("PosTipoPago ID "+PosTipoPago);
-            
-            if(Rs.getString("estado").equals("AUTORIZADO")){
+
+            System.out.println("PosTipoPago ID " + PosTipoPago);
+
+            if (Rs.getString("estado").equals("AUTORIZADO")) {
                 btPagos.setEnabled(true);
                 btAutorizar.setEnabled(false);
                 btEditar.setEnabled(false);
                 CargaAdministrador();
-            }else{
-             
+            } else {
+
                 btPagos.setEnabled(false);
                 btAutorizar.setEnabled(true);
                 btReversar.setEnabled(false);
                 btEditar.setEnabled(true);
             }
 
-            if(Rs.getInt("Cuotas") == Rs.getInt("Cuotaspagadas"))
+            if (Rs.getInt("Cuotas") == Rs.getInt("Cuotaspagadas")) {
                 txEstadoPago.setText("Pagado");
-            else if (Rs.getInt("Cuotaspagadas") < Rs.getInt("Cuotas") && Rs.getInt("Cuotaspagadas") > 0) 
+            } else if (Rs.getInt("Cuotaspagadas") < Rs.getInt("Cuotas") && Rs.getInt("Cuotaspagadas") > 0) {
                 txEstadoPago.setText("Pagado " + Rs.getString("Cuotaspagadas") + " de " + Rs.getInt("Cuotas"));
-            else 
+            } else {
                 txEstadoPago.setText("No Pagado");
-            
-            
-            
+            }
+
             // Carga detalles.
-            Rs = Sql.Select("select pd.sku,p.nombre, pu.um, pd.cantidad, pd.valorunitario,pd.totallinea, pd.ubicancp\n" +
-                            "from ctacteprvdet pd\n" +
-                            "left join producto   p  on pd.sku=p.sku\n" +
-                            "left join par_unidad pu on p.unidad =pu.codigo \n" +
-                            "where pd.nrodocto=" + Numero + " and pd.tipdocto='FAP' and pd.rut=" + Rut);
-            
-            while(Rs.next()){
-            
+            Rs = Sql.Select("select pd.sku,p.nombre, pu.um, pd.cantidad, pd.valorunitario,pd.totallinea, pd.ubicancp\n"
+                    + "from ctacteprvdet pd\n"
+                    + "left join producto   p  on pd.sku=p.sku\n"
+                    + "left join par_unidad pu on p.unidad =pu.codigo \n"
+                    + "where pd.nrodocto=" + Numero + " and pd.tipdocto='FAP' and pd.rut=" + Rut);
+
+            while (Rs.next()) {
+
                 TableModel.addRow(new Object[]{Rs.getString("sku"),
-                                               Rs.getString("nombre"),
-                                               Rs.getString("um"),
-                                               Rs.getString("cantidad"),
-                                               fmMain.FormatoNumero31(Rs.getDouble("valorunitario")),
-                                               fmMain.FormatoNumero31(Rs.getDouble("totallinea")),
-                                               Rs.getString("cantidad"),
-                                               fmMain.FormatoNumero31(Rs.getDouble("valorunitario")),
-                                               fmMain.FormatoNumeroSinDecimal(Rs.getDouble("ubicancp"))
+                    Rs.getString("nombre"),
+                    Rs.getString("um"),
+                    Rs.getString("cantidad"),
+                    fmMain.FormatoNumero31(Rs.getDouble("valorunitario")),
+                    fmMain.FormatoNumero31(Rs.getDouble("totallinea")),
+                    Rs.getString("cantidad"),
+                    fmMain.FormatoNumero31(Rs.getDouble("valorunitario")),
+                    fmMain.FormatoNumeroSinDecimal(Rs.getDouble("ubicancp"))
                 });
             }
-            System.out.println("select nrodocto\n" +
-                            "from ctacteprv\n" +
-                            "where tipdocto='GDP'\n" +
-                            "and tipdocorigen='FAP'\n" +
-                            "and nrodocorigen=" + Numero + 
-                            " and rut=" + Rut);
-            
-            Rs = Sql.Select("select nrodocto\n" +
-                            "from ctacteprv\n" +
-                            "where tipdocto='GDP'\n" +
-                            "and tipdocorigen='FAP'\n" +
-                            "and nrodocorigen=" + Numero + 
-                            " and rut=" + Rut);
-            while(Rs.next()){
-               
+            System.out.println("select nrodocto\n"
+                    + "from ctacteprv\n"
+                    + "where tipdocto='GDP'\n"
+                    + "and tipdocorigen='FAP'\n"
+                    + "and nrodocorigen=" + Numero
+                    + " and rut=" + Rut);
+
+            Rs = Sql.Select("select nrodocto\n"
+                    + "from ctacteprv\n"
+                    + "where tipdocto='GDP'\n"
+                    + "and tipdocorigen='FAP'\n"
+                    + "and nrodocorigen=" + Numero
+                    + " and rut=" + Rut);
+            while (Rs.next()) {
+
                 dfListModel.addElement(Rs.getString("nrodocto").trim());
                 lstGuias.setModel(dfListModel);
             }
             Habilita(true);
             //btAutorizar.setEnabled(true);
-            Tipo=2;
-            
+            Tipo = 2;
+
             cbTipoPago.setEnabled(false);
-            
-            
+
             Grilla.getColumnModel().getColumn(8).setCellRenderer(new Elrender());
-            
-        }catch (SQLException | HeadlessException e) {
-         
+
+        } catch (SQLException | HeadlessException e) {
+
             fmMain.Mensaje(e.getMessage());
-        
-        }finally{
-         
-           Sql.Close();
-        }
-        
-    }
-    // muestra los documentos relacionados en la grilla
-    private void carga_doc_rel(String StOrden){
-        
-        ExeSql Sql = new ExeSql();
-        ResultSet Rs,Rs1;
-        String Query, QTot="";
-        DefaultTableModel TableModel = (DefaultTableModel) GrillaDoc.getModel();        
-        
-        try{     
-        
-            Query ="select  \n" +
-                   "  f.tipdocto ,	\n" +
-                   "  f.nrodocto , \n" +
-                   "  f.femision\n" +
-                   "from ctacteprv f\n" +
-                   "where  f.nrodocorigen = " + StOrden + "\n" +
-                   "and f.tipdocorigen = 'FAP'\n" +
-                   "and f.tipdocto in( 'NCP')\n" +
-                   "UNION\n" +
-                   "select  \n" +
-                   "  f.tipdocto tip_nota,	\n" +
-                   "  f.nrodocto nro_nota, \n" +
-                   "  f.femision\n" +
-                   "from ctacteprv f\n" +
-                   "where  "  + "f.nrodocorigen=" + StOrden + "\n" +
-                   "and f.tipdocorigen = 'FAP'\n" +
-                   "and f.tipdocto in( 'GDP')";
-        
-//     Limpia Ordenes Encabezado   
-            while(TableModel.getRowCount()>0)
-                   TableModel.removeRow(0);    
-            
-            Rs = Sql.Select(Query);
-            
-            while(Rs.next()){
-               
-               TableModel.addRow(new Object[]{Rs.getString("tipdocto").trim(), 
-                                              Rs.getInt("nrodocto"),Rs.getString("femision")});
-            }
-            
-            Rs.close();
-        
-        }catch (Exception e) {
-        
-           fmMain.Mensaje("Existe una inconsistencia en la información.");
-        
-        }finally{
+
+        } finally {
+
             Sql.Close();
-        }    
-        
+        }
+
     }
-    
+
+    // muestra los documentos relacionados en la grilla
+    private void carga_doc_rel(String StOrden) {
+
+        ExeSql Sql = new ExeSql();
+        ResultSet Rs, Rs1;
+        String Query, QTot = "";
+        DefaultTableModel TableModel = (DefaultTableModel) GrillaDoc.getModel();
+
+        try {
+
+            Query = "select  \n"
+                    + "  f.tipdocto ,	\n"
+                    + "  f.nrodocto , \n"
+                    + "  f.femision\n"
+                    + "from ctacteprv f\n"
+                    + "where  f.nrodocorigen = " + StOrden + "\n"
+                    + "and f.tipdocorigen = 'FAP'\n"
+                    + "and f.tipdocto in( 'NCP')\n"
+                    + "UNION\n"
+                    + "select  \n"
+                    + "  f.tipdocto tip_nota,	\n"
+                    + "  f.nrodocto nro_nota, \n"
+                    + "  f.femision\n"
+                    + "from ctacteprv f\n"
+                    + "where  " + "f.nrodocorigen=" + StOrden + "\n"
+                    + "and f.tipdocorigen = 'FAP'\n"
+                    + "and f.tipdocto in( 'GDP')";
+
+//     Limpia Ordenes Encabezado   
+            while (TableModel.getRowCount() > 0) {
+                TableModel.removeRow(0);
+            }
+
+            Rs = Sql.Select(Query);
+
+            while (Rs.next()) {
+
+                TableModel.addRow(new Object[]{Rs.getString("tipdocto").trim(),
+                    Rs.getInt("nrodocto"), Rs.getString("femision")});
+            }
+
+            Rs.close();
+
+        } catch (Exception e) {
+
+            fmMain.Mensaje("Existe una inconsistencia en la información.");
+
+        } finally {
+            Sql.Close();
+        }
+
+    }
+
     private boolean CargaProveedor(String Rut) {
         ExeSql Sql = new ExeSql();
         ResultSet Rs;
-    
+
         try {
-            Rs = Sql.Select("select rut,dv,nombre from proveedor where rut="+Rut);
-            if(Sql.GetRowCount()==0){
-                JOptionPane.showMessageDialog(null,"Proveedor No encontrado");
+            Rs = Sql.Select("select rut,dv,nombre from proveedor where rut=" + Rut);
+            if (Sql.GetRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "Proveedor No encontrado");
                 return false;
             }
-            
+
             Rs.next();
             txRut.setText(Rs.getString("Rut").trim());
             txDv.setText(Rs.getString("dv").trim());
             txNombre.setText(Rs.getString("nombre").trim().trim());
-            
+
             txNroFactura.setEnabled(true);
             txNroFactura.setEditable(true);
             btIrFactura.setEnabled(true);
@@ -1451,35 +1434,35 @@ public class pfFAProveedor extends javax.swing.JPanel {
         } catch (Exception e) {
             fmMain.Mensaje(e.getMessage());
             return false;
-        } finally{
+        } finally {
             Sql.Close();
         }
     }
-    
-    
+
+
     private void btIrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIrActionPerformed
-        
+
         boolean Carga;
-        
-        if(!txRut.getText().isEmpty()){
-            Carga=CargaProveedor(txRut.getText());
-        
-        }else{
+
+        if (!txRut.getText().isEmpty()) {
+            Carga = CargaProveedor(txRut.getText());
+
+        } else {
             jdBuscarCliPrv BPC = new jdBuscarCliPrv(null, true);
             BPC.setLocationRelativeTo(null);
             BPC.setTitle("Buscar Proveedor");
             BPC.SetTipo(1);
             BPC.setVisible(true);
-            Carga=CargaProveedor(BPC.GetRut());
+            Carga = CargaProveedor(BPC.GetRut());
         }
-        
-        if(Carga){
-            
-            if(Tipo==2){
-            
+
+        if (Carga) {
+
+            if (Tipo == 2) {
+
                 txNroFactura.requestFocus();
-            
-            }else if(Tipo==1){
+
+            } else if (Tipo == 1) {
                 Habilita(true);
                 Edicion(true);
                 txNroFactura.requestFocus();
@@ -1489,32 +1472,31 @@ public class pfFAProveedor extends javax.swing.JPanel {
                 btAgregaGuia.setEnabled(true);
             }
         }
-        
+
     }//GEN-LAST:event_btIrActionPerformed
 
-
     public String getFechaEmisionAsString() {
-        
+
         try {
-        
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return( sdf.format( (dtEmision.getDate()).getTime() ) );
-        
-        }catch (Exception e) {
-            
+            return (sdf.format((dtEmision.getDate()).getTime()));
+
+        } catch (Exception e) {
+
             return "";
         }
 
     }
-    
+
     public String getFechaRecepcionAsString() {
-        
+
         try {
-        
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return( sdf.format( (dtRecepcion.getDate()).getTime() ) );
-        
-        }catch (Exception e) {
+            return (sdf.format((dtRecepcion.getDate()).getTime()));
+
+        } catch (Exception e) {
             return "";
         }
 
@@ -1522,42 +1504,44 @@ public class pfFAProveedor extends javax.swing.JPanel {
 //--------------------------------------------------------------------------------
 // SUMADOR
 //--------------------------------------------------------------------------------
-    private void Sumador(){    
-        
-        double Neto=0;
-        double Exento=0;
-        double Iva=0;
-        double Total=0;
-        double Comision=0;
-        String Unitario,Cantidad;
-    
-        for(int i=0; i< Grilla.getRowCount(); i++){
-            Unitario = Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString();
-            Cantidad = Grilla.getModel().getValueAt(i,GetCol("CantReal")).toString();
+
+    private void Sumador() {
+
+        double Neto = 0;
+        double Exento = 0;
+        double Iva = 0;
+        double Total = 0;
+        double Comision = 0;
+        String Unitario, Cantidad;
+
+        for (int i = 0; i < Grilla.getRowCount(); i++) {
+            Unitario = Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString();
+            Cantidad = Grilla.getModel().getValueAt(i, GetCol("CantReal")).toString();
             Unitario = Unitario.replace(fmMain.GetMiles(), "");
             Cantidad = Cantidad.replace(fmMain.GetMiles(), "");
-            Neto =  (Double.parseDouble(Unitario) * Double.parseDouble(Cantidad)) + Neto;
+            Neto = (Double.parseDouble(Unitario) * Double.parseDouble(Cantidad)) + Neto;
         }
-        
+
         Neto = Math.round(Neto);
-        if (txRut.getText().trim().equals("96726970")){
-        
-            Comision = Math.round(Neto*0.005);
-            Neto = Neto+Comision;
+        if (txRut.getText().trim().equals("96726970")) {
+
+            Comision = Math.round(Neto * 0.005);
+            Neto = Neto + Comision;
         }
-        
+
         Iva = Math.round((Neto * Double.parseDouble("0.19")));
-    
-        if(PesoCorreccion != 0){
-            
-            if(PesoCorreccion==1)
-                  Iva = Iva +1;
-            else
-              Neto = Neto -1;
+
+        if (PesoCorreccion != 0) {
+
+            if (PesoCorreccion == 1) {
+                Iva = Iva + 1;
+            } else {
+                Neto = Neto - 1;
+            }
         }
-    
+
         Total = Neto + Iva + ImpEsp + EspHarina12 + EspIABA10 + EspIABA18;
-        
+
         txComision.setText(fmMain.FormatoTotal(Comision));
         txNeto.setText(fmMain.FormatoTotal(Neto));
         txExento.setText(fmMain.FormatoTotal(Exento));
@@ -1568,66 +1552,66 @@ public class pfFAProveedor extends javax.swing.JPanel {
 //  
 //------------------------------------------------------------------------------
     private void GrillaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_GrillaMouseClicked
-        
-        if(evt.getClickCount()==2 && !Grilla.getValueAt(Grilla.getSelectedRow(), 0).toString().isEmpty() && (Tipo == 3 || Tipo == 1)){
-            
+
+        if (evt.getClickCount() == 2 && !Grilla.getValueAt(Grilla.getSelectedRow(), 0).toString().isEmpty() && (Tipo == 3 || Tipo == 1)) {
+
             jdIngresaNumero2 jdNumero = new jdIngresaNumero2(null, true);
             jdNumero.setLocationRelativeTo(null);
-            jdNumero.setVisible(true);        
-            
-            if(jdNumero.GetNumero() != -99 ){   
-       
+            jdNumero.setVisible(true);
+
+            if (jdNumero.GetNumero() != -99) {
+
                 try {
-                    
+
                     if (jdNumero.GetActualiza() == 1) {
-                    
-                        double vcantidad = Double.parseDouble(Grilla.getValueAt(Grilla.getSelectedRow(),3).toString().replaceAll("\\,",""));
-                    
-                        Grilla.setValueAt(fmMain.FormatoNumero31(jdNumero.GetPrecio()), Grilla.getSelectedRow(),GetCol("Unitario"));
+
+                        double vcantidad = Double.parseDouble(Grilla.getValueAt(Grilla.getSelectedRow(), 3).toString().replaceAll("\\,", ""));
+
+                        Grilla.setValueAt(fmMain.FormatoNumero31(jdNumero.GetPrecio()), Grilla.getSelectedRow(), GetCol("Unitario"));
                         double TotLinea = vcantidad * jdNumero.GetPrecio();
-                        Grilla.setValueAt(fmMain.FormatoNumero31(TotLinea),Grilla.getSelectedRow(),GetCol("Total"));
-                
-                   // Grilla.setValueAt(jdNumero.GetNumero(), Grilla.getSelectedRow(),GetCol("CantReal"));
-                        Grilla.setValueAt(vcantidad, Grilla.getSelectedRow(),GetCol("CantReal"));
-                        Grilla.setValueAt(jdNumero.GetPrecio(), Grilla.getSelectedRow(),GetCol("UniReal"));  
-                
+                        Grilla.setValueAt(fmMain.FormatoNumero31(TotLinea), Grilla.getSelectedRow(), GetCol("Total"));
+
+                        // Grilla.setValueAt(jdNumero.GetNumero(), Grilla.getSelectedRow(),GetCol("CantReal"));
+                        Grilla.setValueAt(vcantidad, Grilla.getSelectedRow(), GetCol("CantReal"));
+                        Grilla.setValueAt(jdNumero.GetPrecio(), Grilla.getSelectedRow(), GetCol("UniReal"));
+
                         Sumador();
-                    
+
                     }
-                
-                }catch (Exception e) {
-                 
+
+                } catch (Exception e) {
+
                     System.out.println(e);
                 }
             }
         }
-     
+
     }//GEN-LAST:event_GrillaMouseClicked
 
     private void btIrFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIrFacturaActionPerformed
-        
-        if (!txNroFactura.getText().isEmpty() && Tipo == 2){
-           
+
+        if (!txNroFactura.getText().isEmpty() && Tipo == 2) {
+
             AbrirFactura(txRut.getText().trim(), txNroFactura.getText().trim());
-        
-        }else if (txNroFactura.getText().isEmpty() && Tipo == 2){
-        
+
+        } else if (txNroFactura.getText().isEmpty() && Tipo == 2) {
+
             jdAbrirDocumento ADoc = new jdAbrirDocumento(null, true);
-            
+
             if (ADoc.ShowModal("FAP", txRut.getText().trim()) == JOptionPane.YES_OPTION) {
-            
+
                 txNroFactura.setText(ADoc.GetNumero());
                 AbrirFactura(txRut.getText().trim(), txNroFactura.getText().trim());
-                
+
             }
         }
-        
+
         // Muestra los documentos relacionados
         carga_doc_rel(txNroFactura.getText().trim());
     }//GEN-LAST:event_btIrFacturaActionPerformed
 
     private void btAutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAutorizarActionPerformed
-    
+
         if (txEstado.getText().trim().equals("AUTORIZADO")) {
             fmMain.Mensaje("La factura se encuentra Autorizada");
             return;
@@ -1680,60 +1664,31 @@ public class pfFAProveedor extends javax.swing.JPanel {
                 //Modifica detalle producto
                 for (int i = 0; i < Grilla.getRowCount(); i++) {
 
-                    // Busca la última compra (FAP) de este producto, excluyendo la factura actual
-                    Rs3 = Sql3.Select("SELECT DISTINCT ctp.rut, ctp.tipdocto, ctp.nrodocto, ctp.sku, ct.femision, ctp.valorunitario FROM ctacteprvdet ctp\n"
-                            + "LEFT JOIN ctacteprv ct ON ctp.nrodocto = ct.nrodocto AND ctp.tipdocto = ct.tipdocto AND ctp.rut = ct.rut \n"
-                            + "WHERE ctp.sku = '" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "' AND ctp.tipdocto = 'FAP'\n"
-                            + "AND ctp.nrodocto <> '" + txNroFactura.getText().trim() + "'\n"
-                            + "ORDER BY ct.femision DESC LIMIT 1 ");
+                    // 1. Obtener datos limpios de la grilla
+                    String sku = Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim();
+                    String nuevoCosto = fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString());
+                    String totalLinea = fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString());
 
-                    // --- INICIO DE CORRECCIÓN ---
-                    // Variable para decidir si se debe actualizar el precio maestro (valultcompra)
-                    boolean actualizarPrecio = false;
-
-                    // CASO 1: El producto SÍ tiene un historial de compras (FAP)
-                    if (Sql3.GetRowCount() > 0) {
-                        Rs3.next();
-
-                        String sfemision = sdf.format(Rs3.getDate("femision")); // Fecha histórica
-                        String sfactura = sdf.format(dtEmision.getDate()); // Fecha actual
-
-                        Date femision = sdf.parse(sfemision);
-                        Date ffactura = sdf.parse(sfactura);
-
-                        //Verifica si el precio mas reciente antes de actualizarlo
-                        // Si la fecha de esta factura es MÁS NUEVA o IGUAL que la histórica, marcamos para actualizar.
-                        if (ffactura.compareTo(femision) >= 0) {
-                            actualizarPrecio = true;
-                        }
-                        // Si es más antigua (ffactura.compareTo(femision) < 0), la bandera queda 'false' y no se actualiza.
-
-                    } else {
-                        // CASO 2: El producto NO tiene historial (primera compra FAP o producto nuevo)
-                        // ¡Aquí estaba el error! Antes no se hacía nada.
-                        // Ahora, marcamos para actualizar, ya que este es el precio más reciente.
-                        actualizarPrecio = true;
-                    }
-
-                    // EJECUCIÓN DE LA ACTUALIZACIÓN EN TABLA 'producto'
-                    // Solo se ejecuta si la bandera 'actualizarPrecio' es verdadera
-                    if (actualizarPrecio) {
-                        if (!txRut.getText().equals("76440015")) {  //que no sea ECONA
-
+                    // 2. ACTUALIZACIÓN DIRECTA DEL MAESTRO DE PRODUCTOS
+                    // Eliminamos la validación de fechas. Si se autoriza, se actualiza.
+                    if (!txRut.getText().equals("76440015")) {  // Mantenemos la excepción de ECONA
+                        try {
                             Sql2.ExeSql("UPDATE producto SET \n"
-                                    + "valultcompra= " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + "\n"
-                                    + "WHERE sku = '" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "'\n");
+                                    + "valultcompra= " + nuevoCosto + " \n"
+                                    + "WHERE sku = '" + sku + "'");
 
                             Sql2.Commit();
+                        } catch (Exception e) {
+                            System.out.println("Error al actualizar precio en producto: " + e.getMessage());
                         }
                     }
-                    // --- FIN DE CORRECCIÓN ---
 
-                    // Este update actualiza el detalle de la OCP relacionada, SIEMPRE.
+                    // 3. ACTUALIZACIÓN DEL DETALLE DE LA ORDEN DE COMPRA (OCP)
+                    // Esto vincula el precio real de la factura a la orden de compra original
                     Sql4.ExeSql("update ctacteprvdet set\n"
-                            + "valorunitario= " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + ",\n"
-                            + "totallinea= " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()) + "\n"
-                            + "where sku ='" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString() + "'\n"
+                            + "valorunitario= " + nuevoCosto + ",\n"
+                            + "totallinea= " + totalLinea + "\n"
+                            + "where sku ='" + sku + "'\n"
                             + "and tipdocto= 'OCP' \n"
                             + "and nrodocto=" + txOrden.getText().trim());
 
@@ -1763,10 +1718,6 @@ public class pfFAProveedor extends javax.swing.JPanel {
                 Sql4.Rollback();
                 Sql6.Rollback();
 
-            } catch (ParseException ex) {
-
-                Logger.getLogger(pfFAProveedor.class.getName()).log(Level.SEVERE, null, ex);
-
             } finally {
                 Sql.Close();
                 Sql2.Close();
@@ -1778,342 +1729,300 @@ public class pfFAProveedor extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btAutorizarActionPerformed
 
-    
-    private void Verifica_Saldo_Ocp(String Orden,double Exento,double Neto,double Iva,double Comision,double Total){
-            
+    private void Verifica_Saldo_Ocp(String Orden, double Exento, double Neto, double Iva, double Comision, double Total) {
+
         ResultSet Rs;
         ResultSet Rs3;
-        
+
         ExeSql Sql = new ExeSql();
         ExeSql Sql2 = new ExeSql();
-        
+
         ExeSql Sql3 = new ExeSql();
         ExeSql Sql4 = new ExeSql();
-               
-        try{
-                
-                Rs = Sql.Select("select * from ctacteprvdet \n" +
-                                "where rut=" + txRut.getText() + " \n"+
-                                "and tipdocto IN ('OCP')\n"+
-                                "and nrodocto =" + Orden );
-                
-                
-                if (Sql.GetRowCount() > 0){
-                
-                    while (Rs.next()){
-                    
-                        int cantidad = Rs.getInt("cantidad");
-                        int recibido = Rs.getInt("recibido");
-                        String Sku = Rs.getString("sku").trim();
-                        
-                        System.out.println("LA cantidad ES : "+cantidad);
-                        System.out.println("LO recibido ES : "+recibido);
-                        System.out.println("EL Sku ES : "+Sku);
-                        
-                        
-                        if(cantidad > recibido ){
-                        
-                            
-                            if (recibido > 0){
-                               
-                                Sql2.ExeSql("UPDATE ctacteprvdet SET \n" +
-                                            "cantidad = " + recibido + "\n" +
-                                            "WHERE rut= " + txRut.getText() + " \n" +  
-                                            "and tipdocto IN ('OCP')\n"+
-                                            "and nrodocto =" + Orden + " \n"+
-                                            "AND sku='" + Sku + "'");
-                                
-                            }else if (recibido == 0){
-                            
-                                Sql2.ExeSql("DELETE FROM ctacteprvdet \n" +
-                                            "WHERE rut= " + txRut.getText() + " \n" +
-                                            "and tipdocto IN ('OCP')\n"+
-                                            "and nrodocto =" + Orden + " \n"+
-                                            "AND sku='" + Sku + "'");
-                            }
-                          
-                            Sql2.Commit();
-                        
+
+        try {
+
+            Rs = Sql.Select("select * from ctacteprvdet \n"
+                    + "where rut=" + txRut.getText() + " \n"
+                    + "and tipdocto IN ('OCP')\n"
+                    + "and nrodocto =" + Orden);
+
+            if (Sql.GetRowCount() > 0) {
+
+                while (Rs.next()) {
+
+                    int cantidad = Rs.getInt("cantidad");
+                    int recibido = Rs.getInt("recibido");
+                    String Sku = Rs.getString("sku").trim();
+
+                    System.out.println("LA cantidad ES : " + cantidad);
+                    System.out.println("LO recibido ES : " + recibido);
+                    System.out.println("EL Sku ES : " + Sku);
+
+                    if (cantidad > recibido) {
+
+                        if (recibido > 0) {
+
+                            Sql2.ExeSql("UPDATE ctacteprvdet SET \n"
+                                    + "cantidad = " + recibido + "\n"
+                                    + "WHERE rut= " + txRut.getText() + " \n"
+                                    + "and tipdocto IN ('OCP')\n"
+                                    + "and nrodocto =" + Orden + " \n"
+                                    + "AND sku='" + Sku + "'");
+
+                        } else if (recibido == 0) {
+
+                            Sql2.ExeSql("DELETE FROM ctacteprvdet \n"
+                                    + "WHERE rut= " + txRut.getText() + " \n"
+                                    + "and tipdocto IN ('OCP')\n"
+                                    + "and nrodocto =" + Orden + " \n"
+                                    + "AND sku='" + Sku + "'");
                         }
-                        
-                    
+
+                        Sql2.Commit();
+
                     }
-                    
-                    
-                    Sql3.ExeSql("UPDATE ctacteprv SET \n" +
-                                "totalafecto = " + Neto + ",\n" +
-                                "comision = " + Comision + ",\n" +
-                                "totaliva = " + Iva + ",\n" +
-                                "totaldocto = " + Total + "\n" +
-                                "WHERE rut= " + txRut.getText() + " \n" +  
-                                "and tipdocto IN ('OCP')\n"+
-                                "and nrodocto =" + Orden );
-              
-                   Sql3.Commit();
-                    
-                   
+
                 }
-                
+
+                Sql3.ExeSql("UPDATE ctacteprv SET \n"
+                        + "totalafecto = " + Neto + ",\n"
+                        + "comision = " + Comision + ",\n"
+                        + "totaliva = " + Iva + ",\n"
+                        + "totaldocto = " + Total + "\n"
+                        + "WHERE rut= " + txRut.getText() + " \n"
+                        + "and tipdocto IN ('OCP')\n"
+                        + "and nrodocto =" + Orden);
+
+                Sql3.Commit();
+
+            }
+
         } catch (SQLException e) {
-            
+
             Sql2.Rollback();
             Sql3.Rollback();
-            
-            
+
             System.out.println(e);
-        
-        }finally{
-            
+
+        } finally {
+
             Sql.Close();
             Sql2.Close();
             Sql3.Close();
-         
-        
+
         }
-        
-    
+
     }
-    
-    
-    private void actualiza_blog_ocp(){
-        
+
+    private void actualiza_blog_ocp() {
+
         try {
             ExeSql Sql = new ExeSql();
-            
-            Sql.ExeSql("UPDATE blog_ocp SET \n" +
-                       "texto = 'Recepcion Completa FAP " + txNroFactura.getText().trim() + "' \n" +
-                       "WHERE rut= " + txRut.getText() + " \n" +
-                       "and tipdocto IN ('OCP')\n"+
-                       "and nrodocto =" + txOrden.getText().trim()  + " \n" +
-                       "and tipo = 4 ");
-            
+
+            Sql.ExeSql("UPDATE blog_ocp SET \n"
+                    + "texto = 'Recepcion Completa FAP " + txNroFactura.getText().trim() + "' \n"
+                    + "WHERE rut= " + txRut.getText() + " \n"
+                    + "and tipdocto IN ('OCP')\n"
+                    + "and nrodocto =" + txOrden.getText().trim() + " \n"
+                    + "and tipo = 4 ");
+
         } catch (SQLException ex) {
             Logger.getLogger(pfFAProveedor.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
+
     }
-    
-    
-    
-    private void Calcular_CostoPromedio(String Sku, String NuevaCant, String NuevoValor, int fila){
-    
-        NuevaCant = NuevaCant.replaceAll("\\,","");
-        NuevaCant = NuevaCant.replaceAll("\\.00","");
-        
-        NuevoValor = NuevoValor.replaceAll("\\,","");
-        NuevoValor = NuevoValor.replaceAll("\\.00","");
-        
+
+    private void Calcular_CostoPromedio(String Sku, String NuevaCant, String NuevoValor, int fila) {
+
+        NuevaCant = NuevaCant.replaceAll("\\,", "");
+        NuevaCant = NuevaCant.replaceAll("\\.00", "");
+
+        NuevoValor = NuevoValor.replaceAll("\\,", "");
+        NuevoValor = NuevoValor.replaceAll("\\.00", "");
+
         ExeSql Sql = new ExeSql();
         ResultSet Rs;
-        
+
         double actual_costo_promedio = 0;
         double nuevocostopromedio = 0;
         int stock = 0;
         int stockanterior = 0;
-        
-        
+
         int nuevacant = Integer.valueOf(NuevaCant);
         int nuevovalor = Integer.valueOf(NuevoValor);
         double nuevocosto = 0;
-        
+
         double totalnuevacompra = 0;
         double totalanterior = 0;
         double nuevototal = 0;
-                
-        
+
         try {
-            
-            Rs = Sql.Select("SELECT p.sku, case when p.costofinal is null then 0 else p.costofinal end, p.valpromcompra,i.stock FROM producto p \n" +
-                            "LEFT JOIN inventario i ON p.sku = i.sku \n" +
-                            "WHERE p.sku = '"+Sku+"'");
-            
-            if (Sql.GetRowCount() > 0){
-                
+
+            Rs = Sql.Select("SELECT p.sku, case when p.costofinal is null then 0 else p.costofinal end, p.valpromcompra,i.stock FROM producto p \n"
+                    + "LEFT JOIN inventario i ON p.sku = i.sku \n"
+                    + "WHERE p.sku = '" + Sku + "'");
+
+            if (Sql.GetRowCount() > 0) {
+
                 Rs.next();
-            
-                
-                System.out.println("Nueva Valor : "+NuevoValor);  
-                
-                
+
+                System.out.println("Nueva Valor : " + NuevoValor);
+
                 stock = Rs.getInt("stock"); //Stock Actual     
-                System.out.println("Stock Actual : "+stock);  
-                
-                if (stock < 0){
-                
+                System.out.println("Stock Actual : " + stock);
+
+                if (stock < 0) {
+
                     stock = 0;
-                
+
                 }
-                
-                
-                System.out.println("Nueva Cantidad : "+nuevacant);
-                
+
+                System.out.println("Nueva Cantidad : " + nuevacant);
+
                 if (stock >= nuevacant) {
-                
+
                     stockanterior = stock - nuevacant;             //stock anterior =  Stock Actual-Nueva Cantidad 
-                
-                }else if (stock < nuevacant) {
-                
+
+                } else if (stock < nuevacant) {
+
                     stockanterior = 0;
-                
+
                 }
-                
-                
-                System.out.println("Stock Anterior : "+stockanterior);
-                
-                actual_costo_promedio = Rs.getDouble("costofinal");  
-                System.out.println("Costo Promedio Actual : "+actual_costo_promedio);
-                
-                
+
+                System.out.println("Stock Anterior : " + stockanterior);
+
+                actual_costo_promedio = Rs.getDouble("costofinal");
+                System.out.println("Costo Promedio Actual : " + actual_costo_promedio);
+
                 totalanterior = stockanterior * actual_costo_promedio;  //Total anterior
-                System.out.println("Total Anterior : "+totalanterior);
-                  
-                  
+                System.out.println("Total Anterior : " + totalanterior);
+
                 nuevacant = (Integer.parseInt(NuevaCant.replace(".0", "")));  //Nueva Cantidad 
-                System.out.println("Nueva Cantidad .0 : "+nuevacant);
-                
-                
-                
+                System.out.println("Nueva Cantidad .0 : " + nuevacant);
+
                 nuevovalor = (Integer.parseInt(NuevoValor.replace(".0", "")));   //Valor Unitario Nuevo Valor
-                System.out.println("Nuevo Valor : "+nuevovalor);
-                
-                
+                System.out.println("Nuevo Valor : " + nuevovalor);
+
                 totalnuevacompra = (nuevacant * nuevocosto);         //Nueva Cantidad * Nuevo Valor Unitario = Total Compra    
-                System.out.println("Total Nueva Compra : "+totalnuevacompra+"\n\n");
-                  
-                  
-                if (totalanterior <= 0){
-                  
+                System.out.println("Total Nueva Compra : " + totalnuevacompra + "\n\n");
+
+                if (totalanterior <= 0) {
+
                     nuevototal = totalnuevacompra;
-                    
-                    if (stock <= 0){
-                    
-                     nuevocostopromedio = Math.round(nuevocosto);     
-                    
-                    }else if (stock > 0){
-                    
-                        nuevocostopromedio = Math.round(nuevototal/stock); 
-                    
-                    }
-                    
-                    System.out.println("Nuevo Total : "+nuevototal);
-                    System.out.println("Nuevo Costo Promedio : "+nuevocostopromedio);
-                    
-                      
-                }else if (totalanterior > 0) {
-                  
-                    nuevototal = Math.round(totalanterior + totalnuevacompra);
-                    
-                    if (stock <= 0){
-                    
-                        nuevocostopromedio = Math.round(nuevocosto);     
-                    
-                    }else if (stock > 0) {
-                    
+
+                    if (stock <= 0) {
+
+                        nuevocostopromedio = Math.round(nuevocosto);
+
+                    } else if (stock > 0) {
+
                         nuevocostopromedio = Math.round(nuevototal / stock);
-                    
+
                     }
-                    System.out.println("Nuevo Total : "+nuevototal);
-                    System.out.println("Nuevo Costo Promedio : "+nuevocostopromedio);
+
+                    System.out.println("Nuevo Total : " + nuevototal);
+                    System.out.println("Nuevo Costo Promedio : " + nuevocostopromedio);
+
+                } else if (totalanterior > 0) {
+
+                    nuevototal = Math.round(totalanterior + totalnuevacompra);
+
+                    if (stock <= 0) {
+
+                        nuevocostopromedio = Math.round(nuevocosto);
+
+                    } else if (stock > 0) {
+
+                        nuevocostopromedio = Math.round(nuevototal / stock);
+
+                    }
+                    System.out.println("Nuevo Total : " + nuevototal);
+                    System.out.println("Nuevo Costo Promedio : " + nuevocostopromedio);
                 }
-                
-                
-                
-   
 
             }
-            
+
             Lista.add(new ArrayList<String>());
-        
-            Lista.get(fila).add(0,Sku);
-            Lista.get(fila).add(1,String.valueOf(nuevocostopromedio));
-            Lista.get(fila).add(2,String.valueOf(nuevototal));
-  
-            
+
+            Lista.get(fila).add(0, Sku);
+            Lista.get(fila).add(1, String.valueOf(nuevocostopromedio));
+            Lista.get(fila).add(2, String.valueOf(nuevototal));
+
 //            System.out.println("LA FILA1 0 = "+Lista.get(fila).get(0));
 //            System.out.println("LA FILA1 0 = "+Lista.get(fila).get(1));
-            
-        
         } catch (SQLException ex) {
-        
+
             Logger.getLogger(pfFAProveedor.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-    
-    } 
-    
-    private void actualiza_venta_web (){
-    
-    
-        ExeSql  Sql = new ExeSql();
-        ExeSql  Sql2 = new ExeSql();
-              
+
+    }
+
+    private void actualiza_venta_web() {
+
+        ExeSql Sql = new ExeSql();
+        ExeSql Sql2 = new ExeSql();
+
         ResultSet Rs;
-              
+
         double valor_uc = 0;
         double cost_ref = 0;
-        
+
         double cost_vent_iva = 0;
-                   
-        
-        try{
-            
+
+        try {
+
             for (int i = 0; i < Grilla.getRowCount(); i++) {
-                
-                Rs = Sql.Select("SELECT sku, valultcompra FROM producto \n" +
-                                "WHERE sku = '"+Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim()+"'" );
-            
-                if (Sql.GetRowCount() > 0){
-            
+
+                Rs = Sql.Select("SELECT sku, valultcompra FROM producto \n"
+                        + "WHERE sku = '" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "'");
+
+                if (Sql.GetRowCount() > 0) {
+
                     Rs.next();
-                
+
                     valor_uc = Rs.getDouble("valultcompra");
-                
-            
-                }else {
-                
+
+                } else {
+
                     valor_uc = 0;
-                
+
                 }
 
-                
                 cost_ref = valor_uc;
-                cost_vent_iva = Math.round((cost_ref/0.65*1.19));
-                               
-                 Sql2.ExeSql("UPDATE producto SET\n" +
-                             "pventa_web = " +cost_vent_iva  + ", \n" +
-                             "compra = 1, \n" +
-                             "compra2 = 0 \n" +
-                             "WHERE sku = '" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "'\n");
+                cost_vent_iva = Math.round((cost_ref / 0.65 * 1.19));
+
+                Sql2.ExeSql("UPDATE producto SET\n"
+                        + "pventa_web = " + cost_vent_iva + ", \n"
+                        + "compra = 1, \n"
+                        + "compra2 = 0 \n"
+                        + "WHERE sku = '" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "'\n");
                 Sql2.Commit();
-            
+
             }
-            
+
         } catch (Exception e) {
             Sql2.Rollback();
             JOptionPane.showMessageDialog(null, e);
         }
-        
-        
-        
-        
-    
+
     }
-    
-    
+
+
     private void txNroFacturaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txNroFacturaKeyPressed
-        if(evt.getKeyCode()== KeyEvent.VK_ENTER)
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
             btIrFactura.doClick();
     }//GEN-LAST:event_txNroFacturaKeyPressed
 
     private void txDiasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txDiasMouseClicked
-       
-        if(evt.getClickCount()==2 && (Tipo==3 || Tipo==1)){
+
+        if (evt.getClickCount() == 2 && (Tipo == 3 || Tipo == 1)) {
             jdDiasOCP Dias = new jdDiasOCP(null, true);
             Dias.setTitle("Dias");
             Dias.setLocationRelativeTo(txDias);
             Dias.SetFilas(Integer.valueOf(txCuotas.getText()));
             Dias.setVisible(true);
-    //        Dias.SetFoco();
+            //        Dias.SetFoco();
             txDias.setText(Dias.GetFilas());
         }
     }//GEN-LAST:event_txDiasMouseClicked
@@ -2121,21 +2030,21 @@ public class pfFAProveedor extends javax.swing.JPanel {
     private void btEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditarActionPerformed
         /*Botones*/
         BotonesEdita(true);
-        
+
         /*Editar*/
         dtEmision.setEditable(true);
         dtRecepcion.setEditable(true);
         txCuotas.setEditable(true);
         btAutorizar.setEnabled(true);
         cbTipoPago.setEnabled(true);
-        Tipo=3;
+        Tipo = 3;
     }//GEN-LAST:event_btEditarActionPerformed
 
     private void txCuotasKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txCuotasKeyTyped
-        if(!Character.isDigit(evt.getKeyChar()))
+        if (!Character.isDigit(evt.getKeyChar()))
             evt.consume();
     }//GEN-LAST:event_txCuotasKeyTyped
-    void BotonesEdita(boolean Estado)    {
+    void BotonesEdita(boolean Estado) {
         /*Botones*/
         btEditar.setEnabled(Estado);
         btAbrir.setEnabled(!Estado);
@@ -2144,24 +2053,30 @@ public class pfFAProveedor extends javax.swing.JPanel {
         btGuardar.setEnabled(Estado);
         btNuevo.setEnabled(!Estado);
 //        btAutorizar.setEnabled(Estado);
-        
+
         /*bloquea*/
         txRut.setEditable(!Estado);
         txNroFactura.setEditable(!Estado);
         txOrden.setEditable(!Estado);
-        
+
     }
+
     public String getFechaEmision() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return( sdf.format( (dtEmision.getDate()).getTime() ) );
+        return (sdf.format((dtEmision.getDate()).getTime()));
     }
+
     public String getFechaRecepcion() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return( sdf.format( (dtRecepcion.getDate()).getTime() ) );
+        return (sdf.format((dtRecepcion.getDate()).getTime()));
     }
-    private Integer BoolToInt(boolean Dato){
-       if(Dato) return 1;
-       else     return 0;
+
+    private Integer BoolToInt(boolean Dato) {
+        if (Dato) {
+            return 1;
+        } else {
+            return 0;
+        }
 
     }
     private void btGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGuardarActionPerformed
@@ -2174,197 +2089,153 @@ public class pfFAProveedor extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Faltan Datos !!");
             return;
         }
-        
-        
-        
+
         //***********************************************************************************************************************************//
-        
-            SimpleDateFormat date = new SimpleDateFormat("dd-MM-yyyy");
-            Date femicion = dtEmision.getDate();
-            Date frecepcion= dtRecepcion.getDate();
-            
-            Date factual = new Date();
-            
-            String fecemision = date.format(femicion);
-            String fecrecepcion = date.format(frecepcion);
-            
-            String fecactual = date.format(factual);
-            
-            Date femision2;
-            Date frecepcion2;
-            
-            try {
-            
-            
-                femision2 = date.parse(fecemision);
-                Date factual2 = date.parse(fecactual); 
-            
-                long dif = femision2.getTime() - factual2.getTime();
-                long dias =  dif /(1000*60*60*24);  //Transforma millisegundos a días
-            
-                System.out.println("Hay " + dias + " dia(s) de diferencia");
-            
-            
-                if (dias >0){
-            
-                    fmMain.Mensaje("Fecha Emisión Factura debe ser Menor o Igual a Fecha Actual !!");
-                    return;
-            
-                }
-                
-                
-                frecepcion2 = date.parse(fecrecepcion);
-                
-                
-                long dif2 = frecepcion2.getTime() - factual2.getTime();
-                long dias2 =  dif2 /(1000*60*60*24);  //Transforma millisegundos a días
-            
-                System.out.println("Hay " + dias2 + " dia2(s) de diferencia");
-                
-                
-                if (dias2 >0){
-            
-                    fmMain.Mensaje("Fecha Recepción Factura debe ser Menor o Igual a Fecha Actual !!");
-                    return;
-            
-                }
-                
-                
-                
-                
-                
-            
-            } catch (ParseException ex) {
-                Logger.getLogger(pfFAProveedor.class.getName()).log(Level.SEVERE, null, ex);
+        SimpleDateFormat date = new SimpleDateFormat("dd-MM-yyyy");
+        Date femicion = dtEmision.getDate();
+        Date frecepcion = dtRecepcion.getDate();
+
+        Date factual = new Date();
+
+        String fecemision = date.format(femicion);
+        String fecrecepcion = date.format(frecepcion);
+
+        String fecactual = date.format(factual);
+
+        Date femision2;
+        Date frecepcion2;
+
+        try {
+
+            femision2 = date.parse(fecemision);
+            Date factual2 = date.parse(fecactual);
+
+            long dif = femision2.getTime() - factual2.getTime();
+            long dias = dif / (1000 * 60 * 60 * 24);  //Transforma millisegundos a días
+
+            System.out.println("Hay " + dias + " dia(s) de diferencia");
+
+            if (dias > 0) {
+
+                fmMain.Mensaje("Fecha Emisión Factura debe ser Menor o Igual a Fecha Actual !!");
+                return;
+
             }
-            
-        
-        
-        
-        
-        
-        
-        
+
+            frecepcion2 = date.parse(fecrecepcion);
+
+            long dif2 = frecepcion2.getTime() - factual2.getTime();
+            long dias2 = dif2 / (1000 * 60 * 60 * 24);  //Transforma millisegundos a días
+
+            System.out.println("Hay " + dias2 + " dia2(s) de diferencia");
+
+            if (dias2 > 0) {
+
+                fmMain.Mensaje("Fecha Recepción Factura debe ser Menor o Igual a Fecha Actual !!");
+                return;
+
+            }
+
+        } catch (ParseException ex) {
+            Logger.getLogger(pfFAProveedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         //***********************************************************************************************************************************//
 //        
 //        //********************************************** Verifica Documento en ACEPTA ******************************************************//
-        
         ExeSql Sql2 = new ExeSql();
         ResultSet Rs2;
         ExeSql Sql8 = new ExeSql();
         ResultSet Rs8;
-        
-        
+
         String Rut = txRut.getText().trim();
         String Numero = txNroFactura.getText().trim();
-        
+
         intNivelUsuario = fmMain.trae_nivel(fmMain.GetUsuario());
-            
+
         try {
-            Rs2 = Sql2.Select("SELECT rut,tipdocto,nrodocto FROM doc_mail \n" +
-                              "WHERE rut = "+Rut+ "\n"+
-                              "AND nrodocto=" + Numero);
-            
-            
-            if(Sql2.GetRowCount()==0 ){
-                JOptionPane.showMessageDialog(null,"Documento no Notificado en ACEPTA");
+            Rs2 = Sql2.Select("SELECT rut,tipdocto,nrodocto FROM doc_mail \n"
+                    + "WHERE rut = " + Rut + "\n"
+                    + "AND nrodocto=" + Numero);
+
+            if (Sql2.GetRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "Documento no Notificado en ACEPTA");
                 txNroFactura.requestFocus();
                 return;
-            
-            }else if(Sql2.GetRowCount() > 0 ) {
-                   
-                
-                
-                 if (Tipo == 1) {
-                
-                    Rs8 = Sql8.Select("SELECT rut,tipdocto,nrodocto FROM ctacteprv \n" +
-                                      "WHERE rut = "+Rut+ " AND tipdocto IN ('FAG','FAP') \n"+
-                                      "AND nrodocto=" + Numero);
-                   
-                    if(Sql8.GetRowCount() > 0 ){
-                   
-                        JOptionPane.showMessageDialog(null,"Documento ya está ingresado");
+
+            } else if (Sql2.GetRowCount() > 0) {
+
+                if (Tipo == 1) {
+
+                    Rs8 = Sql8.Select("SELECT rut,tipdocto,nrodocto FROM ctacteprv \n"
+                            + "WHERE rut = " + Rut + " AND tipdocto IN ('FAG','FAP') \n"
+                            + "AND nrodocto=" + Numero);
+
+                    if (Sql8.GetRowCount() > 0) {
+
+                        JOptionPane.showMessageDialog(null, "Documento ya está ingresado");
                         txNroFactura.requestFocus();
                         return;
-                    
-                    }    
-                 }    
+
+                    }
+                }
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(pfFAProveedor.class.getName()).log(Level.SEVERE, null, ex);
         }
-   
-        
+
         //*****************************************************************************************************************************//
-      
-        
-         //***********************************************************************************************************************     
-             
-            try {
-               
-                ExeSql Sql7 = new ExeSql();
-                ResultSet Rs7;
-                
-                
-                Rs7 = Sql7.Select("SELECT rut,tipdocto,nrodocto FROM prv_cuentasxpagar \n" +
-                                  "WHERE rut = "+Rut+ " AND tipdocto IN ('BOG','FAG','FAP')\n"+
-                                  "AND nrodocto=" + Numero);
+        //***********************************************************************************************************************     
+        try {
 
+            ExeSql Sql7 = new ExeSql();
+            ResultSet Rs7;
 
-               if(Sql7.GetRowCount() > 0 ){
-                   JOptionPane.showMessageDialog(null,"Documento ya está ingresado...!");
-                   txNroFactura.requestFocus();
-                   return;
-               }
+            Rs7 = Sql7.Select("SELECT rut,tipdocto,nrodocto FROM prv_cuentasxpagar \n"
+                    + "WHERE rut = " + Rut + " AND tipdocto IN ('BOG','FAG','FAP')\n"
+                    + "AND nrodocto=" + Numero);
 
-           } catch (SQLException ex) {
-               Logger.getLogger(pfNCPProveedor.class.getName()).log(Level.SEVERE, null, ex);
-           }
+            if (Sql7.GetRowCount() > 0) {
+                JOptionPane.showMessageDialog(null, "Documento ya está ingresado...!");
+                txNroFactura.requestFocus();
+                return;
+            }
 
-           
-       //**********************************************************************************************************************     
-        
-        
-        
-    
-        
-        
-        if (cbTipoPago.getSelectedIndex() == 0){
-                
+        } catch (SQLException ex) {
+            Logger.getLogger(pfNCPProveedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //**********************************************************************************************************************     
+        if (cbTipoPago.getSelectedIndex() == 0) {
+
             JOptionPane.showMessageDialog(null, "Debe elegir un Tipo de Pago");
             return;
         }
-        
-        if (txCuotas.getText().isEmpty()){
-        
+
+        if (txCuotas.getText().isEmpty()) {
+
             JOptionPane.showMessageDialog(null, "Debe ingresar el N° de cuota");
             return;
-        
+
         }
-        
-        
-        if (txDias.getText().isEmpty()){
-        
+
+        if (txDias.getText().isEmpty()) {
+
             JOptionPane.showMessageDialog(null, "Debe ingresar el N° de Dias");
             return;
-            
+
         }
-        
-        
-        
-      
+
         ExeSql Sql = new ExeSql();
 
         /*
          NUEVA FACTURA PROVEEDOR            
          */
-        
-        
         if (Tipo == 1) {
-            
+
             try {
-                
+
                 Sql.ExeSql("INSERT INTO public.ctacteprv\n"
                         + "(rut,tipdocto,nrodocto,femision,frecepcion,totalafecto,totalexento,totaliva,totalotroimp,\n"
                         + "adicioharina12,adicioiaba10,adicioiaba18, \n"
@@ -2385,11 +2256,10 @@ public class pfFAProveedor extends javax.swing.JPanel {
                         + fmMain.SetGuardar(txAdicIABA18.getText()) + ","
                         + fmMain.SetGuardar(txTotal.getText()) + ","
                         + cbTipoPagoId.getSelectedItem().toString() + ","
-                        + BoolToInt(chkElectronica.isSelected()) + ",0," 
+                        + BoolToInt(chkElectronica.isSelected()) + ",0,"
                         + txCuotas.getText().trim() + ",'"
-                        + txDias.getText().trim() + "','OCP'," + txOrden.getText().trim() +","+fmMain.SetGuardar(txComision.getText())+ ")");
-                
-                
+                        + txDias.getText().trim() + "','OCP'," + txOrden.getText().trim() + "," + fmMain.SetGuardar(txComision.getText()) + ")");
+
                 for (int i = 0; i < Grilla.getRowCount(); i++) {
                     Sql.ExeSql("INSERT INTO ctacteprvdet\n"
                             + "(rut,tipdocto,nrodocto,sku,cantidad, valorunitario,totallinea) \n"
@@ -2402,40 +2272,37 @@ public class pfFAProveedor extends javax.swing.JPanel {
                             + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + ","
                             + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()) + ")");
                 }
-                
+
                 for (int i = 0; i < lstGuias.getModel().getSize(); i++) {
-                    
+
                     String NroGuia = lstGuias.getModel().getElementAt(i).toString();
-                    
+
                     Sql.ExeSql("update ctacteprv set tipdocorigen='FAP', autoriza = 3, nrodocorigen=" + txNroFactura.getText().trim() + "\n"
                             + "where rut=" + RutBusca.trim() + "\n"
                             + "and tipdocto='GDP' \n"
                             + "and nrodocto=" + NroGuia);
                 }
                 Sql.Commit();
-                
-                 Nuevo_Blog(1);
-                
-                
-                JOptionPane.showMessageDialog(null,"Guardado");
+
+                Nuevo_Blog(1);
+
+                JOptionPane.showMessageDialog(null, "Guardado");
                 Habilita(false);
-                Tipo=2;
+                Tipo = 2;
 
                 cbTipoPago.setEnabled(false);
-                
-            }catch (Exception e) {
-            
-                fmMain.Mensaje("Error al guardar: "+e);
+
+            } catch (Exception e) {
+
+                fmMain.Mensaje("Error al guardar: " + e);
                 Sql.Rollback();
-            
-            }finally{
+
+            } finally {
                 Sql.Close();
             }
-            
-        } 
-        /*FACTURA ABIERTA EDITANDO*/ 
-        else if (Tipo == 3) {
-            
+
+        } /*FACTURA ABIERTA EDITANDO*/ else if (Tipo == 3) {
+
             try {
                 //Modifica Orden de Compra
                 Sql.ExeSql("update ctacteprv set\n"
@@ -2465,87 +2332,76 @@ public class pfFAProveedor extends javax.swing.JPanel {
                         + "where rut=" + txRut.getText().trim() + "\n"
                         + "and tipdocto='FAP'\n"
                         + "and nrodocto=" + txNroFactura.getText().trim());
-                
-                
-                
+
                 //Modifica detalle producto
-                
                 for (int i = 0; i < Grilla.getRowCount(); i++) {
-                
+
                     Sql.ExeSql("update ctacteprvdet set\n"
-                             + "valorunitario= " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + ",\n"
-                             + "totallinea= " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()) + "\n"
-                             + "where rut=" + txRut.getText().trim() + "\n"
-                             + "and sku ='" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "'\n"
-                             + "and tipdocto= 'FAP' \n"
-                             + "and nrodocto=" + txNroFactura.getText().trim());
-                    
+                            + "valorunitario= " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + ",\n"
+                            + "totallinea= " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()) + "\n"
+                            + "where rut=" + txRut.getText().trim() + "\n"
+                            + "and sku ='" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "'\n"
+                            + "and tipdocto= 'FAP' \n"
+                            + "and nrodocto=" + txNroFactura.getText().trim());
+
                 }
-                
 
                 Sql.Commit();
-                
-                
+
                 JOptionPane.showMessageDialog(null, "Guardado");
-                Tipo=2;
-                
+                Tipo = 2;
+
                 cbTipoPago.setEnabled(false);
-                
+
                 btIrFactura.doClick();
-            
-            }catch (Exception e){
+
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
                 Sql.Rollback();
-            }finally{
+            } finally {
                 Sql.Close();
             }
         }
-        
+
         BotonesEdita(false);
     }//GEN-LAST:event_btGuardarActionPerformed
-    
-    
-    public void Nuevo_Blog(int tipo){
-    
+
+    public void Nuevo_Blog(int tipo) {
+
         ExeSql Sql = new ExeSql();
-        
-        
+
         try {
-            
-            if (tipo == 1){
-            
-                Sql.ExeSql("insert into blog_ocp \n"+
-                           "(rut,tipdocto,nrodocto,texto,tipo) \n"+
-                           "VALUES"+
-                           "("+txRut.getText()+",'OCP',"+txOrden.getText().trim()+",'Se ingresa FAP " + txNroFactura.getText().trim()+"',8)");
-            
-            }else if (tipo == 2){
-            
-                Sql.ExeSql("insert into blog_ocp \n"+
-                           "(rut,tipdocto,nrodocto,texto,tipo) \n"+
-                           "VALUES"+
-                           "("+txRut.getText()+",'OCP',"+txOrden.getText().trim()+",'Se autoriza FAP " + txNroFactura.getText().trim()+"',9)");
+
+            if (tipo == 1) {
+
+                Sql.ExeSql("insert into blog_ocp \n"
+                        + "(rut,tipdocto,nrodocto,texto,tipo) \n"
+                        + "VALUES"
+                        + "(" + txRut.getText() + ",'OCP'," + txOrden.getText().trim() + ",'Se ingresa FAP " + txNroFactura.getText().trim() + "',8)");
+
+            } else if (tipo == 2) {
+
+                Sql.ExeSql("insert into blog_ocp \n"
+                        + "(rut,tipdocto,nrodocto,texto,tipo) \n"
+                        + "VALUES"
+                        + "(" + txRut.getText() + ",'OCP'," + txOrden.getText().trim() + ",'Se autoriza FAP " + txNroFactura.getText().trim() + "',9)");
             }
-            
+
             Sql.Commit();
-          
+
         } catch (SQLException ex) {
             Logger.getLogger(pfFAProveedor.class.getName()).log(Level.SEVERE, null, ex);
             Sql.Rollback();
-        
-        }finally{
-            
+
+        } finally {
+
             Sql.Close();
-        
+
         }
-    
-    
+
     }
-    
-    
-    
-    
-    public void CargaFactura(String Rut,String NroDocto){
+
+    public void CargaFactura(String Rut, String NroDocto) {
         btAbrir.doClick();
         txRut.setText(Rut);
         btIr.doClick();
@@ -2553,12 +2409,12 @@ public class pfFAProveedor extends javax.swing.JPanel {
         btIrFactura.doClick();
     }
     private void btCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarActionPerformed
-        if(fmMain.OkCancel("¿Desea cancelar?")==JOptionPane.OK_OPTION){
+        if (fmMain.OkCancel("¿Desea cancelar?") == JOptionPane.OK_OPTION) {
             BotonesEdita(false);
             Limpia();
-           // btIrFactura.doClick();
+            // btIrFactura.doClick();
             cbTipoPago.setEnabled(false);
-            
+
         }
     }//GEN-LAST:event_btCancelarActionPerformed
 
@@ -2571,19 +2427,18 @@ public class pfFAProveedor extends javax.swing.JPanel {
     }//GEN-LAST:event_btPagosActionPerformed
 
     private void cbTipoPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoPagoActionPerformed
-        
-        System.out.println("La variable Tipo ES : "+Tipo); 
-        System.out.println("La variable CargaTipo ES : "+CargaTipo); 
-        
+
+        System.out.println("La variable Tipo ES : " + Tipo);
+        System.out.println("La variable CargaTipo ES : " + CargaTipo);
+
         //if(Tipo!=-99){
-        
-        if (!CargaTipo){   
+        if (!CargaTipo) {
 //            if(Tipo==2 || Tipo==3){
-           cbTipoPagoId.setSelectedIndex(cbTipoPago.getSelectedIndex());
+            cbTipoPagoId.setSelectedIndex(cbTipoPago.getSelectedIndex());
 //            }
-        }   
-        
-        
+        }
+
+
     }//GEN-LAST:event_cbTipoPagoActionPerformed
 
     private void btNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNuevoActionPerformed
@@ -2595,66 +2450,63 @@ public class pfFAProveedor extends javax.swing.JPanel {
     }//GEN-LAST:event_btNuevoActionPerformed
 
     private void btAgregaGuiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAgregaGuiaActionPerformed
-        
+
         String Condicional = "";
         String Guias = "";
         RutBusca = txRut.getText().trim();
         ExeSql Sql = new ExeSql();
         ExeSql Sql1 = new ExeSql();
         ResultSet Rs, Rs2;
-        
+
         if (Tipo == 1) {
             //--------SI EL RUT PERTENECE A CHILEMAT PUEDE LEER CUALQUIER OTRO RUT SIEMPRE Y CUANDO SEA GUIA Y PERTENEZCA A LAS OC DE CHILEMAT--------------
-            if (txRut.getText().trim().equals("96726970")){
-                
-                try{
-                    
+            if (txRut.getText().trim().equals("96726970")) {
+
+                try {
+
                     String OCCHM = JOptionPane.showInputDialog("Ingrese numero OC (CHILEMAT o LUVALY)");
-                    
+
 //                    Rs2= Sql1.Select("select c.rut from ctacteprv  c\n" +
 //                                    "left join recepcionprv r on c.nrodocto=r.nrodocto and c.tipdocto=r.tipdocto and c.rut = r.rut \n" +
 //                                    "where r.ocp in (select nrodocto from ctacteprv where tipdocto='OCP' and occhilemat="+OCCHM.trim()+")");
-                    
-                    
-                    Rs2= Sql1.Select("select c.rut from ctacteprv  c\n" +
-                                    "left join recepcionprv r on c.nrodocto=r.nrodocto and c.tipdocto=r.tipdocto and c.rut = r.rut \n" +
-                                    "where r.ocp in (select nrodocto from ctacteprv where tipdocto='OCP' and \n"+
-                                    "(occhilemat="+OCCHM.trim()+" or nrodocto = "+OCCHM.trim()+"))");
-                    
-                    
-                    if (Rs2.next()){
-                    
+                    Rs2 = Sql1.Select("select c.rut from ctacteprv  c\n"
+                            + "left join recepcionprv r on c.nrodocto=r.nrodocto and c.tipdocto=r.tipdocto and c.rut = r.rut \n"
+                            + "where r.ocp in (select nrodocto from ctacteprv where tipdocto='OCP' and \n"
+                            + "(occhilemat=" + OCCHM.trim() + " or nrodocto = " + OCCHM.trim() + "))");
+
+                    if (Rs2.next()) {
+
                         RutBusca = Rs2.getString("rut").trim();
-                    }else{
-                    
-                        fmMain.Mensaje("No se encontro la OC: "+OCCHM);
+                    } else {
+
+                        fmMain.Mensaje("No se encontro la OC: " + OCCHM);
                         return;
                     }
-                }catch (Exception e){
-                 
-                    fmMain.Mensaje("Error al cargar OC Chilemat: "+e);
-                
-                }finally {
+                } catch (Exception e) {
+
+                    fmMain.Mensaje("Error al cargar OC Chilemat: " + e);
+
+                } finally {
                     Sql1.Close();
                 }
-                                
+
             }
-            
+
             jdAbrirDocumento ADoc = new jdAbrirDocumento(null, true);
 
-            if (lstGuias.getModel().getSize() > 0){
-                
+            if (lstGuias.getModel().getSize() > 0) {
+
                 for (int i = 0; i < lstGuias.getModel().getSize(); i++) {
                     Guias = Guias + lstGuias.getModel().getElementAt(i).toString() + ",";
                 }
-                
+
                 Guias = Guias.substring(0, Guias.length() - 1);
                 Condicional = "and nrodocorigen is null and  nrodocto not in (" + Guias + ")";
-            }else{
+            } else {
                 Condicional = "and nrodocorigen is null";
             }
 
-            if (ADoc.ShowModalCondicional("GDP", RutBusca , Condicional) == JOptionPane.YES_OPTION) {
+            if (ADoc.ShowModalCondicional("GDP", RutBusca, Condicional) == JOptionPane.YES_OPTION) {
 
 //                // COMPROBAR QUE EL NUMERO A AGREGAR NO ESTE EN LA LISTA
 //                for (int i = 0; i < lstGuias.getModel().getSize(); i++) {
@@ -2666,10 +2518,9 @@ public class pfFAProveedor extends javax.swing.JPanel {
                 dfListModel.addElement(ADoc.GetNumero());
                 lstGuias.setModel(dfListModel);
                 //AgregaGuias();
-               
-                
+
                 try {
-                    Rs = Sql.Select("select p.nrodocto,p.cuotas,p.dias\n"       
+                    Rs = Sql.Select("select p.nrodocto,p.cuotas,p.dias\n"
                             + "from recepcionprv r\n"
                             + "left join ctacteprv p\n"
                             + "on r.rut=p.rut and r.ocp=p.nrodocto and p.tipdocto='OCP'\n"
@@ -2695,7 +2546,7 @@ public class pfFAProveedor extends javax.swing.JPanel {
     }//GEN-LAST:event_btAgregaGuiaActionPerformed
 
     private void lstGuiasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstGuiasMouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             lstGuias.remove(lstGuias.getSelectedIndex());
         }
     }//GEN-LAST:event_lstGuiasMouseClicked
@@ -2705,89 +2556,91 @@ public class pfFAProveedor extends javax.swing.JPanel {
     }//GEN-LAST:event_txDiasActionPerformed
 
     private void btReversarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btReversarActionPerformed
-        ExeSql Sql=new ExeSql();
-        
+        ExeSql Sql = new ExeSql();
+
         try {
-            
-            if(fmMain.OkCancel("¿Realmente desea reversar esta factura?")== JOptionPane.OK_OPTION){
-                
-                Sql.ExeSql("select fn_reversofacprv("+ txRut.getText().trim() +"," + txNroFactura.getText().trim() +")");
+
+            if (fmMain.OkCancel("¿Realmente desea reversar esta factura?") == JOptionPane.OK_OPTION) {
+
+                Sql.ExeSql("select fn_reversofacprv(" + txRut.getText().trim() + "," + txNroFactura.getText().trim() + ")");
                 Sql.Commit();
                 fmMain.Mensaje("Factura Reversada");
-                Tipo=2;
+                Tipo = 2;
                 btIrFactura.doClick();
             }
-            
+
         } catch (Exception e) {
             fmMain.Mensaje(e.getMessage());
             Sql.Rollback();
-        }finally{
+        } finally {
             Sql.Close();
         }
     }//GEN-LAST:event_btReversarActionPerformed
 
     private void jPanel4PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jPanel4PropertyChange
-        
-            
+
+
     }//GEN-LAST:event_jPanel4PropertyChange
 
     private void chkElectronicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkElectronicaActionPerformed
-        if(Tipo==2)
-          chkElectronica.setSelected(EsElectronica);
+        if (Tipo == 2)
+            chkElectronica.setSelected(EsElectronica);
     }//GEN-LAST:event_chkElectronicaActionPerformed
 
     private void txNetoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txNetoMouseClicked
-        
-        if(evt.getClickCount()==2 && Tipo==3){
-        
+
+        if (evt.getClickCount() == 2 && Tipo == 3) {
+
             jdAjustePesos Aju = new jdAjustePesos(null, true);
             Aju.setLocationRelativeTo(null);
             Aju.setVisible(true);
-            
-            if(SumadorNeto + Aju.GetAjuste() > 1 || SumadorNeto + Aju.GetAjuste() < -1)
+
+            if (SumadorNeto + Aju.GetAjuste() > 1 || SumadorNeto + Aju.GetAjuste() < -1) {
                 return;
-            
+            }
+
             SumadorNeto = SumadorNeto + Aju.GetAjuste();
             double Neto = Double.valueOf(fmMain.SetGuardar(txNeto.getText()));
             double Total = Double.valueOf(fmMain.SetGuardar(txTotal.getText()));
             Neto = Neto + Aju.GetAjuste();
             Total = Total + Aju.GetAjuste();
-            
+
             txNeto.setText(fmMain.FormatoTotal(Neto));
             txTotal.setText(fmMain.FormatoTotal(Total));
         }
     }//GEN-LAST:event_txNetoMouseClicked
 
     private void txIvaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txIvaMouseClicked
-        
-        if(evt.getClickCount()==2 && Tipo==3){
-        
+
+        if (evt.getClickCount() == 2 && Tipo == 3) {
+
             jdAjustePesos Aju = new jdAjustePesos(null, true);
             Aju.setLocationRelativeTo(null);
             Aju.setVisible(true);
-            
-            if(SumadorIva + Aju.GetAjuste() > 1 || SumadorIva + Aju.GetAjuste() < -1)
+
+            if (SumadorIva + Aju.GetAjuste() > 1 || SumadorIva + Aju.GetAjuste() < -1) {
                 return;
-            
+            }
+
             SumadorNeto = SumadorIva + Aju.GetAjuste();
             double Iva = Double.valueOf(fmMain.SetGuardar(txIva.getText()));
             double Total = Double.valueOf(fmMain.SetGuardar(txTotal.getText()));
             Iva = Iva + Aju.GetAjuste();
             Total = Total + Aju.GetAjuste();
-            
+
             txIva.setText(fmMain.FormatoTotal(Iva));
             txTotal.setText(fmMain.FormatoTotal(Total));
         }
     }//GEN-LAST:event_txIvaMouseClicked
 
     private void GrillaDocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_GrillaDocMouseClicked
-        
+
         String Tipodoc = GrillaDoc.getValueAt(GrillaDoc.getSelectedRow(), 0).toString().trim();
         String nrodoc = GrillaDoc.getValueAt(GrillaDoc.getSelectedRow(), 1).toString().trim();
-        String fecha  = GrillaDoc.getValueAt(GrillaDoc.getSelectedRow(), 2).toString().trim();
-        String rut ="";
-            
-        if (Tipodoc.equals("GDP")){    
+        String fecha = GrillaDoc.getValueAt(GrillaDoc.getSelectedRow(), 2).toString().trim();
+        String rut = "";
+
+        if (Tipodoc.equals("GDP")) {
 //                pfFAProveedor Pro = new pfFAProveedor();
 //                Pro.setOpaque(false);
 //                pnPestanas.addTab("Factura Proveedor", Pro);
@@ -2795,9 +2648,9 @@ public class pfFAProveedor extends javax.swing.JPanel {
 //                pnPestanas.setTabComponentAt(pnPestanas.indexOfComponent(Pro), btc);
 //                pnPestanas.setSelectedIndex(pnPestanas.getTabCount() - 1);
 //                Pro.CargaFactura(txRut.getText().trim()  ,nrodoc);
-        
-        }else if (Tipodoc.equals("NCP")){
-            
+
+        } else if (Tipodoc.equals("NCP")) {
+
             pfNCPProveedor NCP = new pfNCPProveedor();
             NCP.setOpaque(false);
             pnPestanas.addTab("Nota Credito Proveedor", NCP);
@@ -2808,24 +2661,24 @@ public class pfFAProveedor extends javax.swing.JPanel {
             NCP.CargaProveedor(rut);
             NCP.AbrirNCP(rut, nrodoc);
         }
-        
+
 
     }//GEN-LAST:event_GrillaDocMouseClicked
 
     private void btProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btProdActionPerformed
-       
+
         AgregaGuias();
         CargaImpuestos();
     }//GEN-LAST:event_btProdActionPerformed
 
     private void btEliminaGuiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEliminaGuiaActionPerformed
-       
+
         dfListModel.remove(lstGuias.getSelectedIndex());
-       
+
     }//GEN-LAST:event_btEliminaGuiaActionPerformed
 
     private void btCorrigePesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCorrigePesoActionPerformed
-        if (txEstado.getText().trim().equals("AUTORIZADO")){
+        if (txEstado.getText().trim().equals("AUTORIZADO")) {
             fmMain.Mensaje("La factura se encuentra Autorizada");
             return;
         }
@@ -2843,192 +2696,190 @@ public class pfFAProveedor extends javax.swing.JPanel {
     }//GEN-LAST:event_cbTipoPagoIdActionPerformed
 
     private void txImpEspecificoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txImpEspecificoFocusLost
-        
-        if (Tipo == 1 || Tipo == 3){
-        
+
+        if (Tipo == 1 || Tipo == 3) {
+
             txImpEspecifico.setText(fmMain.FormatoTotal(ImpEsp));
             Sumador();
             txImpEspecifico.setEnabled(false);
             txImpEspecifico.setEditable(false);
         }
-        
+
     }//GEN-LAST:event_txImpEspecificoFocusLost
 
     private void txImpEspecificoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txImpEspecificoKeyPressed
-        
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-        
-            if (Tipo == 1 || Tipo == 3){
-            
+
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+
+            if (Tipo == 1 || Tipo == 3) {
+
                 ImpEsp = Double.valueOf(txImpEspecifico.getText().trim().replaceAll("\\,", ""));
                 Sumador();
                 txRut.requestFocus();
-                
+
             }
         }
-        
-        
-        
+
+
     }//GEN-LAST:event_txImpEspecificoKeyPressed
 
     private void txImpEspecificoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txImpEspecificoMouseClicked
-        
-        if(evt.getClickCount()==2){
-              
-              if (Tipo == 1 || Tipo == 3){
-              
+
+        if (evt.getClickCount() == 2) {
+
+            if (Tipo == 1 || Tipo == 3) {
+
                 txImpEspecifico.requestFocus();
                 ImpEsp = Double.valueOf(txImpEspecifico.getText().trim().replaceAll("\\,", ""));
                 txImpEspecifico.setEnabled(true);
                 txImpEspecifico.setEditable(true);
-              }
-          
-          }
-        
-        
+            }
+
+        }
+
+
     }//GEN-LAST:event_txImpEspecificoMouseClicked
 
     private void txAdicHarina12FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txAdicHarina12FocusLost
-        
-         if (Tipo == 1 || Tipo == 3){
-        
+
+        if (Tipo == 1 || Tipo == 3) {
+
             txAdicHarina12.setText(fmMain.FormatoTotal(EspHarina12));
             Sumador();
             txAdicHarina12.setEnabled(false);
             txAdicHarina12.setEditable(false);
         }
-        
-        
+
+
     }//GEN-LAST:event_txAdicHarina12FocusLost
 
     private void txAdicHarina12KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txAdicHarina12KeyPressed
-        
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-        
-             if (Tipo == 1 || Tipo == 3){
-            
+
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+
+            if (Tipo == 1 || Tipo == 3) {
+
                 EspHarina12 = Double.valueOf(txAdicHarina12.getText().trim().replaceAll("\\,", ""));
                 Sumador();
-                txRut.requestFocus(); 
+                txRut.requestFocus();
             }
         }
-        
-        
+
+
     }//GEN-LAST:event_txAdicHarina12KeyPressed
 
     private void txAdicHarina12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txAdicHarina12MouseClicked
-        
-        if(evt.getClickCount()==2){
-              
-            if (Tipo == 1 || Tipo == 3){
-              
+
+        if (evt.getClickCount() == 2) {
+
+            if (Tipo == 1 || Tipo == 3) {
+
                 txAdicHarina12.requestFocus();
                 EspHarina12 = Double.valueOf(txAdicHarina12.getText().trim().replaceAll("\\,", ""));
                 txAdicHarina12.setEnabled(true);
                 txAdicHarina12.setEditable(true);
             }
-          
+
         }
-        
-        
+
+
     }//GEN-LAST:event_txAdicHarina12MouseClicked
 
     private void txAdicIABA10FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txAdicIABA10FocusLost
-        
-        if (Tipo == 1 || Tipo == 3){
-        
+
+        if (Tipo == 1 || Tipo == 3) {
+
             txAdicIABA10.setText(fmMain.FormatoTotal(EspIABA10));
             Sumador();
             txAdicIABA10.setEnabled(false);
             txAdicIABA10.setEditable(false);
         }
-        
-        
+
+
     }//GEN-LAST:event_txAdicIABA10FocusLost
 
     private void txAdicIABA10KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txAdicIABA10KeyPressed
-        
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-        
-            if (Tipo == 1 || Tipo == 3){
-            
+
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+
+            if (Tipo == 1 || Tipo == 3) {
+
                 EspIABA10 = Double.valueOf(txAdicIABA10.getText().trim().replaceAll("\\,", ""));
                 Sumador();
                 txRut.requestFocus();
             }
         }
-        
-        
+
+
     }//GEN-LAST:event_txAdicIABA10KeyPressed
 
     private void txAdicIABA10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txAdicIABA10MouseClicked
-        
-        if(evt.getClickCount()==2){
-              
-            if (Tipo == 1 || Tipo == 3){
-              
+
+        if (evt.getClickCount() == 2) {
+
+            if (Tipo == 1 || Tipo == 3) {
+
                 txAdicIABA10.requestFocus();
                 EspIABA10 = Double.valueOf(txAdicIABA10.getText().trim().replaceAll("\\,", ""));
                 txAdicIABA10.setEnabled(true);
                 txAdicIABA10.setEditable(true);
             }
-          
+
         }
-        
-        
-        
+
+
     }//GEN-LAST:event_txAdicIABA10MouseClicked
 
     private void txAdicIABA18FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txAdicIABA18FocusLost
-        
-        if (Tipo == 1 || Tipo == 3){
-        
+
+        if (Tipo == 1 || Tipo == 3) {
+
             txAdicIABA18.setText(fmMain.FormatoTotal(EspIABA18).trim().replaceAll("\\,", ""));
             Sumador();
             txAdicIABA18.setEnabled(false);
             txAdicIABA18.setEditable(false);
         }
-        
-        
+
+
     }//GEN-LAST:event_txAdicIABA18FocusLost
 
     private void txAdicIABA18KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txAdicIABA18KeyPressed
-        
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-        
-           if (Tipo == 1 || Tipo == 3){
-            
+
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+
+            if (Tipo == 1 || Tipo == 3) {
+
                 EspIABA18 = Double.valueOf(txAdicIABA18.getText().trim().replaceAll("\\,", ""));
                 Sumador();
                 txRut.requestFocus();
             }
         }
-        
-        
+
+
     }//GEN-LAST:event_txAdicIABA18KeyPressed
 
     private void txAdicIABA18MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txAdicIABA18MouseClicked
-        
-        if(evt.getClickCount()==2){
-              
-             if (Tipo == 1 || Tipo == 3){
-              
+
+        if (evt.getClickCount() == 2) {
+
+            if (Tipo == 1 || Tipo == 3) {
+
                 txAdicIABA18.requestFocus();
                 EspIABA18 = Double.valueOf(txAdicIABA18.getText().trim().replaceAll("\\,", ""));
                 txAdicIABA18.setEnabled(true);
                 txAdicIABA18.setEditable(true);
             }
-          
+
         }
-        
-        
+
+
     }//GEN-LAST:event_txAdicIABA18MouseClicked
-    
+
     private void AgregaGuias() {
-        
+
         DefaultTableModel dfTm = (DefaultTableModel) Grilla.getModel();
-        double cant_ingresa=0, cant_grilla=0;
-        double valor_ingresa=0, valor_grilla=0;
+        double cant_ingresa = 0, cant_grilla = 0;
+        double valor_ingresa = 0, valor_grilla = 0;
         String Guias = "";
 
         if (lstGuias.getModel().getSize() > 0) {
@@ -3046,106 +2897,100 @@ public class pfFAProveedor extends javax.swing.JPanel {
 
             try {
                 //Rs = Sql.Select("select d.sku,p.nombre,u.unidad,sum(d.cantidad) as cantidad,d.valorunitario,sum(d.totallinea) as totallinea\n"
-                Rs = Sql.Select("select d.sku,p.nombre,u.unidad,sum(d.cantidad+d.ubicancp) as cantidad,d.valorunitario,sum(d.totallinea) as totallinea, d.ubicancp\n"        
-                              + "from ctacteprvdet d\n"
-                              + "left join producto p on d.sku=p.sku\n"
-                              + "left join par_unidad u on p.unidad=u.codigo\n"
-                              + "where tipdocto='GDP'\n"
-                              + "and rut="+ RutBusca +"\n"
-                              + "and nrodocto in (" + Guias + ")\n"
-                              + "group by d.sku,p.nombre,u.unidad,d.valorunitario,d.ubicancp");
-                String codigo="";
-                int pos =-1;
-                
-                while(Rs.next()){
+                Rs = Sql.Select("select d.sku,p.nombre,u.unidad,sum(d.cantidad+d.ubicancp) as cantidad,d.valorunitario,sum(d.totallinea) as totallinea, d.ubicancp\n"
+                        + "from ctacteprvdet d\n"
+                        + "left join producto p on d.sku=p.sku\n"
+                        + "left join par_unidad u on p.unidad=u.codigo\n"
+                        + "where tipdocto='GDP'\n"
+                        + "and rut=" + RutBusca + "\n"
+                        + "and nrodocto in (" + Guias + ")\n"
+                        + "group by d.sku,p.nombre,u.unidad,d.valorunitario,d.ubicancp");
+                String codigo = "";
+                int pos = -1;
+
+                while (Rs.next()) {
                     // primero se valida si el codigo esta o no en la grilla
                     //--------------------------------------------------------------------------------------
                     // Busca si el codigo se ha ingresado anteriormente en la grilla
-                    for (int i=0; i<=Grilla.getRowCount()-1; i++ ){
-                        
-                        codigo= Grilla.getValueAt(i, 0).toString().trim();
-                        
-                        if (codigo.equals(Rs.getString("sku").trim())){
-                        
+                    for (int i = 0; i <= Grilla.getRowCount() - 1; i++) {
+
+                        codigo = Grilla.getValueAt(i, 0).toString().trim();
+
+                        if (codigo.equals(Rs.getString("sku").trim())) {
+
                             pos = i;
                             break;
                         }
                     }
 
                     // Si existe el codigo en la grilla modificara la cantidad ingresada
-                    if (pos>-1){
+                    if (pos > -1) {
                         // Grilla.changeSelection(pos, 0 , false, false);
                         //Valida que el valor unitario sea igual al ingresado
-                
-                
+
                         // Agrupa la cantidad en el codigo correspondiente.
                         cant_ingresa = Double.parseDouble(Rs.getString("cantidad").trim());
-                        cant_grilla = Double.valueOf(fmMain.SetGuardar( Grilla.getValueAt(pos, 3).toString()));
+                        cant_grilla = Double.valueOf(fmMain.SetGuardar(Grilla.getValueAt(pos, 3).toString()));
                         Grilla.setValueAt(cant_grilla + cant_ingresa, pos, 3);
-                
-                        valor_ingresa=Double.parseDouble(Rs.getString("valorunitario").trim());
-                        valor_grilla=   Double.valueOf(fmMain.SetGuardar( Grilla.getValueAt(pos, 7).toString()));
-                
-                        if (valor_grilla > valor_ingresa){
-                            Grilla.setValueAt(fmMain.FormatoTotal(valor_grilla) , pos, 4);
+
+                        valor_ingresa = Double.parseDouble(Rs.getString("valorunitario").trim());
+                        valor_grilla = Double.valueOf(fmMain.SetGuardar(Grilla.getValueAt(pos, 7).toString()));
+
+                        if (valor_grilla > valor_ingresa) {
+                            Grilla.setValueAt(fmMain.FormatoTotal(valor_grilla), pos, 4);
                             Grilla.setValueAt(valor_grilla, pos, 7);
                             // Se reasigna el total
-                            Grilla.setValueAt( fmMain.FormatoTotal((cant_grilla + cant_ingresa)* valor_grilla), pos, 5);
-                        }else{
-                            
-                            Grilla.setValueAt( fmMain.FormatoTotal(valor_ingresa), pos, 4);
+                            Grilla.setValueAt(fmMain.FormatoTotal((cant_grilla + cant_ingresa) * valor_grilla), pos, 5);
+                        } else {
+
+                            Grilla.setValueAt(fmMain.FormatoTotal(valor_ingresa), pos, 4);
                             Grilla.setValueAt(valor_ingresa, pos, 7);
                             // Se reasigna el total
-                            Grilla.setValueAt( fmMain.FormatoTotal( (cant_grilla + cant_ingresa)* valor_ingresa), pos, 5);
+                            Grilla.setValueAt(fmMain.FormatoTotal((cant_grilla + cant_ingresa) * valor_ingresa), pos, 5);
                         }
                         // Asigna valores a unireal, cantreal   
                         Grilla.setValueAt(cant_grilla + cant_ingresa, pos, 6);
-                
-                    }else{
+
+                    } else {
                         //--------------------------------------------------------------------------------------
                         dfTm.addRow(new Object[]{
-                                Rs.getString("sku"),
-                                Rs.getString("nombre"),
-                                Rs.getString("unidad"),
-                                fmMain.FormatoNumero(Rs.getDouble("cantidad")),
-                                fmMain.FormatoNumero31(Rs.getDouble("valorunitario")),
-                                fmMain.FormatoNumero31(Rs.getDouble("totallinea")),
-                                Rs.getDouble("cantidad"),
-                                Rs.getDouble("valorunitario"),
-                                fmMain.FormatoNumeroSinDecimal(Rs.getDouble("ubicancp"))
-                                
+                            Rs.getString("sku"),
+                            Rs.getString("nombre"),
+                            Rs.getString("unidad"),
+                            fmMain.FormatoNumero(Rs.getDouble("cantidad")),
+                            fmMain.FormatoNumero31(Rs.getDouble("valorunitario")),
+                            fmMain.FormatoNumero31(Rs.getDouble("totallinea")),
+                            Rs.getDouble("cantidad"),
+                            Rs.getDouble("valorunitario"),
+                            fmMain.FormatoNumeroSinDecimal(Rs.getDouble("ubicancp"))
+
                         });
                     } // Fin Sino       
                 } // End -while
-                
+
                 Sumador();
-                
-                
-                
+
                 Grilla.getColumnModel().getColumn(8).setCellRenderer(new Elrender());
-                
-                
-            }catch (Exception e) {
-            
+
+            } catch (Exception e) {
+
                 fmMain.Mensaje(e.getMessage());
-            
-            }finally{
+
+            } finally {
                 Sql.Close();
             }
 
         }
     }
-    
-    
-    
+
     private void CargaImpuestos() {
-    
+
         if (lstGuias.getModel().getSize() > 0) {
             ExeSql Sql = new ExeSql();
             ResultSet Rs;
-            
-            double cant_ingresa=0, cant_grilla=0;
-            double valor_ingresa=0, valor_grilla=0;
+
+            double cant_ingresa = 0, cant_grilla = 0;
+            double valor_ingresa = 0, valor_grilla = 0;
             String Guias = "";
 
             Comision = 0;
@@ -3153,8 +2998,6 @@ public class pfFAProveedor extends javax.swing.JPanel {
             EspHarina12 = 0;
             EspIABA10 = 0;
             EspIABA18 = 0;
-            
-            
 
             for (int i = 0; i < lstGuias.getModel().getSize(); i++) {
                 Guias = Guias + lstGuias.getModel().getElementAt(i).toString() + ",";
@@ -3162,99 +3005,86 @@ public class pfFAProveedor extends javax.swing.JPanel {
             Guias = Guias.substring(0, Guias.length() - 1);
 
             try {
-                
-                Rs = Sql.Select("select p.rut,p.comision,p.totalotroimp,p.adicioharina12,p.adicioiaba10,p.adicioiaba18 \n"+   
-                               "from ctacteprv p \n"+
-                               "where tipdocto='GDP' \n"+
-                               "and rut="+ RutBusca +"\n"+
-                               "and nrodocto in (" + Guias + ")");
-               
-                
-                if (Sql.GetRowCount() > 0){
-                
-                    while(Rs.next()){
-                        
+
+                Rs = Sql.Select("select p.rut,p.comision,p.totalotroimp,p.adicioharina12,p.adicioiaba10,p.adicioiaba18 \n"
+                        + "from ctacteprv p \n"
+                        + "where tipdocto='GDP' \n"
+                        + "and rut=" + RutBusca + "\n"
+                        + "and nrodocto in (" + Guias + ")");
+
+                if (Sql.GetRowCount() > 0) {
+
+                    while (Rs.next()) {
+
                         ImpEsp = ImpEsp + Rs.getDouble("totalotroimp");
                         EspHarina12 = EspHarina12 + Rs.getDouble("adicioharina12");
                         EspIABA10 = EspIABA10 + Rs.getDouble("adicioiaba10");
                         EspIABA18 = EspIABA18 + Rs.getDouble("adicioiaba18");
-                    
-                    
-                    } 
-                    
+
+                    }
+
                     txImpEspecifico.setText(fmMain.FormatoTotal(ImpEsp));
                     txAdicHarina12.setText(fmMain.FormatoTotal(EspHarina12));
                     txAdicIABA10.setText(fmMain.FormatoTotal(EspIABA10));
                     txAdicIABA18.setText(fmMain.FormatoTotal(EspIABA18));
-                
+
                     Sumador();
-                
+
                 }
-            }catch (Exception e) {
-            
+            } catch (Exception e) {
+
                 fmMain.Mensaje(e.getMessage());
-            
-            }finally{
+
+            } finally {
                 Sql.Close();
             }
 
         }
-        
-    
+
     }
-    
+
     class Elrender extends DefaultTableCellRenderer {
-         
+
         @Override
         public Component getTableCellRendererComponent(JTable tabla, Object valor, boolean isSelected, boolean hasFocus, int fila, int columna) {
-        
-            Component componente = super.getTableCellRendererComponent(tabla,valor,isSelected, hasFocus, fila, columna);
-             
-         
-            if(fila==tabla.getSelectedRow()){
-                
+
+            Component componente = super.getTableCellRendererComponent(tabla, valor, isSelected, hasFocus, fila, columna);
+
+            if (fila == tabla.getSelectedRow()) {
+
                 componente.setForeground(Color.black);
                 componente.setBackground(Color.LIGHT_GRAY);
                 componente.setFont(new Font("Arial", Font.BOLD, 12));
-                
-                
-            }else{
-                 
+
+            } else {
+
                 componente.setForeground(Color.black);
-                componente.setBackground(Color.white);   
-                    
-                    
-            }    
-           
-            
-            if (columna== 8){  
-               
-                if(Double.parseDouble(tabla.getValueAt(fila,8).toString().trim().replaceAll("\\,", "")) > 0 ){
-                
+                componente.setBackground(Color.white);
+
+            }
+
+            if (columna == 8) {
+
+                if (Double.parseDouble(tabla.getValueAt(fila, 8).toString().trim().replaceAll("\\,", "")) > 0) {
+
                     componente.setForeground(Color.red);
                     componente.setFont(new Font("Arial", Font.BOLD, 12));
                     componente.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-            
-                }else{
-                
+
+                } else {
+
                     componente.setForeground(Color.black);
                     componente.setFont(new Font("Arial", Font.PLAIN, 12));
                     componente.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-            
+
                 }
-            
+
             }
-            
-            
-         
-           
-            
+
             return componente;
         }
-    } 
-    
-    
-    
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable Grilla;

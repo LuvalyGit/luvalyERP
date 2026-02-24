@@ -1114,16 +1114,22 @@ private void Sumador(){
     double Total=0;
     String Unitario,Cantidad;
     
-    for(int i=0; i< Grilla.getRowCount(); i++){
-        System.out.println("UniReal ES : "+Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString());
-        
-        Unitario = Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString();
-        Cantidad = Grilla.getModel().getValueAt(i,GetCol("CantReal")).toString();
-        
-        Unitario = Unitario.replace(fmMain.GetMiles(), "");
-        Cantidad = Cantidad.replace(fmMain.GetMiles(), "");
-        Neto =  (Double.parseDouble(Unitario) * Double.parseDouble(Cantidad)) + Neto;
-        System.out.println(Neto);
+    for (int i = 0; i < Grilla.getRowCount(); i++) {
+        Object valUni = Grilla.getModel().getValueAt(i, GetCol("UniReal"));
+        Object valCant = Grilla.getModel().getValueAt(i, GetCol("CantReal"));
+
+        // Validar que no sean nulos o vacíos
+        String strUni = (valUni != null) ? valUni.toString().replace(fmMain.GetMiles(), "").trim() : "0";
+        String strCant = (valCant != null) ? valCant.toString().replace(fmMain.GetMiles(), "").trim() : "0";
+
+        if (strUni.isEmpty()) {
+            strUni = "0";
+        }
+        if (strCant.isEmpty()) {
+            strCant = "0";
+        }
+
+        Neto = (Double.parseDouble(strUni) * Double.parseDouble(strCant)) + Neto;
     }
     Neto = Math.round(Neto);
     
@@ -1809,7 +1815,7 @@ return( sdf.format( (dtDespacho.getDate()).getTime() ) );
     }//GEN-LAST:event_btGuardarActionPerformed
 
     public void GuardarLuvalyOCP() {
-    
+
         ExeSql Sql = new ExeSql();
         ExeSql Sql2 = new ExeSql();
         ExeSql Sql3 = new ExeSql();
@@ -1821,191 +1827,215 @@ return( sdf.format( (dtDespacho.getDate()).getTime() ) );
         String Query3 = "";
         String Query4 = "";
         String NroChm;
-        String Codigos="";
+        String Codigos = "";
         String NewCorrelativo;
-    
-        if(JOptionPane.showConfirmDialog(null, "Guardar los cambios realizados.","Guardar",JOptionPane.YES_OPTION)!= JOptionPane.YES_OPTION){
+
+        if (JOptionPane.showConfirmDialog(null, "Guardar los cambios realizados.", "Guardar", JOptionPane.YES_OPTION) != JOptionPane.YES_OPTION) {
             return;
         }
-    
-            NroChm = lblNroChilemat.getText().trim();
-            
-            if (NroChm.equals("")){
-                NroChm = "-1";
-            }
-            
-            
-            
-            if (cbCuotas.getSelectedIndex() == -1){
-                
-                fmMain.Mensaje("Debe Ingresar Cuotas!!");
-                return;
-            
-            } 
-            
-            
-            if (txDias.getText().trim().equals("")){
-                
-                fmMain.Mensaje("Debe Ingresar Dias!!");
-                return;
-            
-            }
-            
-            
-            
-            if (cbCuotas.getSelectedIndex() >= 1){
-                
-                
-                if(!txDias.getText().trim().contains("-")){
-                    
-                    fmMain.Mensaje("Número de Cuotas no son Iguales!!!!");
-                    return;
-                
-                }
-                
-                String[] nCuotas = txDias.getText().trim().split("-");
-                
-                System.out.println("Las nbCuotas SON :"+nCuotas.length);
-                System.out.println("Las Cuotas SON :"+ Integer.parseInt(cbCuotas.getSelectedItem().toString().trim()) ); 
-                
-                if(nCuotas.length != Integer.parseInt(cbCuotas.getSelectedItem().toString().trim())){
-                 
-                    fmMain.Mensaje("Número de Cuotas no son Iguales!!!!");
-                    return;
-                    
-                    
-                }
-                
-               
-            }
-            
-            
-            try {
-                
-                Rs4 = Sql4.Select("SELECT case when cuotas is null then 1 else cuotas end as cuota, \n" +
-                                  "case when dias is null then '0' else dias end as dia \n" +
-                                  "from proveedor WHERE rut="+ txRut.getText().trim());
-                
-                
-                if (Sql4.GetRowCount() > 0){
-                
-                    Rs4.next();
-                
-                    int DiasProveedor = Rs4.getInt("dia");
-                    
-                    if (!txDias.getText().toString().trim().contains("-")){
-                    
-                        int DiasOCP = Integer.parseInt(txDias.getText().toString().trim());
-                
-                        if(DiasOCP < DiasProveedor){
-                        
-                            fmMain.Mensaje("Condición de Pago de la Orden ("+DiasOCP+" dias) \n"+
-                                           "es menor al de la ficha del Proveedor ("+DiasProveedor+" dias)...!!");
-                            return;
-                        
-                        }
-                    
-                    } 
-                }
-                
-            
-            } catch (SQLException ex) {
-            
-                Logger.getLogger(pfOCProveedor.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            
-            
-            
-           
-            
-    
-    
-     if(Tipo==1){   //Nueva Orden de Compra
-         
-         
-         try {
-             
-             //Busca si existen folios liberados
-            Rs = Sql.Select("select count(*) as Existe from folioslibres where tipdocto='OCP' and estado=0");
-            Rs.next();
-            
-            if(Rs.getInt("Existe")>0){
-            
-                NewCorrelativo = Sql.SelectUnico("select min(nrodocto) as folio from folioslibres where tipdocto='OCP' and estado=0");
-                Sql.ExeSql("update folioslibres set estado=1 where tipdocto='OCP' and nrodocto=" + NewCorrelativo);
-            
-            }else{  //Sino obtiene uno nuevo
-             
-                Sql.ExeSql("update par_correlativo set numero=numero + 1 where tipo='OCP'");
-                NewCorrelativo = Sql.SelectUnico("select numero from par_correlativo where tipo='OCP'");
-            }
 
-            Sql.ExeSql("  INSERT INTO ctacteprv\n" +
-                       "  (rut,tipdocto,nrodocto,femision,totalexento,totalafecto,totaliva,\n" +
-                       "  totalotroimp,totaldocto,fdespacho,contacto,comentarios, tipodespacho,cuotas,dias, occhilemat) \n" +
-                       "  VALUES (\n" +
-                          txRut.getText() + ",\n" +
-                       "  'OCP',\n" +
-                           NewCorrelativo              +  ",\n'" +
-                           getFechaEmisionAsString()   + "',\n" +
-                           fmMain.SetGuardar(txExento.getText()) + ",\n" +
-                           fmMain.SetGuardar(txNeto.getText()) + ",\n" +
-                           fmMain.SetGuardar(txIva.getText()) + ",\n" +
-                           fmMain.SetGuardar(txImpEspecifico.getText()) + ",\n" +
-                           fmMain.SetGuardar(txTotal.getText()) + ",'\n" +
-                           getFechaDespachoAsString()  + "',\n" +
-                           IdVendedor + ",\n'" +
-                           txComentario.getText() + "',\n" +
-                           jComboBox1.getSelectedIndex() + "," +
-                           cbCuotas.getSelectedItem().toString().trim() +",'" + 
-                           txDias.getText().trim() + "', '"+NroChm+"')" );
-             
-                // Guarda Productos
-                for(int i=0; i< Grilla.getRowCount(); i++){
-                    Query = "INSERT INTO ctacteprvdet\n" +
-                            "(rut,tipdocto,nrodocto,sku,cantidad, valorunitario,totallinea) \n" +
-                            "VALUES (\n" +
-                            txRut.getText() + ",\n" +
-                            "  'OCP',\n" +
-                            NewCorrelativo +  ",\n'" +
-                            Grilla.getModel().getValueAt(i,GetCol("Sku")).toString().trim() + "'," +
-                            fmMain.SetGuardar(Grilla.getValueAt(i,GetCol("CantReal")).toString()) + "," +
-                            fmMain.SetGuardar(Grilla.getValueAt(i,GetCol("UniReal")).toString()) + "," +
-                            fmMain.SetGuardar(Grilla.getValueAt(i,GetCol("Total")).toString()) + ")";
-                    Sql.ExeSql(Query);
-                }
-                
-          //      Verifica_Codprv(); 
-                
-        //*********************** ACTUALIZA DIAS - CUOTAS PAGO **************************************************//
-                try {
-                
-                    //Rs = Sql.Select("SELECT cuotas, dias from proveedor WHERE rut="+ txRut.getText().trim());
-                    
-                    Rs = Sql.Select("SELECT case when cuotas is null then 1 else cuotas end as cuota, \n" +
-                                    "case when dias is null then '0' else dias end as dia \n" +
-                                    "from proveedor WHERE rut="+ txRut.getText().trim());
-                    
-                    
-                    Rs.next();
-                
-                    if(!Rs.getString("cuota").equals(cbCuotas.getSelectedItem().toString().trim()) || !Rs.getString("dia").equals(txDias.getText().trim())){
-                        
-                        if(fmMain.OkCancel("¿Desea guardar esta condicion de pago para el Proveedor?")== JOptionPane.OK_OPTION){
-                        
-                            Sql.ExeSql("UPDATE proveedor SET \n" +
-                                       "cuotas=" + cbCuotas.getSelectedItem().toString().trim() + ",\n "+
-                                       "dias='"  + txDias.getText().trim() + "' where rut = " + txRut.getText());
+        ExeSql SqlValida = new ExeSql();
+        try {
+            for (int i = 0; i < Grilla.getRowCount(); i++) {
+
+                // 1. Obtener datos de la fila actual
+                String vSku = Grilla.getValueAt(i, GetCol("Sku")).toString().trim();
+                // Usamos CantReal (índice 8 según tu enum) que es el valor numérico
+                String strCantidad = Grilla.getValueAt(i, GetCol("CantReal")).toString().replace(",", "");
+                double vCantidad = Double.parseDouble(strCantidad);
+
+                // 2. Consultar el embalaje (display) en la base de datos para este SKU
+                ResultSet rsVal = SqlValida.Select("SELECT display FROM producto WHERE sku = '" + vSku + "'");
+
+                if (rsVal.next()) {
+                    int vEmbalaje = rsVal.getInt("display");
+
+                    // 3. Aplicar lógica solo si el producto tiene embalaje configurado (> 0)
+                    if (vEmbalaje > 0) {
+
+                        // Cálculo del múltiplo más cercano
+                        double cantFinal = Math.round(vCantidad / vEmbalaje) * vEmbalaje;
+
+                        // Protección por si el redondeo da 0 (aunque con cantidades positivas no debería pasar)
+                        if (cantFinal == 0 && vCantidad > 0) {
+                            cantFinal = vEmbalaje;
+                        }
+
+                        // 4. Comparar. Si es diferente, DETENER EL GUARDADO.
+                        if (vCantidad != cantFinal) {
+                            fmMain.Mensaje("ERROR DE EMPAQUE EN SKU: " + vSku + "\n"
+                                    + "La cantidad (" + vCantidad + ") no corresponde al embalaje (" + vEmbalaje + ").\n"
+                                    + "Debe ser múltiplo de " + vEmbalaje + ".\n"
+                                    + "Sugerencia: Ajuste a " + (int) cantFinal + ".");
+                            return; // <--- AQUÍ SE DETIENE EL PROCESO DE GUARDADO
                         }
                     }
-            
-                }catch (Exception e) {   
-                
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            fmMain.Mensaje("Error al validar embalajes: " + e.getMessage());
+            return;
+        } finally {
+            SqlValida.Close();
+        }
+
+        NroChm = lblNroChilemat.getText().trim();
+
+        if (NroChm.equals("")) {
+            NroChm = "-1";
+        }
+
+        if (cbCuotas.getSelectedIndex() == -1) {
+
+            fmMain.Mensaje("Debe Ingresar Cuotas!!");
+            return;
+
+        }
+
+        if (txDias.getText().trim().equals("")) {
+
+            fmMain.Mensaje("Debe Ingresar Dias!!");
+            return;
+
+        }
+
+        if (cbCuotas.getSelectedIndex() >= 1) {
+
+            if (!txDias.getText().trim().contains("-")) {
+
+                fmMain.Mensaje("Número de Cuotas no son Iguales!!!!");
+                return;
+
+            }
+
+            String[] nCuotas = txDias.getText().trim().split("-");
+
+            System.out.println("Las nbCuotas SON :" + nCuotas.length);
+            System.out.println("Las Cuotas SON :" + Integer.parseInt(cbCuotas.getSelectedItem().toString().trim()));
+
+            if (nCuotas.length != Integer.parseInt(cbCuotas.getSelectedItem().toString().trim())) {
+
+                fmMain.Mensaje("Número de Cuotas no son Iguales!!!!");
+                return;
+
+            }
+
+        }
+
+        try {
+
+            Rs4 = Sql4.Select("SELECT case when cuotas is null then 1 else cuotas end as cuota, \n"
+                    + "case when dias is null then '0' else dias end as dia \n"
+                    + "from proveedor WHERE rut=" + txRut.getText().trim());
+
+            if (Sql4.GetRowCount() > 0) {
+
+                Rs4.next();
+
+                int DiasProveedor = Rs4.getInt("dia");
+
+                if (!txDias.getText().toString().trim().contains("-")) {
+
+                    int DiasOCP = Integer.parseInt(txDias.getText().toString().trim());
+
+                    if (DiasOCP < DiasProveedor) {
+
+                        fmMain.Mensaje("Condición de Pago de la Orden (" + DiasOCP + " dias) \n"
+                                + "es menor al de la ficha del Proveedor (" + DiasProveedor + " dias)...!!");
+                        return;
+
+                    }
+
+                }
+            }
+
+        } catch (SQLException ex) {
+
+            Logger.getLogger(pfOCProveedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (Tipo == 1) {   //Nueva Orden de Compra
+
+            try {
+
+                //Busca si existen folios liberados
+                Rs = Sql.Select("select count(*) as Existe from folioslibres where tipdocto='OCP' and estado=0");
+                Rs.next();
+
+                if (Rs.getInt("Existe") > 0) {
+
+                    NewCorrelativo = Sql.SelectUnico("select min(nrodocto) as folio from folioslibres where tipdocto='OCP' and estado=0");
+                    Sql.ExeSql("update folioslibres set estado=1 where tipdocto='OCP' and nrodocto=" + NewCorrelativo);
+
+                } else {  //Sino obtiene uno nuevo
+
+                    Sql.ExeSql("update par_correlativo set numero=numero + 1 where tipo='OCP'");
+                    NewCorrelativo = Sql.SelectUnico("select numero from par_correlativo where tipo='OCP'");
+                }
+
+                Sql.ExeSql("  INSERT INTO ctacteprv\n"
+                        + "  (rut,tipdocto,nrodocto,femision,totalexento,totalafecto,totaliva,\n"
+                        + "  totalotroimp,totaldocto,fdespacho,contacto,comentarios, tipodespacho,cuotas,dias, occhilemat) \n"
+                        + "  VALUES (\n"
+                        + txRut.getText() + ",\n"
+                        + "  'OCP',\n"
+                        + NewCorrelativo + ",\n'"
+                        + getFechaEmisionAsString() + "',\n"
+                        + fmMain.SetGuardar(txExento.getText()) + ",\n"
+                        + fmMain.SetGuardar(txNeto.getText()) + ",\n"
+                        + fmMain.SetGuardar(txIva.getText()) + ",\n"
+                        + fmMain.SetGuardar(txImpEspecifico.getText()) + ",\n"
+                        + fmMain.SetGuardar(txTotal.getText()) + ",'\n"
+                        + getFechaDespachoAsString() + "',\n"
+                        + IdVendedor + ",\n'"
+                        + txComentario.getText() + "',\n"
+                        + jComboBox1.getSelectedIndex() + ","
+                        + cbCuotas.getSelectedItem().toString().trim() + ",'"
+                        + txDias.getText().trim() + "', '" + NroChm + "')");
+
+                // Guarda Productos
+                for (int i = 0; i < Grilla.getRowCount(); i++) {
+                    Query = "INSERT INTO ctacteprvdet\n"
+                            + "(rut,tipdocto,nrodocto,sku,cantidad, valorunitario,totallinea) \n"
+                            + "VALUES (\n"
+                            + txRut.getText() + ",\n"
+                            + "  'OCP',\n"
+                            + NewCorrelativo + ",\n'"
+                            + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "',"
+                            + fmMain.SetGuardar(Grilla.getValueAt(i, GetCol("CantReal")).toString()) + ","
+                            + fmMain.SetGuardar(Grilla.getValueAt(i, GetCol("UniReal")).toString()) + ","
+                            + fmMain.SetGuardar(Grilla.getValueAt(i, GetCol("Total")).toString()) + ")";
+                    Sql.ExeSql(Query);
+                }
+
+                //      Verifica_Codprv(); 
+                //*********************** ACTUALIZA DIAS - CUOTAS PAGO **************************************************//
+                try {
+
+                    //Rs = Sql.Select("SELECT cuotas, dias from proveedor WHERE rut="+ txRut.getText().trim());
+                    Rs = Sql.Select("SELECT case when cuotas is null then 1 else cuotas end as cuota, \n"
+                            + "case when dias is null then '0' else dias end as dia \n"
+                            + "from proveedor WHERE rut=" + txRut.getText().trim());
+
+                    Rs.next();
+
+                    if (!Rs.getString("cuota").equals(cbCuotas.getSelectedItem().toString().trim()) || !Rs.getString("dia").equals(txDias.getText().trim())) {
+
+                        if (fmMain.OkCancel("¿Desea guardar esta condicion de pago para el Proveedor?") == JOptionPane.OK_OPTION) {
+
+                            Sql.ExeSql("UPDATE proveedor SET \n"
+                                    + "cuotas=" + cbCuotas.getSelectedItem().toString().trim() + ",\n "
+                                    + "dias='" + txDias.getText().trim() + "' where rut = " + txRut.getText());
+                        }
+                    }
+
+                } catch (Exception e) {
+
                     JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
                 }
 // FIN
-            
+
                 // Actualiza OC de Chilemat para dejarla Autorizada y Emitida
 //                if (!NroChm.equals("-1")){
 //                    
@@ -2016,7 +2046,7 @@ return( sdf.format( (dtDespacho.getDate()).getTime() ) );
 //                                      " and rut= "+ txRut.getText() +
 //                                      "and nrodocto=" +  NewCorrelativo );
 //                        
-////                          Sql.Commit();
+                ////                          Sql.Commit();
 ////                          fmMain.Mensaje("Autorizado");
 //                        
 //          // Se emite OCP
@@ -2040,195 +2070,177 @@ return( sdf.format( (dtDespacho.getDate()).getTime() ) );
                 
                 
             Sql.Commit();
-             
-            Asocia_Proveedor(txRut.getText().trim(),txNombre.getText().trim());
-             
-            Asocia_Codigo_Proveedor(); 
-             
-             
-             AbrirOCP(NewCorrelativo);
-             
-             JOptionPane.showMessageDialog(null, "Orden Guardada. Numero:" + NewCorrelativo);
-             
-         } catch (SQLException | HeadlessException e) {
-             
-             JOptionPane.showMessageDialog(null, e.getMessage());
-             System.out.println(e.getMessage());
-             Sql.Rollback();
-             Logger.getLogger(pfOCProveedor.class.getName()).log(Level.SEVERE, null, e);
-         
-         }finally{
-          
-             Sql.Close();
-         }
-             
-     }else{  //Orden Existente
-      
-         
-         try{
-            
-             Sql.ExeSql("UPDATE ctacteprv  \n" +
-                        "SET \n" +
-                        "femision = '"+ getFechaEmisionAsString()  +"',\n" +
-                        "totalexento = "+ fmMain.SetGuardar(txExento.getText()) +",\n" +
-                        "totalafecto = "+fmMain.SetGuardar(txNeto.getText())+",\n" +
-                        "totaliva = "+fmMain.SetGuardar(txIva.getText())+",\n" +
-                        "totalotroimp = "+fmMain.SetGuardar(txImpEspecifico.getText())+",\n" +
-                        "totaldocto = "+fmMain.SetGuardar(txTotal.getText())+",\n" +
-                        "fdespacho = '"+getFechaDespachoAsString()+"',\n" +
-                        "contacto = "+ IdVendedor +",\n" +
-                        "comentarios = '"+txComentario.getText()+"',\n" +
-                        "tipodespacho = " + jComboBox1.getSelectedIndex() +",\n" +
-                        "cuotas=" + cbCuotas.getSelectedItem().toString().trim() + ",\n"+
-                        "occhilemat=" + NroChm + ",\n"+
-                        "dias='" + txDias.getText().trim() + "'\n"+
-                        "WHERE rut = "+txRut.getText()+"\n" +
-                        "AND  tipdocto = 'OCP'\n" +
-                        "AND  nrodocto = " + txNroOc.getText());
-         
-         
-            Rs2 = Sql2.Select("SELECT nrodocto FROM ctacteprv WHERE nrodocorigen="+ txNroOc.getText()+" LIMIT 1");
-            Rs2.next();
-         
-            if (Sql2.GetRowCount() > 0){
-         
-                docfap = Rs2.getInt("nrodocto");
-                existe = 1;
-         
-            }else{
-         
-                 existe = 0;
-            }
-                    
-         
-         //ACTUALIZA EL DETALLE
-            for(int i=0; i< Grilla.getRowCount(); i++){
-            
-             // 1. Verifica si existe
-                    Rs = Sql.Select("select count(*) as Existe from ctacteprvdet \n" +
-                                    "  where  rut= "+ txRut.getText() +
-                                    "  and nrodocto=" + txNroOc.getText().trim() + "\n" +
-                                    "  and tipdocto='OCP'\n" + 
-                                    "  and sku='"+ Grilla.getModel().getValueAt(i,GetCol("Sku")).toString().trim() +"'");
-                    Rs.next();
-         // 2. Si Existe UPDATE
-                    if(Rs.getInt("Existe")>0){
-                            Query =  "  update ctacteprvdet set \n" +
-                                     "  cantidad = " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("CantReal")).toString()) + ",\n" +
-                                     "  valorunitario="+ fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString()) +",\n" +
-                                     "  nuevo_valor="+ fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString()) +",\n" +
-                                     "  totallinea ="+ fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("Total")).toString()) +"\n" +
-                                     "  where  rut= "+ txRut.getText() +
-                                     "  and nrodocto=" + txNroOc.getText().trim() + "\n" +
-                                     "  and tipdocto='OCP'\n" + 
-                                     "  and sku='"+ Grilla.getModel().getValueAt(i,GetCol("Sku")).toString() +"'";
-                        
-                            Query3 = "UPDATE ctacteprvdet set \n" +
-                                     "nuevo_valor="+ fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString()) +"\n" +
-                                     "WHERE rut= "+ txRut.getText() +
-                                    "AND nrodocto=" + docfap + "\n" +
-                                    "AND tipdocto IN ('FAP', 'GDP') \n" + 
-                                    "AND sku='"+ Grilla.getModel().getValueAt(i,GetCol("Sku")).toString() +"'";  
-                    
 
-                        
-         // 3. Si no existe INSERT
-                    }else{
-                    
-                        Query = "INSERT INTO ctacteprvdet\n" +
-                                "(rut,tipdocto,nrodocto,sku,cantidad, valorunitario,totallinea) \n" +
-                                "VALUES (\n" +
-                                txRut.getText() + ",\n" +
-                                "  'OCP',\n" +
-                                txNroOc.getText()               +  ",\n'" +
-                                Grilla.getModel().getValueAt(i,GetCol("Sku")).toString().trim() + "'," +
-                                fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("CantReal")).toString()) + "," +
-                                fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("UniReal")).toString()) + "," +
-                                fmMain.SetGuardar(Grilla.getModel().getValueAt(i,GetCol("Total")).toString()) + ")";
-        
-                    }
-                    
-                    Sql.ExeSql(Query); 
-        
-        
-                    if (existe == 1){
-            
-                        Sql3.ExeSql(Query3); 
-           
-                    }
-        
-        // 4. Agrega sku al LISTADO
-                    Codigos = Codigos + "'" + Grilla.getModel().getValueAt(i,GetCol("Sku")).toString().trim() + "',";
-        } 
-        
-     //  Verifica_Codprv(); 
-        
-//ACTUALIZA DIAS - CUOTAS PAGO
-            try {
-                
-                //Rs = Sql.Select("SELECT cuotas, dias from proveedor WHERE rut="+ txRut.getText().trim());
-                
-                Rs = Sql.Select("SELECT case when cuotas is null then 1 else cuotas end as cuota, \n" +
-                                 "case when dias is null then '0' else dias end as dia \n" +
-                                 "from proveedor WHERE rut="+ txRut.getText().trim());
-                Rs.next();
-                
-                if(!Rs.getString("cuota").equals(cbCuotas.getSelectedItem().toString().trim()) || !Rs.getString("dia").equals(txDias.getText().trim())){ 
-                    
-                    if(fmMain.OkCancel("¿desa guardar esta condicion de pago para el proveedor?")== JOptionPane.OK_OPTION){
-                        
-                        Sql.ExeSql("UPDATE proveedor SET \n" +
-                                   "cuotas=" + cbCuotas.getSelectedItem().toString().trim() + ",\n "+
-                                   "dias='"  + txDias.getText().trim() + "' where rut = " + txRut.getText());
-                    
-                    }
-                }
-            
-            }catch (Exception e) {   
-            
-                JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                Asocia_Proveedor(txRut.getText().trim(), txNombre.getText().trim());
+
+                Asocia_Codigo_Proveedor();
+
+                AbrirOCP(NewCorrelativo);
+
+                JOptionPane.showMessageDialog(null, "Orden Guardada. Numero:" + NewCorrelativo);
+
+            } catch (SQLException | HeadlessException e) {
+
+                JOptionPane.showMessageDialog(null, e.getMessage());
+                System.out.println(e.getMessage());
+                Sql.Rollback();
                 Logger.getLogger(pfOCProveedor.class.getName()).log(Level.SEVERE, null, e);
+
+            } finally {
+
+                Sql.Close();
             }
+
+        } else {  //Orden Existente
+
+            try {
+
+                Sql.ExeSql("UPDATE ctacteprv  \n"
+                        + "SET \n"
+                        + "femision = '" + getFechaEmisionAsString() + "',\n"
+                        + "totalexento = " + fmMain.SetGuardar(txExento.getText()) + ",\n"
+                        + "totalafecto = " + fmMain.SetGuardar(txNeto.getText()) + ",\n"
+                        + "totaliva = " + fmMain.SetGuardar(txIva.getText()) + ",\n"
+                        + "totalotroimp = " + fmMain.SetGuardar(txImpEspecifico.getText()) + ",\n"
+                        + "totaldocto = " + fmMain.SetGuardar(txTotal.getText()) + ",\n"
+                        + "fdespacho = '" + getFechaDespachoAsString() + "',\n"
+                        + "contacto = " + IdVendedor + ",\n"
+                        + "comentarios = '" + txComentario.getText() + "',\n"
+                        + "tipodespacho = " + jComboBox1.getSelectedIndex() + ",\n"
+                        + "cuotas=" + cbCuotas.getSelectedItem().toString().trim() + ",\n"
+                        + "occhilemat=" + NroChm + ",\n"
+                        + "dias='" + txDias.getText().trim() + "'\n"
+                        + "WHERE rut = " + txRut.getText() + "\n"
+                        + "AND  tipdocto = 'OCP'\n"
+                        + "AND  nrodocto = " + txNroOc.getText());
+
+                Rs2 = Sql2.Select("SELECT nrodocto FROM ctacteprv WHERE nrodocorigen=" + txNroOc.getText() + " LIMIT 1");
+                Rs2.next();
+
+                if (Sql2.GetRowCount() > 0) {
+
+                    docfap = Rs2.getInt("nrodocto");
+                    existe = 1;
+
+                } else {
+
+                    existe = 0;
+                }
+
+                //ACTUALIZA EL DETALLE
+                for (int i = 0; i < Grilla.getRowCount(); i++) {
+
+                    // 1. Verifica si existe
+                    Rs = Sql.Select("select count(*) as Existe from ctacteprvdet \n"
+                            + "  where  rut= " + txRut.getText()
+                            + "  and nrodocto=" + txNroOc.getText().trim() + "\n"
+                            + "  and tipdocto='OCP'\n"
+                            + "  and sku='" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "'");
+                    Rs.next();
+                    // 2. Si Existe UPDATE
+                    if (Rs.getInt("Existe") > 0) {
+                        Query = "  update ctacteprvdet set \n"
+                                + "  cantidad = " + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("CantReal")).toString()) + ",\n"
+                                + "  valorunitario=" + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + ",\n"
+                                + "  nuevo_valor=" + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + ",\n"
+                                + "  totallinea =" + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()) + "\n"
+                                + "  where  rut= " + txRut.getText()
+                                + "  and nrodocto=" + txNroOc.getText().trim() + "\n"
+                                + "  and tipdocto='OCP'\n"
+                                + "  and sku='" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString() + "'";
+
+                        Query3 = "UPDATE ctacteprvdet set \n"
+                                + "nuevo_valor=" + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + "\n"
+                                + "WHERE rut= " + txRut.getText()
+                                + "AND nrodocto=" + docfap + "\n"
+                                + "AND tipdocto IN ('FAP', 'GDP') \n"
+                                + "AND sku='" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString() + "'";
+
+                        // 3. Si no existe INSERT
+                    } else {
+
+                        Query = "INSERT INTO ctacteprvdet\n"
+                                + "(rut,tipdocto,nrodocto,sku,cantidad, valorunitario,totallinea) \n"
+                                + "VALUES (\n"
+                                + txRut.getText() + ",\n"
+                                + "  'OCP',\n"
+                                + txNroOc.getText() + ",\n'"
+                                + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "',"
+                                + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("CantReal")).toString()) + ","
+                                + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("UniReal")).toString()) + ","
+                                + fmMain.SetGuardar(Grilla.getModel().getValueAt(i, GetCol("Total")).toString()) + ")";
+
+                    }
+
+                    Sql.ExeSql(Query);
+
+                    if (existe == 1) {
+
+                        Sql3.ExeSql(Query3);
+
+                    }
+
+                    // 4. Agrega sku al LISTADO
+                    Codigos = Codigos + "'" + Grilla.getModel().getValueAt(i, GetCol("Sku")).toString().trim() + "',";
+                }
+
+                //  Verifica_Codprv(); 
+//ACTUALIZA DIAS - CUOTAS PAGO
+                try {
+
+                    //Rs = Sql.Select("SELECT cuotas, dias from proveedor WHERE rut="+ txRut.getText().trim());
+                    Rs = Sql.Select("SELECT case when cuotas is null then 1 else cuotas end as cuota, \n"
+                            + "case when dias is null then '0' else dias end as dia \n"
+                            + "from proveedor WHERE rut=" + txRut.getText().trim());
+                    Rs.next();
+
+                    if (!Rs.getString("cuota").equals(cbCuotas.getSelectedItem().toString().trim()) || !Rs.getString("dia").equals(txDias.getText().trim())) {
+
+                        if (fmMain.OkCancel("¿desa guardar esta condicion de pago para el proveedor?") == JOptionPane.OK_OPTION) {
+
+                            Sql.ExeSql("UPDATE proveedor SET \n"
+                                    + "cuotas=" + cbCuotas.getSelectedItem().toString().trim() + ",\n "
+                                    + "dias='" + txDias.getText().trim() + "' where rut = " + txRut.getText());
+
+                        }
+                    }
+
+                } catch (Exception e) {
+
+                    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+                    Logger.getLogger(pfOCProveedor.class.getName()).log(Level.SEVERE, null, e);
+                }
 // FIN
-        
-        
-         // 5. Elimina productos que ya no pertenecen
-             Query =  " DELETE from ctacteprvdet " + 
-                      " WHERE  rut= "+ txRut.getText() +
-                      " AND nrodocto=" + txNroOc.getText().trim() + "\n" +
-                      " AND tipdocto='OCP'\n" + 
-                      " AND sku not in (" + Codigos.substring(0, Codigos.length()-1) + ")";
-             Sql.ExeSql(Query);        
 
-            
+                // 5. Elimina productos que ya no pertenecen
+                Query = " DELETE from ctacteprvdet "
+                        + " WHERE  rut= " + txRut.getText()
+                        + " AND nrodocto=" + txNroOc.getText().trim() + "\n"
+                        + " AND tipdocto='OCP'\n"
+                        + " AND sku not in (" + Codigos.substring(0, Codigos.length() - 1) + ")";
+                Sql.ExeSql(Query);
 
-        Sql.Commit();
+                Sql.Commit();
 
-        
-        Asocia_Proveedor(txRut.getText().trim(),txNombre.getText().trim());
-        Asocia_Codigo_Proveedor(); 
-        
-        
-        AbrirOCP(txNroOc.getText());
-        
-        JOptionPane.showMessageDialog(null, "Orden de Compra Actualizada"); 
-        
-         } catch (SQLException | HeadlessException e) {
-             JOptionPane.showMessageDialog(null, e);
-             Sql.Rollback();
-             
-             Logger.getLogger(pfOCProveedor.class.getName()).log(Level.SEVERE, null, e);
+                Asocia_Proveedor(txRut.getText().trim(), txNombre.getText().trim());
+                Asocia_Codigo_Proveedor();
 
-         }
-         finally{
-             Sql.Close();
-         }
-         
-     }
-     
-     
-     
-     
+                AbrirOCP(txNroOc.getText());
+
+                JOptionPane.showMessageDialog(null, "Orden de Compra Actualizada");
+
+            } catch (SQLException | HeadlessException e) {
+                JOptionPane.showMessageDialog(null, e);
+                Sql.Rollback();
+
+                Logger.getLogger(pfOCProveedor.class.getName()).log(Level.SEVERE, null, e);
+
+            } finally {
+                Sql.Close();
+            }
+
+        }
+
     }
    
     
